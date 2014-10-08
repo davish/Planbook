@@ -47,7 +47,7 @@ $('document').ready(function() {
 });
 
 function saveWeek(o) {
-  db.get(ref.monday.toISOString()).then(function (w) {
+  db.get(ref.monday.toISOString().slice(0, 10)).then(function (w) {
     // update the document
     if (w.assignments != JSON.stringify(o)) {
       db.put({
@@ -59,7 +59,7 @@ function saveWeek(o) {
   }, function (err, response) { // document couldn't be found
     if(err) { // make a new document
       db.put({
-        '_id': ref.monday.toISOString(),
+        '_id': ref.monday.toISOString().slice(0, 10),
         'assignments': JSON.stringify(o),
       });
     } else {
