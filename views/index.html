@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Planbook</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="css/stylesheet.css" rel="stylesheet" media="screen">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <nav class="navbar navbar-default" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Planbook</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+          <li> <a href="/">Home</a></li>
+          <li><a href="/planner">App</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+
+          <li class="loggedOut"><a href="#" data-toggle="modal" data-target=".loginModal">Login</a></li>
+          <li class="loggedOut"><a href="#" data-toggle="modal" data-target=".signupModal">Sign Up</a></li>
+
+          <li class="loggedIn" id="username"> <a href="/settings" >  </a></li>
+          <li class="loggedIn" id="logoutButton"> <a href="/logout">Logout</a></li>
+          
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+
+    <div class="container hidden-xs">
+    <div class="row row-offcanvas row-offcanvas-right">
+    <div class="col-sm-1">
+      <div id="subjects">
+      </div>
+      <button id="add" style="margin-top: 37px; position: relative; bottom: 17px;" class="btn btn-sm btn-default">+</button>
+    </div>
+    <div class="col-sm-8"> <!-- Main Column -->
+      <div class="row">
+        <div class="col-sm-2 day col-sm-offset-2" id="monday"><span>Monday</span></div>
+        <div class="col-sm-2 day" id="tuesday"> <span>Tuesday</span></div>
+        <div class="col-sm-2 day" id="wednesday"> <span>Wednesday</span></div>
+        <div class="col-sm-2 day" id="thursday"> <span>Thursday</span></div>
+        <div class="col-sm-2 day" id="friday"> <span>Friday</span></div>
+      </div>
+      <div id="planner">
+
+      </div>
+
+      <div class="row" name="#">
+        <div class="col-sm-3 col-sm-offset-6" id="buttons">
+          <ul class="pagination pagination-sm">
+            <li><a href="##" id="back">&laquo;</a></li>
+            <li><a href="##" id="save">Save</a></li>
+            <li><a href="##" id="next">&raquo;</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3" id="sidebar"> 
+      <div class="row"> 
+        <div class="col-sm-6 day" id="saturday"><span>Saturday</span></div>
+        <div class="col-sm-6 day" id="sunday"><span>Sunday</span></div>
+      </div>
+      <div class="row" id="weekend">
+        <div class="col-sm-6"><textarea class="ta weekendNote" id="saturdayNotes"></textarea></div>
+        <div class="col-sm-6"><textarea class="ta weekendNote" id="sundayNotes"> </textarea> </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="note" id="title"><center>Notes</center></div>
+          <div><textarea id="box" class="note"></textarea></div>
+        </div>
+      </div>
+      <div class="row">
+
+    </div>
+  </div>
+    </div>
+  </div>
+
+  <div class="container visible-xs"> <!-- Mobile Site -->
+        <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="mobile-tabs">
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content" id="mobile-tab-content">
+    </div>
+  </div>
+
+
+<div class="modal fade loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" id="login" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Log In</h4>
+      </div>
+      <div class="modal-body">
+        <form id="login">
+          <div class="form-group">
+            <input type="username" class="form-control" id="loginUsername" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+          </div>
+          <button id="loginSubmit" class="btn btn-default">Submit</button>
+        </form>
+          <br>
+          <span id="403" class="text-danger" style="display: none;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade choiceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel"><center>You must be logged in to use the Planbook.</center></h4>
+      </div>
+      <div class="modal-body">
+        <center>
+        <button class="btn btn-lg btn-primary" href="#" id="goToLogin">Login</button>
+        <button class="btn btn-lg btn-primary" href="#" id="goToSignup">Signup</button>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade signupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" id="signup" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Sign Up</h4>
+      </div>
+      <div class="modal-body">
+        <form id="signup">
+          <div class="form-group">
+            <input type="username" class="form-control" id="signupUsername" placeholder="Enter desired username">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" id="signupPassword" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" id="signupPasswordVerify" placeholder="Verify Password">
+          </div>
+          <input type="submit" id="signupSubmit" class="btn btn-default"></button>
+        </form>
+        <br>
+        <span id="403-1" class="text-danger" style="display: none;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/pouchdb.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/planner.js"></script>
+    <script src="js/listeners.js"></script>
+
+    <!-- // <script src="js/snake.js"></script> -->
+
+  </body>
+
+</html>

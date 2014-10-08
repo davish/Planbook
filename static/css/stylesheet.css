@@ -1,0 +1,93 @@
+textarea {
+  height: 70px;
+  width: 100%;
+  display: block;
+
+  resize: none;
+
+  font-size: 12px;
+  border-color: #777;
+  border-width: 1px;
+
+}
+
+.navbar {
+  border-radius: 0;
+  line-height: 20px;
+  height: 20px;
+}
+
+.navbar-brand {
+  padding: 16px;
+}
+
+span#today {
+  font-weight: bold;
+}
+#buttons {
+  position: relative;
+  bottom: 17px;
+}
+.weekendNote {
+  width: 100%px;
+  height: 140px;
+  border-width: 1px;
+}
+
+.input-group {
+  width: 50%;
+}
+.choiceModal {
+  padding-top: 15%;
+}
+.day {
+  border-color: #777;
+  border-style: solid;
+  border-width: 0px;
+  font-size: 11px;
+}
+
+.subj {
+  /*display: table-cell;*/
+  height: 70px;
+  width: 100%;
+  padding-top: 40px;
+  border-width: 0px;
+  /*vertical-align:right;*/
+}
+
+#snake {
+  height: 210px;
+  width: 100%;
+}
+.weekendevnt {
+  border-color: #777;
+  border-style: solid;
+  border-width: 1px;
+
+  height: 140px;
+  margin-bottom: 0px;
+}
+.note#title {
+  border-color: #777;
+  border-style: solid;
+  border-width: 1px;
+}
+.note#box {
+  height: 119px;
+  border-bottom-width: 2px;
+}
+
+div#planner  {
+  position:relative;
+}
+#weekend {
+  position: relative;
+}
+#sidebar {
+  position:relative;
+  left: -1px;
+  
+  padding-top:1px;
+  border-left-width: 2px;
+}
