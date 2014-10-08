@@ -8,6 +8,7 @@
   "dependencies": {
     "express": "3.x",
     "nano": "*",
-    "cookie": "*"
+    "cookie": "*",
+    "ejs": "*"
   }
 }
