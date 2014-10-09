@@ -187,31 +187,53 @@ function subjectListen() {
     $(this).parent().prepend(input);
     $(this).remove();
     input.focus();
-  });
+    input.select();
 
-   $('.subj').on('blur', 'input', function () {
-      $(this).parent().prepend($('<span />', {'class':'.subjectspan'}).html($(this).val()));
-      var id = $(this).parent().get(0).id;
-      var subj = $(this).val();  
-      $(this).remove();
-
-      if (id != 0) {
-        $(this).prop('contenteditable', false); // make it not editable
-        ref.settings.rows[id-1] = subj; // actually change the name
-        // Save the new settings
-        db.put(ref.settings, function(err, response) {
-          if (err) {
-            alert("there's been an error. try again.");
-            console.log(err);
-          } else {
-            db.get("settings").then(function(s) {
-              ref.settings = s;
-            });
-          }
-        });
+    input.keydown(function(e) {
+      // console.log(e);
+      // console.log(e);
+      if (e.keyCode == 13) {
+        e.preventDefault();
+        // console.log(e);
+        this.blur();
       }
-
+    });
   });
+
+ $('.subj').on('blur', 'input', function () {
+    $(this).parent().prepend($('<span />', {'class':'subjectspan'}).html($(this).val()));
+    var id = $(this).parent().get(0).id;
+    var subj = $(this).val();
+    $(this).unbind();  
+    $(this).remove();
+    if (id != 0) {
+      $(this).prop('contenteditable', false); // make it not editable
+      ref.settings.rows[id-1] = subj; // actually change the name
+      // Save the new settings
+      db.put(ref.settings, function(err, response) {
+        if (err) {
+          alert("there's been an error. try again.");
+          console.log(err);
+        } else {
+          db.get("settings").then(function(s) {
+            ref.settings = s;
+          });
+        }
+      });
+    }
+  });
+
+ $('input').keydown(function(e) {
+  console.log(e);
+  if (e.keycode == 13) {
+    e.preventDefault();
+    this.blur();
+  }
+ });
+ // $('subj').on('keydown', 'input', function(e) {
+
+    
+ // });
 
   // mouseover logic
   $('.subj').mouseenter(function() {
@@ -243,14 +265,6 @@ function subjectListen() {
   });
   $('button.edit').unbind();
   $('button.edit').click(function() {
-      var t = $(this).parent().parent().children('.subjectspan');
-      var input = $('<input />', {
-        'type': 'text',
-        'name': 'unique',
-        'value': $(t).html()
-      });
-      $(t).parent().prepend(input);
-      $(t).remove();
-      input.focus();
+      $(this).parent().parent().children('.subjectspan').trigger('dblclick');
   });
 }
