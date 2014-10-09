@@ -179,43 +179,54 @@ function taListen() {
 
 function subjectListen() {
   $('.subj').unbind(); // When you add a subject, need to re-add all the listeners
-  $('.subj').children("span").click(function() {
-    if (this.id != 0) {
-      $(this).prop('contenteditable', true);
-    }
+
+  $('.subj').on('dblclick', '.subjectspan', function () {
+    var input = $('<input />', {
+      'type': 'text',
+      'name': 'unique',
+      'value': $(this).html()
+    });
+    $(this).parent().prepend(input);
+    $(this).remove();
+    input.focus();
   });
+
+   $('.subj').on('blur', 'input', function () {
+      $(this).parent().prepend($('<span />', {'class':'.subjectspan'}).html($(this).val()));
+      var id = $(this).parent().get(0).id;
+      var subj = $(this).val();  
+      $(this).remove();
+
+      if (id != 0) {
+        $(this).prop('contenteditable', false); // make it not editable
+        ref.settings.rows[id-1] = subj; // actually change the name
+        // Save the new settings
+        db.put(ref.settings, function(err, response) {
+          if (err) {
+            alert("there's been an error. try again.");
+            console.log(err);
+          } else {
+            db.get("settings").then(function(s) {
+              ref.settings = s;
+            });
+          }
+        });
+      }
+
+  });
+
   // mouseover logic
   $('.subj').mouseenter(function() {
-    $(this).children("button").show();
+    $(this).children(".subjbtns").show();
   });
   $('.subj').mouseleave(function() {
-     $(this).children("button").hide();
-  });
-  // Save the subject name
-  $('.subj').children("span").blur(function() {
-    var id = this.id;
-    var subj = $(this).text();
-    if (id != 0) {
-      $(this).prop('contenteditable', false); // make it not editable
-      ref.settings.rows[id-1] = subj; // actually change the name
-      // Save the new settings
-      db.put(ref.settings, function(err, response) {
-        if (err) {
-          alert("there's been an error. try again.");
-          console.log(err);
-        } else {
-          db.get("settings").then(function(s) {
-            ref.settings = s;
-          });
-        }
-      });
-    }
+     $(this).children(".subjbtns").hide();
   });
 
   $('button.delete').unbind();
   // delete subject
   $('button.delete').click(function() {
-    var id = $(this).parent().children("span")[0].id;
+    var id = $(this).parent().parent()[0].id;
     if (confirm("Are you sure you want to delete " + ref.settings.rows[id-1] + "?")){
       ref.settings.rows.splice(id-1, 1); // splice out the row from settings
       // save
@@ -231,5 +242,17 @@ function subjectListen() {
         }
       });
     }
+  });
+  $('button.edit').unbind();
+  $('button.edit').click(function() {
+      var t = $(this).parent().parent().children('.subjectspan');
+      var input = $('<input />', {
+        'type': 'text',
+        'name': 'unique',
+        'value': $(t).html()
+      });
+      $(t).parent().prepend(input);
+      $(t).remove();
+      input.focus();
   });
 }

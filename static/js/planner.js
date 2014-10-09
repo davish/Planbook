@@ -198,7 +198,7 @@ function renderRows(rows) {
 function renderSubjects(r) {
   $("#subjects").html("");
   for (var i = 0; i < r.length; i++)
-    $('#subjects').append('<div class="subj"><span id="'+(i+1)+'">'+r[i]+'</span> <button class="delete btn btn-xs btn-danger" style="display:none;">-</button></div>');
+    $('#subjects').append('<div class="subj" id="'+(i+1)+'"><span class="subjectspan">'+r[i]+'</span> <span class="subjbtns" style="display: none;"><button class="edit btn btn-default btn-xs""><span class="glyphicon glyphicon-edit"></span></button> <button class="delete btn btn-xs btn-danger">-</button></span></div>');
   $('#subjects').append('<div class="subj" id="0">Labs</div>')
 
   subjectListen();
