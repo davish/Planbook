@@ -45,9 +45,7 @@ $('document').ready(function() {
           ref.settings = s;
           renderRows(s.rows);
           // select the new row
-          $('span#'+String(s.rows.length)).prop('contenteditable', true);
-          $('span#'+String(s.rows.length)).focus().selectText();
-          // $('span#'+String(s.rows.length)).select();
+          $('.subj#'+String(s.rows.length)).children('.subjectspan').trigger('dblclick');
         });
       }
     });
