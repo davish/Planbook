@@ -1,6 +1,6 @@
 Planbook, Revision 4
 ==============
-4rd version of the planbook! First was Java, Second was Python, now fully in Node and Javascript, with no CSS framework!
+4rd version of the planbook! First was Java, Second was Python, now fully in Node and Javascript!
 
 
 ## How to Install
