@@ -2,7 +2,7 @@ var ref = {
   'monday': getMonday(new Date())
 };
 
-window.server = 'davish.iriscouch.com'; // hermes.local
+window.server = ''//'davish.iriscouch.com'; // hermes.local
 
 var db = null;
 var remoteCouch = false;
@@ -123,6 +123,9 @@ function login(user, pswd, c, fail) {
     },
     success: function(data) {
       ref.user = data.user;
+      // console.log(data.dbURL);
+      server = data.dbURL;
+      console.log(server);
       db = new PouchDB('http://'+ data.user +':'+ pswd +'@'+server+':5984/' + data.user);
       db.get("settings").then(function(settings) {
         ref.settings = settings;
