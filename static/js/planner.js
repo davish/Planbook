@@ -7,12 +7,16 @@ window.server = ''//'davish.iriscouch.com'; // hermes.local
 var db = null;
 var remoteCouch = false;
 $('document').ready(function() {
+  $('.stuff').hide();
+  $('.navbar').hide();
   $.ajax({
     url: "/session",
     success: function(data) {
       if (data.username && data.password) {
         ref.user = data.username;
         login(data.username, data.password, function(data) { // Login was successful
+          $('.stuff').show();
+          $('.navbar').show()
           $('li#username').children('a').text(data.user);
           $('.loggedIn').show();
           $('.loggedOut').hide();

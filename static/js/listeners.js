@@ -63,6 +63,9 @@ $('document').ready(function() {
   $("form#login").submit(function(e) {
     e.preventDefault();
     login($('#loginUsername').val().toLowerCase(), $('#loginPassword').val(), function(data) {
+      $('.stuff').show();
+      $('.navbar').show();
+
       $('.loginModal').modal('hide');
       $('li#username').children('a').text(data.user);
       $('.loggedIn').show();
@@ -82,6 +85,9 @@ $('document').ready(function() {
     e.preventDefault();
     if ($('#signupPasswordVerify').val() == $('#signupPassword').val()) {    
       signup($('#signupUsername').val().toLowerCase(), $('#signupPassword').val(), function(data) {
+        $('.stuff').show();
+        $('.navbar').show();
+
         $('.signupModal').modal('hide');
         $('li#username').children('a').text(data.user);
         $('.loggedIn').show();
