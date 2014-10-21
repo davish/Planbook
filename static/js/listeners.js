@@ -2,6 +2,12 @@
   Event Handlers
 */
 $('document').ready(function() {
+
+  /*
+    Window Close Confirmation
+  */
+  
+
   /* 
     Navigation Buttons
   */
@@ -124,8 +130,13 @@ function taListen() {
     Keypress listener, for parsing and using inputs to different textareas.
     Will get quite large as features such as lab requests are added.
   */
+  $("textarea").blur(function() {
+    saveWeek(getAssignmentValues());
+  })
   $("textarea").keydown(function(e) {
+
     if (e.which == 13) {
+      saveWeek(getAssignmentValues());
       var value = $(this).val().toLowerCase();
       if (value.indexOf("test") != -1) {
         var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + (this.id[1]-1));

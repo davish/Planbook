@@ -1,5 +1,5 @@
 var ref = {
-  'monday': getMonday(new Date())
+  'monday': getMonday(new Date()),
 };
 
 window.server = ''//'davish.iriscouch.com'; // hermes.local
@@ -56,6 +56,7 @@ function saveWeek(o) {
         'assignments': JSON.stringify(o)
       });
     }
+
   }, function (err, response) { // document couldn't be found
     if(err) { // make a new document
       db.put({
@@ -123,9 +124,7 @@ function login(user, pswd, c, fail) {
     },
     success: function(data) {
       ref.user = data.user;
-      // console.log(data.dbURL);
       server = data.dbURL;
-      console.log(server);
       db = new PouchDB('http://'+ data.user +':'+ pswd +'@'+server+':5984/' + data.user);
       db.get("settings").then(function(settings) {
         ref.settings = settings;
