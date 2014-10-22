@@ -140,9 +140,8 @@ function taListen() {
   */
   $("textarea").blur(function() {
     saveWeek(getAssignmentValues());
-  })
+  });
   $("textarea").keydown(function(e) {
-
     if (e.which == 13) {
       saveWeek(getAssignmentValues());
       var value = $(this).val().toLowerCase();
@@ -152,6 +151,25 @@ function taListen() {
         console.log(((d.getMonth()+1) + '/' + d.getDate() + '/' + d.getYear() % 100) + " " + ref.settings.rows[this.id[0]-1]);
       }
     }
+  });
+
+  /*
+  Setting assignment as done
+  */
+  $('textarea').parent().mouseenter(function() {
+    $(this).children("button").show();
+  });
+  $('textarea').parent().mouseleave(function() {
+     $(this).children("button").hide();
+  });
+  $('button.done').unbind();
+  $('button.done').click(function() {
+    var t = $(this).parent().children("textarea");
+    if ($(t).css("text-decoration") == "none")
+        $(t).css("text-decoration", "line-through");
+    else 
+      $(t).css("text-decoration", "none");
+
   });
 
   /*

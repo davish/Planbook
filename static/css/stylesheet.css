@@ -11,6 +11,12 @@ textarea {
 
 }
 
+button.done {
+  position:absolute;
+  bottom: 0px;
+  right:0px;
+}
+
 .navbar {
   border-radius: 0;
   line-height: 20px;

@@ -171,9 +171,9 @@ function renderRows(rows) {
       var row = $("#planner").append('<div class="row"></div>');
       for (var j = 1; j <= 5; j++) {
         if (j == 1)
-          row.append('<div class="col-sm-2 col-sm-offset-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea></div>');
+          row.append('<div class="col-sm-2 col-sm-offset-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea><button class="done btn btn-default btn-xs" style="display: none;"><span class="glyphicon glyphicon-ok"></span></button></div>');
         else
-          row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea></div>');
+          row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea><button class="done btn btn-default btn-xs" style="display: none;"><span class="glyphicon glyphicon-ok"></span></button></div>');
       }
     }
     var labs = $("#planner").append('<div class="row"></div>');
@@ -187,7 +187,7 @@ function renderRows(rows) {
     getWeek(setAssignmentValues);
 
   }
-  else {
+  else { // Mobile Site
     var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     $(".mobile").html("");
     // $(".mobile").append('<div class="row"><div class="col-sm-2">Monday</div><div class="col-sm-2">Tuesday</div><span>Wednesday</span><div class="col-sm-2">Thursday</div><div class="col-sm-2">Friday</div></div>');
@@ -205,18 +205,6 @@ function renderRows(rows) {
     });
     getWeek(setAssignmentValues);
   }
-
-/*  else {
-    var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-    for (var i = 1; i <= rows.length; i++) {
-      $("#mobile-tabs").append('<li><a href="#'+ rows[i-1][0]+'" data-toggle="tab">'+rows[i-1][0]+'</a></li>');
-      $('#mobile-tab-content').append('<div class="tab-pane" id="'+ rows[i-1][0] +'"></div>');
-      for (var j = 1; j <= days.length; j++) {
-        $('#' + rows[i-1][0]).append('<h3>' + days[j-1] + '</h3>');
-        $('#' + rows[i-1][0]).append('<div><textarea id="'+ rows[i-1][1] + String(j)+'"></textarea></div>');
-      }
-    }
-  }*/
 
 }
 
