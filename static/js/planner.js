@@ -201,6 +201,7 @@ function renderRows(rows) {
     taListen();
     $("textarea").each(function() {
       $(this).prop("readonly", true);
+      $(this).css("width", "50%")
     });
     getWeek(setAssignmentValues);
   }
