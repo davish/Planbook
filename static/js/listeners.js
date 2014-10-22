@@ -65,6 +65,7 @@ $('document').ready(function() {
     login($('#loginUsername').val().toLowerCase(), $('#loginPassword').val(), function(data) {
       $('.stuff').show();
       $('.navbar').show();
+      $('.mobile').show();
 
       $('.loginModal').modal('hide');
       $('li#username').children('a').text(data.user);
@@ -87,6 +88,7 @@ $('document').ready(function() {
       signup($('#signupUsername').val().toLowerCase(), $('#signupPassword').val(), function(data) {
         $('.stuff').show();
         $('.navbar').show();
+        $('.mobile').show();
 
         $('.signupModal').modal('hide');
         $('li#username').children('a').text(data.user);
@@ -163,8 +165,6 @@ function taListen() {
 
   if (!isiOS){
     $('textarea').dblclick(function() { // toggle between strikethrough and no styling on textareas
-      
-      console.log($(this).css("text-decoration"));
       if ($(this).css("text-decoration") == "none")
         $(this).css("text-decoration", "line-through");
       else {
@@ -179,10 +179,12 @@ function taListen() {
       var delta = now - lastTouch;
       clearTimeout(action);
       if (delta<500 && delta>0){
-        if ($(this).css("text-decoration") == "none solid rgb(0, 0, 0)")
+        if ($(this).css("text-decoration") == "none") {
           $(this).css("text-decoration", "line-through");
-        else
-          $(this).css("text-decoration", "none solid rgb(0, 0, 0)");        
+        }
+        else {
+          $(this).css("text-decoration", "none");     
+        }
       } else {
         $(this).data('lastTouch', now);
         action = setTimeout(function(e){

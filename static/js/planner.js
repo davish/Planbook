@@ -8,6 +8,7 @@ var db = null;
 var remoteCouch = false;
 $('document').ready(function() {
   $('.stuff').hide();
+  $('.mobile').hide();
   $('.navbar').hide();
   $.ajax({
     url: "/session",
@@ -17,6 +18,7 @@ $('document').ready(function() {
         login(data.username, data.password, function(data) { // Login was successful
           $('.stuff').show();
           $('.navbar').show()
+          $('.mobile').show();
           $('li#username').children('a').text(data.user);
           $('.loggedIn').show();
           $('.loggedOut').hide();
@@ -185,7 +187,23 @@ function renderRows(rows) {
     getWeek(setAssignmentValues);
 
   }
-
+  else {
+    var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    $(".mobile").html("");
+    // $(".mobile").append('<div class="row"><div class="col-sm-2">Monday</div><div class="col-sm-2">Tuesday</div><span>Wednesday</span><div class="col-sm-2">Thursday</div><div class="col-sm-2">Friday</div></div>');
+    for (var j = 1; j <= 5; j++) {
+      var row = $(".mobile").append('<div class="row"></div>');
+      row.append('<div class="col-sm-2"><h3>'+days[j-1]+'<h3></div>');
+      for (var i = 0; i < rows.length; i++) {
+        row.append('<div class="col-sm-2"><h4>'+rows[i]+'</h4><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea></div>')
+      }
+    }
+    taListen();
+    $("textarea").each(function() {
+      $(this).prop("readonly", true);
+    });
+    getWeek(setAssignmentValues);
+  }
 
 /*  else {
     var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
