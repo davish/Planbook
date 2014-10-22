@@ -163,10 +163,13 @@ function taListen() {
 
   if (!isiOS){
     $('textarea').dblclick(function() { // toggle between strikethrough and no styling on textareas
-      if ($(this).css("text-decoration") == "none solid rgb(0, 0, 0)")
+      
+      console.log($(this).css("text-decoration"));
+      if ($(this).css("text-decoration") == "none")
         $(this).css("text-decoration", "line-through");
-      else
-        $(this).css("text-decoration", "none solid rgb(0, 0, 0)");
+      else {
+        $(this).css("text-decoration", "none");
+      }
     });
   } else {
     var action;
