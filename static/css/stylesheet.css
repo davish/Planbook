@@ -11,10 +11,27 @@ textarea {
 
 }
 
+.mnav {
+  position: fixed;
+}
+#mnext {
+  left: 85%;
+  top: 50%;
+}
+
+#mback {
+  top: 50%;
+  left: 10%;
+}
+#msave {
+  top: calc(50% + 25px);
+  left: 85%;
+}
+
 button.done {
   position:absolute;
-  bottom: 0px;
-  right:0px;
+  bottom:10px;
+  right:10px;
 }
 
 .navbar {

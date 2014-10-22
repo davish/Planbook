@@ -34,6 +34,23 @@ $('document').ready(function() {
     });
   });
 
+  $('#msave').click(function() {
+    saveWeek(getAssignmentValues());
+  });
+  $('#mback').click(function() {
+    // animation
+    saveWeek(getAssignmentValues()); // save the current state
+    ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() - 7); // decrement by 1 week
+    getWeek(setAssignmentValues);
+    drawDates()  
+  });
+  $('#mnext').click(function() {
+    saveWeek(getAssignmentValues());
+    ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + 7);
+    getWeek(setAssignmentValues);
+    drawDates();
+  });
+
   // add subject
   $('button#add').click(function() {
     r = ref.settings.rows;
@@ -65,7 +82,7 @@ $('document').ready(function() {
     login($('#loginUsername').val().toLowerCase(), $('#loginPassword').val(), function(data) {
       $('.stuff').show();
       $('.navbar').show();
-      $('.mobile').show();
+      $('.mAll').show();
 
       $('.loginModal').modal('hide');
       $('li#username').children('a').text(data.user);
@@ -88,7 +105,7 @@ $('document').ready(function() {
       signup($('#signupUsername').val().toLowerCase(), $('#signupPassword').val(), function(data) {
         $('.stuff').show();
         $('.navbar').show();
-        $('.mobile').show();
+        $('.mAll').show();
 
         $('.signupModal').modal('hide');
         $('li#username').children('a').text(data.user);

@@ -8,7 +8,7 @@ var db = null;
 var remoteCouch = false;
 $('document').ready(function() {
   $('.stuff').hide();
-  $('.mobile').hide();
+  $('.mAll').hide();
   $('.navbar').hide();
   $.ajax({
     url: "/session",
@@ -18,7 +18,7 @@ $('document').ready(function() {
         login(data.username, data.password, function(data) { // Login was successful
           $('.stuff').show();
           $('.navbar').show()
-          $('.mobile').show();
+          $('.mAll').show();
           $('li#username').children('a').text(data.user);
           $('.loggedIn').show();
           $('.loggedOut').hide();
@@ -200,9 +200,10 @@ function renderRows(rows) {
     }
     taListen();
     $("textarea").each(function() {
-      $(this).prop("readonly", true);
+      //$(this).prop("readonly", true);
       $(this).css("width", "50%")
     });
+    drawDates();
     getWeek(setAssignmentValues);
   }
 
@@ -233,14 +234,27 @@ function genBlankAssignments() {
 
 
 function drawDates() {
-  $('.day').each(function(index, element) {
-    var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + index);
-    var isToday = (d.getFullYear = new Date().getFullYear && d.getMonth() == new Date().getMonth() && d.getDate() == new Date().getDate())
-    if (isToday)
-      $(element).html('<span id="today">' + $(element).children('span').html() + '</span> ' + (d.getMonth()+1) + '/' + d.getDate());
-    else
-      $(element).html('<span>' + $(element).children('span').html() + '</span> ' + (d.getMonth()+1) + '/' + d.getDate());
-  });
+  if ($('.container').width() >= 720) {
+    $('.day').each(function(index, element) {
+      var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + index);
+      var isToday = (d.getFullYear = new Date().getFullYear && d.getMonth() == new Date().getMonth() && d.getDate() == new Date().getDate())
+      if (isToday)
+        $(element).html('<span id="today">' + $(element).children('span').html() + '</span> ' + (d.getMonth()+1) + '/' + d.getDate());
+      else
+        $(element).html('<span>' + $(element).children('span').html() + '</span> ' + (d.getMonth()+1) + '/' + d.getDate());
+    });
+  } else {
+    var i = 0;
+    $('h3').each(function(index, element) {
+      var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+      var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + days.indexOf($(element).text()));
+      var isToday = (d.getFullYear = new Date().getFullYear && d.getMonth() == new Date().getMonth() && d.getDate() == new Date().getDate())
+      if (isToday)
+        $(element).parent().html('<h3><em><u>'+$(element).text()+ '</u></em></h3>' + (d.getMonth()+1) + '/' + d.getDate());
+      else
+        $(element).parent().html('<h3>'+$(element).text()+ '</h3>' + (d.getMonth()+1) + '/' + d.getDate());
+    });
+  }
 }
 
 $.fn.slide = function(dist, t, c) {
