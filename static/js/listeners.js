@@ -281,7 +281,6 @@ function subjectListen() {
   });
 
   $('input').keydown(function(e) {
-  console.log(e);
   if (e.keycode == 13) {
     e.preventDefault();
     this.blur();

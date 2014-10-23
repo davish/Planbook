@@ -113,12 +113,23 @@ function login(req, res) {
             res.cookie("AuthSession", cookie.parse(headers['set-cookie'][0]).AuthSession);
             res.send({"user": req.body.username, "dbURL": loginData.dbURL});
           }
-          else // username doesn't exist, or pswd is wrong
+          else // In Dalton, but first time using the service
             signup(req, res);
         });
         break;
-      case 404:
-        res.send(403, {'message': 'The username and password entered do not match.'});
+      case 404: // not found in Dalton
+        nano.auth(req.body.username, req.body.password, function(err, body, headers) { // not Dalton, but still exists:
+          if (headers) { // authorization went through
+            req.session.username = req.body.username;
+            req.session.password = req.body.password;
+
+            res.type('text/json');
+            res.cookie("AuthSession", cookie.parse(headers['set-cookie'][0]).AuthSession);
+            res.send({"user": req.body.username, "dbURL": loginData.dbURL});
+          }
+          else // Not in Dalton and doesn't exist
+            res.send(403, {'message': 'The username and password entered do not match.'});
+        });
         break;
     }
   }).on('error', function(e) {
