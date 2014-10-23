@@ -319,4 +319,27 @@ function subjectListen() {
   $('button.edit').click(function() {
       $(this).parent().parent().children('.subjectspan').trigger('dblclick');
   });
+
+  $('button#add').unbind();
+  $('button#add').click(function() {
+    r = ref.settings.rows;
+    // r.push(["Class", r[r.length-1][1]+1]);
+    // add row to subjects
+    r.push("Class");
+    ref.settings.rows = r;
+    // save
+    db.put(ref.settings, function(err, response) {
+      if (err) {
+        alert("there's been an error. try again.");
+        console.log(err);
+      } else {
+        db.get("settings").then(function(s) {
+          ref.settings = s;
+          renderRows(s.rows);
+          // select the new row
+          $('.subj#'+String(s.rows.length)).children('.subjectspan').trigger('dblclick');
+        });
+      }
+    });
+  });
 }

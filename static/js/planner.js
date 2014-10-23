@@ -166,24 +166,22 @@ function signup(user, pswd, c, fail) {
 function renderRows(rows) {
   if ($('.container').width() >= 720) {
     $("#planner").html("");
-    renderSubjects(rows);
     for (var i = 0; i < rows.length; i++) {
       var row = $("#planner").append('<div class="row"></div>');
+      row.append('<div class="subj col-sm-2" id="'+(i+1)+'"><span class="subjectspan">'+rows[i]+'</span> <span class="subjbtns" style="display: none;"><button class="edit btn btn-default btn-xs""><span class="glyphicon glyphicon-edit"></span></button> <button class="delete btn btn-xs btn-danger">-</button></span></div>');
       for (var j = 1; j <= 5; j++) {
-        if (j == 1)
-          row.append('<div class="col-sm-2 col-sm-offset-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea><button class="done btn btn-default btn-xs" style="display: none;"><span class="glyphicon glyphicon-ok"></span></button></div>');
-        else
-          row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea><button class="done btn btn-default btn-xs" style="display: none;"><span class="glyphicon glyphicon-ok"></span></button></div>');
+        row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea><button class="done btn btn-default btn-xs" style="display: none;"><span class="glyphicon glyphicon-ok"></span></button></div>');
       }
     }
     var labs = $("#planner").append('<div class="row"></div>');
+    labs.append('<div class="subj col-sm-2" id="0">Labs</div>');
+
     for (var j = 1; j <= 5; j++) {
-      if (j==1)
-        labs.append('<div class="col-sm-2 col-sm-offset-2"><textarea class="labs ta" id="0' + String(j)+'"></textarea></div>');
-      else
-        labs.append('<div class="col-sm-2"><textarea class="labs ta" id="0' + String(j)+'"></textarea></div>');
+      labs.append('<div class="col-sm-2"><textarea class="labs ta" id="0' + String(j)+'"></textarea></div>');
     }
+    $('#planner').append('<div class="row"><button id="add" style="margin-top: 37px; position: relative; bottom: 17px;" class="btn btn-sm btn-default">+</button></div>')
     taListen();
+    subjectListen();
     getWeek(setAssignmentValues);
 
   }
@@ -207,16 +205,6 @@ function renderRows(rows) {
     getWeek(setAssignmentValues);
   }
 
-}
-
-function renderSubjects(r) {
-  $("#subjects").html("");
-  for (var i = 0; i < r.length; i++)
-    $('#subjects').append('<div class="subj" id="'+(i+1)+'"><span class="subjectspan">'+r[i]+'</span> <span class="subjbtns" style="display: none;"><button class="edit btn btn-default btn-xs""><span class="glyphicon glyphicon-edit"></span></button> <button class="delete btn btn-xs btn-danger">-</button></span></div>');
-  $('#subjects').append('<div class="subj" id="0">Labs</div>')
-
-  subjectListen();
-  taListen();
 }
 
 function getMonday(d) {
