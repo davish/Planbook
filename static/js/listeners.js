@@ -194,7 +194,7 @@ function taListen() {
   */
   var isiOS = false;
   var agent = navigator.userAgent.toLowerCase();
-  if(agent.indexOf('iphone') >= 0 || agent.indexOf('ipad') >= 0) {
+  if(agent.indexOf('iphone') >= 0 || agent.indexOf('ipad') >= 0 || agent.indexOf('android') >= 0) {
     isiOS = true;
   }
 
