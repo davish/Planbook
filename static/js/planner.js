@@ -179,7 +179,6 @@ function renderRows(rows) {
     for (var j = 1; j <= 5; j++) {
       labs.append('<div class="col-sm-2"><textarea class="labs ta" id="0' + String(j)+'"></textarea></div>');
     }
-    $('#planner').append('<div class="row"><button id="add" style="margin-top: 37px; position: relative; bottom: 17px;" class="btn btn-sm btn-default">+</button></div>')
     taListen();
     subjectListen();
     getWeek(setAssignmentValues);
