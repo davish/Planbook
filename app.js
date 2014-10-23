@@ -51,8 +51,7 @@ app.get('/validate', function(req, res) {
         break;
     }
   }).on('error', function(e) {
-    console.log("Got error: " + e.message);
-    res.end("hi");
+    res.end(500);
   });
 });
 
@@ -100,17 +99,30 @@ app.get('/session', function(req, res) {
 });
 
 function login(req, res) {
-  nano.auth(req.body.username, req.body.password, function(err, body, headers) {
-    if (headers) { // authorization went through
-      req.session.username = req.body.username;
-      req.session.password = req.body.password;
 
-      res.type('text/json');
-      res.cookie("AuthSession", cookie.parse(headers['set-cookie'][0]).AuthSession);
-      res.send({"user": req.body.username, "dbURL": loginData.dbURL});
+  var options = {host: 'compsci.dalton.org',port: 8080, path: '/zbuttenwieser/validation/index.jsp?username='+req.body.username+'&password='+req.body.password};
+  http.get(options, function(r) {
+    switch (r.statusCode) {
+      case 200: // user exists in Dalton db
+        nano.auth(req.body.username, req.body.password, function(err, body, headers) {
+          if (headers) { // authorization went through
+            req.session.username = req.body.username;
+            req.session.password = req.body.password;
+
+            res.type('text/json');
+            res.cookie("AuthSession", cookie.parse(headers['set-cookie'][0]).AuthSession);
+            res.send({"user": req.body.username, "dbURL": loginData.dbURL});
+          }
+          else // username doesn't exist, or pswd is wrong
+            signup(req, res);
+        });
+        break;
+      case 404:
+        res.send(403, {'message': 'The username and password entered do not match.'});
+        break;
     }
-    else // username/password combo got rejected
-      res.send(403, {'message': 'The username and password entered do not match.'});
+  }).on('error', function(e) {
+    res.end(500);
   });
 }
 
