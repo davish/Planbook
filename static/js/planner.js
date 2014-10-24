@@ -269,7 +269,11 @@ $.fn.slide = function(dist, t, c) {
       left: "+=" + dist
   }, t, function() {
       $(element).css({left: -dist});
-      $(element).animate({left: 0}, t);
+      $(element).animate({left: 0}, t, function() {
+        if (element.id == "sidebar")
+          $(element).css("left", "-1px");
+      });
+
       if (c)
           c();
   });
