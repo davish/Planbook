@@ -37,71 +37,74 @@ app.get('/', function(req, res) {
 // return 404 if it doesn't exist, and let the client deal with it.
 app.get('/planner', function(req, res) {
   res.type('text/json');
-
-  var assignments = db.assignments.findOne(
-  {
-    $and: 
-    [
-      {'name': req.session.username},
-      {'monday': req.body.monday}
-    ]
+  console.log(req.session.username);
+  console.log(req.body.monday);
+  db.collection("assignments").find({$and: [{'name': req.session.username}, {'monday': req.body.monday}]}).toArray(function(err, docs) {
+    console.log(docs);
+    if (docs[0])
+      res.send({'assignments': docs[0].data});
+    else
+      res.send(404);
   });
-  if (assignments) // if the assignment exists
-    res.send({'assignments': assignments.data});
-  else // send back 404, the client knows how to deal with it.
-    res.send(404);
-  
+
 });
 
 // update this week's assignments, with req.session.username, req.body.monday and req.body.data
 app.post('/planner', function(req, res) {
   res.type('text/json');
-
-  var assignments = db.assignments.findOne(
+  var assignments = db.collection("assignments").find(
   {
     $and: 
     [
       {'name': req.session.username},
       {'monday': req.body.monday}
     ]
+  }).toArray(function(err, docs) {
+    if (!err) {
+      if (docs[0]) { // doc exists
+        db.collection("assignments").findOneAndUpdate({_id: docs[0]._id}, {
+          $set: {'data': req.body.data}
+        }, function (err, result) {
+          if (!err)
+            res.send(200);
+          else
+            res.send(500, err);
+        });
+      } else {
+        db.collection("assignments").insert({
+          'name': req.session.username, 'monday': req.body.monday, 'data': req.body.data}, 
+        function(err, result) {
+          if (!err)
+            res.send(200);
+          else
+            res.send(500, err);
+        });
+      }
+    } else {
+      res.send(500, err);
+    }
   });
-  if (assignments) { // update the document
-    db.collection("assignments").findOneAndUpdate({_id: assignments._id}, {
-      $set: {'data': req.body.data}
-    }, function (err, result) {
-      if (!err)
-        res.send(200);
-      else
-        res.send(500, err);
-    });
-  } else { // create a new document
-    db.collection("assignments").insert({
-      'name': req.session.name, 'monday': req.body.monday, 'data': req.body.data}, 
-    function(err, result) {
-      if (!err)
-        res.send(200);
-      else
-        res.send(500, err);
-    });
-  }
 });
 
 // get req.session.username's settings and return it in JSON.
 app.get('/settings', function(req, res) {
   res.type('text/json');
 
-  var settings = db.collection("users").findOne({'name': req.session.username}).settings;
-  if (settings)
-    res.send({'data': settings});
-  else
-    res.send(403);
-  
+  db.collection("users").find({'name': req.session.username}).toArray(function (err, docs) {
+    if (!err) {
+      if (docs[0])
+        res.send({'data': settings});
+      else
+        res.send(403)
+    } else {
+      res.send(500, err);
+    }
+  });
 });
 
 // update req.session.username's settings with req.body.settings.
 app.post('/settings', function(req, res) {
   res.type('text/json');
-
   db.collection("users").findOneAndUpdate(
     {'name': req.session.username}, 
     {$set: {'data': req.body.data}}, 
@@ -138,13 +141,18 @@ function login(req, res) {
     switch (r.statusCode) {
       case 200: // user exists in Dalton db
         // check if they exist in our db:
-        var u = db.users.findOne({'name': req.body.username});
-        if (u) {
-          req.session.username = req.body.username;
-          res.send({'settings': u.settings}); // send back that login went swimmingly
-        }
-        else // In Dalton, but first time using the service
-            signup(req, res);
+        db.collection("users").find({'name': req.body.username}).toArray(function(err, docs) {
+          if (!err) {
+            if (docs[0]) {
+              req.session.username = req.body.username;
+              res.send({'settings': docs[0].settings, 'user': req.body.username}); // send back that login went swimmingly
+            } else {
+              signup(req, res);
+            }
+          } else {
+            res.send(500, err);
+          }
+        });
         break;
       case 404: // not found in Dalton
         res.send(403, {'message': 'The username and password entered do not match.'});
@@ -157,34 +165,42 @@ function login(req, res) {
 
 function signup(req, res) {
   res.type('text/json');
-  if (!(db.users.findOne({'name': req.body.username}))) { // if the user doesn't already exist
-    var user = { // create the user schema
-      name: req.body.username,
-      settings: {
-                  'rows': [
-                            "English", 
-                            "History", 
-                            "Math", 
-                            "Science", 
-                            "Language",
-                            "Other"
-                          ],
-                  'theme': "default"
-                }
-    };
-    
-    db.collection("users").insert(user, function(err, result) {
-      if (!err)
-        login(req, res);
-      else
-        res.send(500, err);
-    });
-  } else {
-    res.send(403, {'message': 'The username and password entered do not match.'});
-  }
+  db.collection("users").find({'name': req.body.username}).toArray(function(err, docs) {
+    if (!err) {
+      if (docs[0] == undefined) {
+        var user = { // create the user schema
+        name: req.body.username,
+        settings: {
+                    'rows': [
+                              "English", 
+                              "History", 
+                              "Math", 
+                              "Science", 
+                              "Language",
+                              "Other"
+                            ],
+                    'theme': "default"
+                  }
+        };
+        
+        db.collection("users").insert(user, function(err, result) {
+          console.log("hi");
+          if (!err) {
+            login(req, res);
+          }
+          else
+            res.send(500, err);
+        });
+      } else {
+        res.send(403, {'message': 'The username and password entered do not match.'});
+      }
+    } else {
+      res.send(500, err);
+    }
+  });
 }
 
-MongoClient.connect('mongodb://localhost/planner', function(err, dbase)) {
+MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
   if (!err) {
     db = dbase;
     var server = app.listen(app.get('port'), function() {
@@ -193,4 +209,4 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase)) {
   } else {
     console.error(err);
   }
-}
+});

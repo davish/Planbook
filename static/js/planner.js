@@ -13,27 +13,21 @@ $('document').ready(function() {
   $.ajax({
     url: "/session",
     success: function(data) {
-      if (data.username && data.password) {
+      if (data.username) {
         ref.user = data.username;
-        login(data.username, data.password, function(data) { // Login was successful
-          $('.stuff').show();
-          $('.navbar').show()
-          $('.mAll').show();
-          $('li#username').children('a').text(data.user);
-          $('.loggedIn').show();
-          $('.loggedOut').hide();
-          $('textarea').each(function(index, attribute) {
-            $(this).removeAttr("disabled");
-          });
-        }, function() { // login not successful
-          $('.choiceModal').modal({backdrop: 'static', 'keyboard': false});
-          $('li#username').children('a').text('');
-          $('.loggedIn').hide();
-          $('.loggedOut').show();
-          $('textarea').each(function(index, attribute) {
-            $(this).attr("disabled", "");
-          });
+        $('.stuff').show();
+        $('.navbar').show()
+        $('.mAll').show();
+        console.log(data);
+        $('li#username').children('a').text(data.user);
+        $('.loggedIn').show();
+        $('.loggedOut').hide();
+        $('textarea').each(function(index, attribute) {
+          $(this).removeAttr("disabled");
         });
+        ref.settings = data.settings;
+        renderRows(ref.settings.rows);
+
       } else { // no one session for this browser found
         $('.choiceModal').modal({backdrop: 'static', 'keyboard': false});
         $('li#username').children('a').text('');
@@ -58,7 +52,7 @@ function saveWeek(o) {
     url: "/planner", 
     data: {
       'monday': ref.monday.toISOString().slice(0, 10),
-      'data': o
+      'data': JSON.stringify(o)
     },
     statusCode: {
       500: function() {
@@ -75,6 +69,9 @@ function getWeek(c) {
   $.ajax({
     type: "GET",
     url: "/planner",
+    data: {
+      monday: ref.monday.toISOString().slice(0, 10) 
+    },
     statusCode: {
       404: function() { // if week doesn't exist
         c(genBlankAssignments());
@@ -84,7 +81,7 @@ function getWeek(c) {
       }
     },
     success: function(data) {
-      c(data.assignments);
+      c(JSON.parse(data.assignments));
     }
   });
 }
@@ -129,7 +126,7 @@ function login(user, pswd, c, fail) {
       ref.settings = data.settings;
       renderRows(ref.settings.rows);
       
-      if (c) c();
+      if (c) c(data);
     }
   });
 }
