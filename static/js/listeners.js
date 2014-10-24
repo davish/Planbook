@@ -53,23 +53,22 @@ $('document').ready(function() {
 
   // add subject
   $('button#add').click(function() {
-    r = ref.settings.rows;
-    // r.push(["Class", r[r.length-1][1]+1]);
-    // add row to subjects
-    r.push("Class");
-    ref.settings.rows = r;
+    ref.settings.rows.push("Class");
     // save
-    db.put(ref.settings, function(err, response) {
-      if (err) {
-        alert("there's been an error. try again.");
-        console.log(err);
-      } else {
-        db.get("settings").then(function(s) {
-          ref.settings = s;
-          renderRows(s.rows);
-          // select the new row
-          $('.subj#'+String(s.rows.length)).children('.subjectspan').trigger('dblclick');
-        });
+    $.ajax({
+      type: "POST",
+      url: "/settings", 
+      data: {
+        'settings': ref.settings
+      },
+      statusCode: { 
+        500: function() {
+          alert("There's been a server error. Contact NLTL for assistance.");
+        }
+      },
+      success: function(data) {
+        renderRows(ref.settings.rows);
+        $('.subj#'+String(s.rows.length)).children('.subjectspan').trigger('dblclick');
       }
     });
   });
@@ -267,14 +266,17 @@ function subjectListen() {
       $(this).prop('contenteditable', false); // make it not editable
       ref.settings.rows[id-1] = subj; // actually change the name
       // Save the new settings
-      db.put(ref.settings, function(err, response) {
-        if (err) {
-          alert("there's been an error. try again.");
-          console.log(err);
-        } else {
-          db.get("settings").then(function(s) {
-            ref.settings = s;
-          });
+      $.ajax({
+        type: "POST",
+        url: "/settings", 
+        data: {'settings': ref.settings},
+        statusCode: { 
+          500: function() {
+            alert("There's been a server error. Contact NLTL for assistance.");
+          }
+        },
+        success: function(data) {
+          renderRows(ref.settings.rows);
         }
       });
     }
@@ -302,15 +304,20 @@ function subjectListen() {
     if (confirm("Are you sure you want to delete " + ref.settings.rows[id-1] + "?")){
       ref.settings.rows.splice(id-1, 1); // splice out the row from settings
       // save
-      db.put(ref.settings, function(err, response) {
-        if (err) {
-          alert("there's been an error. try again.");
-          console.log(err);
-        } else {
-          db.get("settings").then(function(s) {
-            ref.settings = s;
-            renderRows(s.rows);
-          });
+
+      $.ajax({
+        type: "POST",
+        url: "/settings", 
+        data: {
+          'settings': ref.settings
+        },
+        statusCode: { 
+          500: function() {
+            alert("There's been a server error. Contact NLTL for assistance.");
+          }
+        },
+        success: function(data) {
+          renderRows(ref.settings.rows);
         }
       });
     }

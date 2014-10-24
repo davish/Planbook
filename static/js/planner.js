@@ -53,41 +53,38 @@ $('document').ready(function() {
 });
 
 function saveWeek(o) {
-  db.get(ref.monday.toISOString().slice(0, 10)).then(function (w) {
-    // update the document
-    if (w.assignments != JSON.stringify(o)) {
-      db.put({
-        '_id': w._id,
-        '_rev': w._rev,
-        'assignments': JSON.stringify(o)
-      });
-    }
-
-  }, function (err, response) { // document couldn't be found
-    if(err) { // make a new document
-      db.put({
-        '_id': ref.monday.toISOString().slice(0, 10),
-        'assignments': JSON.stringify(o),
-      });
-    } else {
+  $.ajax({ // now get a new auth cookie from couch
+    type: "POST",
+    url: "/planner", 
+    data: {
+      'monday': ref.monday.toISOString().slice(0, 10),
+      'data': o
+    },
+    statusCode: {
+      500: function() {
+        alert("There's been a server error. Contact NLTL for assistance.");
+      }
+    },
+    success: function(data) {
 
     }
   });
 }
 
 function getWeek(c) {
-  db.get(ref.monday.toISOString().slice(0,10)).then(function(w) {
-    c(JSON.parse(w.assignments));
-  }, function (err, response) {
-    if(err) { // make a new document
-      c(genBlankAssignments());
-      db.put({
-        '_id': ref.monday.toISOString().slice(0,10),
-        'assignments': JSON.stringify(genBlankAssignments())
-      });
-      
-    } else {
-
+  $.ajax({
+    type: "GET",
+    url: "/planner",
+    statusCode: {
+      404: function() { // if week doesn't exist
+        c(genBlankAssignments());
+      },
+      500: function() {
+        alert("There's been a server error. Contact NLTL for assistance.");
+      }
+    },
+    success: function(data) {
+      c(data.assignments);
     }
   });
 }
@@ -129,15 +126,10 @@ function login(user, pswd, c, fail) {
       }
     },
     success: function(data) {
-      ref.user = data.user;
-      server = data.dbURL;
-      db = new PouchDB('http://'+ data.user +':'+ pswd +'@'+server+':5984/' + data.user);
-      db.get("settings").then(function(settings) {
-        ref.settings = settings;
-        renderRows(ref.settings.rows);
-      });
+      ref.settings = data.settings;
+      renderRows(ref.settings.rows);
       
-      if (c) c(data);
+      if (c) c();
     }
   });
 }
