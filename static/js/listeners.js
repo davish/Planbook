@@ -174,19 +174,27 @@ function taListen() {
   Setting assignment as done
   */
   $('textarea').parent().mouseenter(function() {
-    $(this).children("button").show();
+    $(this).children("span.tabuttons").show();
   });
   $('textarea').parent().mouseleave(function() {
-     $(this).children("button").hide();
+     $(this).children("span.tabuttons").hide();
   });
   $('button.done').unbind();
   $('button.done').click(function() {
-    var t = $(this).parent().children("textarea");
+    var t = $(this).parent().parent().children("textarea");
     if ($(t).css("text-decoration") == "none")
         $(t).css("text-decoration", "line-through");
     else 
       $(t).css("text-decoration", "none");
 
+  });
+
+  $('.cc').unbind();
+  $('.cc').click(function() {
+    var code = this.classList[0];
+    console.log(code);
+    var ta = $(this).parent().parent().parent().parent().parent().children('textarea')
+    ta.css("background-color", ref.settings.colorCode[code]);
   });
 
   /*

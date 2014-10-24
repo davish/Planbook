@@ -33,6 +33,7 @@ $('document').ready(function() {
             }
           },
           success: function(data) {
+            console.log(data);
             ref.settings = data.settings;
             renderRows(ref.settings.rows);
           }
@@ -178,13 +179,22 @@ function signup(user, pswd, c, fail) {
 
 
 function renderRows(rows) {
+  var buttongroup = '<span class="tabuttons" style="display: none;"><div class="btn-group">\
+  <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span class=caret></span></button>\
+  <ul class="dropdown-menu" role="menu">\
+  <li><a data-target="#" class="codeRed cc">Important</a></li>\
+  <li><a data-target="#" class="codeYellow cc">Moderate</a></li>\
+  <li><a data-target="#" class="codeGreen cc">Not Important</a></li>\
+  <li><a data-target="#" class="codeWhite cc">No Color</a></li>\
+  </ul>\
+  </div><button class="done btn btn-default btn-xs"><span class="glyphicon glyphicon-ok"></span></button></span></div>';
   if ($('.container').width() >= 720) {
     $("#planner").html("");
     for (var i = 0; i < rows.length; i++) {
       var row = $("#planner").append('<div class="row"></div>');
       row.append('<div class="subj col-sm-2" id="'+(i+1)+'"><span class="subjectspan">'+rows[i]+'</span> <span class="subjbtns" style="display: none;"><button class="edit btn btn-default btn-xs""><span class="glyphicon glyphicon-edit"></span></button> <button class="delete btn btn-xs btn-danger">-</button></span></div>');
       for (var j = 1; j <= 5; j++) {
-        row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea><button class="done btn btn-default btn-xs" style="display: none;"><span class="glyphicon glyphicon-ok"></span></button></div>');
+        row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea>' + buttongroup);
       }
     }
     var labs = $("#planner").append('<div class="row"></div>');

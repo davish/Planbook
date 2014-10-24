@@ -28,10 +28,10 @@ textarea {
   left: 85%;
 }
 
-button.done {
+span.tabuttons {
   position:absolute;
-  bottom:10px;
-  right:10px;
+  bottom:1px;
+  right:0px;
 }
 
 .navbar {
@@ -113,4 +113,8 @@ div#planner  {
   
   padding-top:1px;
   border-left-width: 2px;
+}
+
+.cc {
+  cursor: pointer;
 }

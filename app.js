@@ -92,7 +92,26 @@ app.get('/settings', function(req, res) {
   db.collection("users").find({'name': req.session.username}).toArray(function (err, docs) {
     if (!err) {
       if (docs[0])  {
-        res.send({'settings': docs[0].settings});
+        if (docs[0].settings.colorCode)
+          res.send({'settings': docs[0].settings});
+        else {
+          db.collection("users").findOneAndUpdate({'name': req.session.username}, {$set: {'colorCode': {
+            codeRed: 'red',
+            codeYellow: 'yellow',
+            codeGreen: '#00FF00',
+            codeWhite: ''
+          }}
+          }, function() {
+            var newSettings = docs[0].settings;
+            newSettings.colorCode = {
+                                  codeRed: 'red',
+                                  codeYellow: 'yellow',
+                                  codeGreen: '#00FF00',
+                                  codeWhite: ''
+                                };
+            res.send({'settings': newSettings});
+          });
+        }
       }
       else
         res.send(403)
@@ -186,8 +205,14 @@ function signup(req, res) {
                               "Language",
                               "Other"
                             ],
-                    'theme': "default"
-                  }
+                    'theme': "default",
+                    'colorCode': {
+                                  codeRed: 'red',
+                                  codeYellow: 'yellow',
+                                  codeGreen: '#00FF00',
+                                  codeWhite: ''
+                                 }
+                    }
         };
         
         db.collection("users").insert(user, function(err, result) {
