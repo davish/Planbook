@@ -14,7 +14,7 @@ $('document').ready(function() {
         $('.stuff').show();
         $('.navbar').show()
         $('.mAll').show();
-        $('li#username').children('a').text(data.user);
+        $('li#username').children('a').text(ref.user);
         $('.loggedIn').show();
         $('.loggedOut').hide();
         $('textarea').each(function(index, attribute) {
