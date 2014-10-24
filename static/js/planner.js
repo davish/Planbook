@@ -1,5 +1,5 @@
 var ref = {
-  'monday': getMonday(new Date())
+  'monday': getMonday(new Date()),
 };
 
 window.server = ''//'davish.iriscouch.com'; // hermes.local
@@ -7,12 +7,18 @@ window.server = ''//'davish.iriscouch.com'; // hermes.local
 var db = null;
 var remoteCouch = false;
 $('document').ready(function() {
+  $('.stuff').hide();
+  $('.mAll').hide();
+  $('.navbar').hide();
   $.ajax({
     url: "/session",
     success: function(data) {
       if (data.username && data.password) {
         ref.user = data.username;
         login(data.username, data.password, function(data) { // Login was successful
+          $('.stuff').show();
+          $('.navbar').show()
+          $('.mAll').show();
           $('li#username').children('a').text(data.user);
           $('.loggedIn').show();
           $('.loggedOut').hide();
@@ -56,6 +62,7 @@ function saveWeek(o) {
         'assignments': JSON.stringify(o)
       });
     }
+
   }, function (err, response) { // document couldn't be found
     if(err) { // make a new document
       db.put({
@@ -123,9 +130,7 @@ function login(user, pswd, c, fail) {
     },
     success: function(data) {
       ref.user = data.user;
-      // console.log(data.dbURL);
       server = data.dbURL;
-      console.log(server);
       db = new PouchDB('http://'+ data.user +':'+ pswd +'@'+server+':5984/' + data.user);
       db.get("settings").then(function(settings) {
         ref.settings = settings;
@@ -161,51 +166,44 @@ function signup(user, pswd, c, fail) {
 function renderRows(rows) {
   if ($('.container').width() >= 720) {
     $("#planner").html("");
-    renderSubjects(rows);
     for (var i = 0; i < rows.length; i++) {
       var row = $("#planner").append('<div class="row"></div>');
+      row.append('<div class="subj col-sm-2" id="'+(i+1)+'"><span class="subjectspan">'+rows[i]+'</span> <span class="subjbtns" style="display: none;"><button class="edit btn btn-default btn-xs""><span class="glyphicon glyphicon-edit"></span></button> <button class="delete btn btn-xs btn-danger">-</button></span></div>');
       for (var j = 1; j <= 5; j++) {
-        if (j == 1)
-          row.append('<div class="col-sm-2 col-sm-offset-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea></div>');
-        else
-          row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea></div>');
+        row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea><button class="done btn btn-default btn-xs" style="display: none;"><span class="glyphicon glyphicon-ok"></span></button></div>');
       }
     }
     var labs = $("#planner").append('<div class="row"></div>');
+    labs.append('<div class="subj col-sm-2" id="0">Labs</div>');
+
     for (var j = 1; j <= 5; j++) {
-      if (j==1)
-        labs.append('<div class="col-sm-2 col-sm-offset-2"><textarea class="labs ta" id="0' + String(j)+'"></textarea></div>');
-      else
-        labs.append('<div class="col-sm-2"><textarea class="labs ta" id="0' + String(j)+'"></textarea></div>');
+      labs.append('<div class="col-sm-2"><textarea class="labs ta" id="0' + String(j)+'"></textarea></div>');
     }
     taListen();
+    subjectListen();
     getWeek(setAssignmentValues);
 
   }
-
-
-/*  else {
-    var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-    for (var i = 1; i <= rows.length; i++) {
-      $("#mobile-tabs").append('<li><a href="#'+ rows[i-1][0]+'" data-toggle="tab">'+rows[i-1][0]+'</a></li>');
-      $('#mobile-tab-content').append('<div class="tab-pane" id="'+ rows[i-1][0] +'"></div>');
-      for (var j = 1; j <= days.length; j++) {
-        $('#' + rows[i-1][0]).append('<h3>' + days[j-1] + '</h3>');
-        $('#' + rows[i-1][0]).append('<div><textarea id="'+ rows[i-1][1] + String(j)+'"></textarea></div>');
+  else { // Mobile Site
+    var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    $(".mobile").html("");
+    // $(".mobile").append('<div class="row"><div class="col-sm-2">Monday</div><div class="col-sm-2">Tuesday</div><span>Wednesday</span><div class="col-sm-2">Thursday</div><div class="col-sm-2">Friday</div></div>');
+    for (var j = 1; j <= 5; j++) {
+      var row = $(".mobile").append('<div class="row"></div>');
+      row.append('<div class="col-sm-2"><h3>'+days[j-1]+'<h3></div>');
+      for (var i = 0; i < rows.length; i++) {
+        row.append('<div class="col-sm-2"><h4>'+rows[i]+'</h4><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea></div>')
       }
     }
-  }*/
+    taListen();
+    $("textarea").each(function() {
+      //$(this).prop("readonly", true);
+      $(this).css("width", "50%")
+    });
+    drawDates();
+    getWeek(setAssignmentValues);
+  }
 
-}
-
-function renderSubjects(r) {
-  $("#subjects").html("");
-  for (var i = 0; i < r.length; i++)
-    $('#subjects').append('<div class="subj" id="'+(i+1)+'"><span class="subjectspan">'+r[i]+'</span> <span class="subjbtns" style="display: none;"><button class="edit btn btn-default btn-xs""><span class="glyphicon glyphicon-edit"></span></button> <button class="delete btn btn-xs btn-danger">-</button></span></div>');
-  $('#subjects').append('<div class="subj" id="0">Labs</div>')
-
-  subjectListen();
-  taListen();
 }
 
 function getMonday(d) {
@@ -223,14 +221,27 @@ function genBlankAssignments() {
 
 
 function drawDates() {
-  $('.day').each(function(index, element) {
-    var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + index);
-    var isToday = (d.getFullYear = new Date().getFullYear && d.getMonth() == new Date().getMonth() && d.getDate() == new Date().getDate())
-    if (isToday)
-      $(element).html('<span id="today">' + $(element).children('span').html() + '</span> ' + (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getYear() % 100);
-    else
-      $(element).html('<span>' + $(element).children('span').html() + '</span> ' + (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getYear() % 100);
-  });
+  if ($('.container').width() >= 720) {
+    $('.day').each(function(index, element) {
+      var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + index);
+      var isToday = (d.getFullYear = new Date().getFullYear && d.getMonth() == new Date().getMonth() && d.getDate() == new Date().getDate())
+      if (isToday)
+        $(element).html('<span id="today">' + $(element).children('span').html() + '</span> ' + (d.getMonth()+1) + '/' + d.getDate());
+      else
+        $(element).html('<span>' + $(element).children('span').html() + '</span> ' + (d.getMonth()+1) + '/' + d.getDate());
+    });
+  } else {
+    var i = 0;
+    $('h3').each(function(index, element) {
+      var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+      var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + days.indexOf($(element).text()));
+      var isToday = (d.getFullYear = new Date().getFullYear && d.getMonth() == new Date().getMonth() && d.getDate() == new Date().getDate())
+      if (isToday)
+        $(element).parent().html('<h3><em><u>'+$(element).text()+ '</u></em></h3>' + (d.getMonth()+1) + '/' + d.getDate());
+      else
+        $(element).parent().html('<h3>'+$(element).text()+ '</h3>' + (d.getMonth()+1) + '/' + d.getDate());
+    });
+  }
 }
 
 $.fn.slide = function(dist, t, c) {

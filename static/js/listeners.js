@@ -2,6 +2,12 @@
   Event Handlers
 */
 $('document').ready(function() {
+
+  /*
+    Window Close Confirmation
+  */
+  
+
   /* 
     Navigation Buttons
   */
@@ -26,6 +32,23 @@ $('document').ready(function() {
       getWeek(setAssignmentValues);
       drawDates();
     });
+  });
+
+  $('#msave').click(function() {
+    saveWeek(getAssignmentValues());
+  });
+  $('#mback').click(function() {
+    // animation
+    saveWeek(getAssignmentValues()); // save the current state
+    ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() - 7); // decrement by 1 week
+    getWeek(setAssignmentValues);
+    drawDates()  
+  });
+  $('#mnext').click(function() {
+    saveWeek(getAssignmentValues());
+    ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + 7);
+    getWeek(setAssignmentValues);
+    drawDates();
   });
 
   // add subject
@@ -57,6 +80,10 @@ $('document').ready(function() {
   $("form#login").submit(function(e) {
     e.preventDefault();
     login($('#loginUsername').val().toLowerCase(), $('#loginPassword').val(), function(data) {
+      $('.stuff').show();
+      $('.navbar').show();
+      $('.mAll').show();
+
       $('.loginModal').modal('hide');
       $('li#username').children('a').text(data.user);
       $('.loggedIn').show();
@@ -76,6 +103,10 @@ $('document').ready(function() {
     e.preventDefault();
     if ($('#signupPasswordVerify').val() == $('#signupPassword').val()) {    
       signup($('#signupUsername').val().toLowerCase(), $('#signupPassword').val(), function(data) {
+        $('.stuff').show();
+        $('.navbar').show();
+        $('.mAll').show();
+
         $('.signupModal').modal('hide');
         $('li#username').children('a').text(data.user);
         $('.loggedIn').show();
@@ -124,8 +155,12 @@ function taListen() {
     Keypress listener, for parsing and using inputs to different textareas.
     Will get quite large as features such as lab requests are added.
   */
+  $("textarea").blur(function() {
+    saveWeek(getAssignmentValues());
+  });
   $("textarea").keydown(function(e) {
     if (e.which == 13) {
+      saveWeek(getAssignmentValues());
       var value = $(this).val().toLowerCase();
       if (value.indexOf("test") != -1) {
         var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + (this.id[1]-1));
@@ -136,21 +171,41 @@ function taListen() {
   });
 
   /*
+  Setting assignment as done
+  */
+  $('textarea').parent().mouseenter(function() {
+    $(this).children("button").show();
+  });
+  $('textarea').parent().mouseleave(function() {
+     $(this).children("button").hide();
+  });
+  $('button.done').unbind();
+  $('button.done').click(function() {
+    var t = $(this).parent().children("textarea");
+    if ($(t).css("text-decoration") == "none")
+        $(t).css("text-decoration", "line-through");
+    else 
+      $(t).css("text-decoration", "none");
+
+  });
+
+  /*
     Double tap/Double click for setting assignments as completed.
   */
   var isiOS = false;
   var agent = navigator.userAgent.toLowerCase();
-  if(agent.indexOf('iphone') >= 0 || agent.indexOf('ipad') >= 0) {
+  if(agent.indexOf('iphone') >= 0 || agent.indexOf('ipad') >= 0 || agent.indexOf('android') >= 0) {
     isiOS = true;
   }
 
-  if (!isiOS){
+  if (!isiOS){/*
     $('textarea').dblclick(function() { // toggle between strikethrough and no styling on textareas
-      if ($(this).css("text-decoration") == "none solid rgb(0, 0, 0)")
+      if ($(this).css("text-decoration") == "none")
         $(this).css("text-decoration", "line-through");
-      else
-        $(this).css("text-decoration", "none solid rgb(0, 0, 0)");
-    });
+      else {
+        $(this).css("text-decoration", "none");
+      }
+    });*/
   } else {
     var action;
     $('textarea').bind('touchend', function(event){
@@ -159,10 +214,12 @@ function taListen() {
       var delta = now - lastTouch;
       clearTimeout(action);
       if (delta<500 && delta>0){
-        if ($(this).css("text-decoration") == "none solid rgb(0, 0, 0)")
+        if ($(this).css("text-decoration") == "none") {
           $(this).css("text-decoration", "line-through");
-        else
-          $(this).css("text-decoration", "none solid rgb(0, 0, 0)");        
+        }
+        else {
+          $(this).css("text-decoration", "none");     
+        }
       } else {
         $(this).data('lastTouch', now);
         action = setTimeout(function(e){
@@ -224,7 +281,6 @@ function subjectListen() {
   });
 
   $('input').keydown(function(e) {
-  console.log(e);
   if (e.keycode == 13) {
     e.preventDefault();
     this.blur();
@@ -263,4 +319,5 @@ function subjectListen() {
   $('button.edit').click(function() {
       $(this).parent().parent().children('.subjectspan').trigger('dblclick');
   });
+
 }

@@ -34,7 +34,7 @@
         <ul class="nav navbar-nav navbar-right">
 
           <li class="loggedOut"><a href="#" data-toggle="modal" data-target=".loginModal">Login</a></li>
-          <li class="loggedOut"><a href="#" data-toggle="modal" data-target=".signupModal">Sign Up</a></li>
+          <!-- <li class="loggedOut"><a href="#" data-toggle="modal" data-target=".signupModal">Sign Up</a></li> -->
 
           <li class="loggedIn" id="username"> <a href="/settings" >  </a></li>
           <li class="loggedIn" id="logoutButton"> <a href="/logout">Logout</a></li>
@@ -44,13 +44,14 @@
     </nav>
 
     <div class="container hidden-xs">
-    <div class="row row-offcanvas row-offcanvas-right">
-    <div class="col-sm-1">
+    <div class="row row-offcanvas row-offcanvas-right stuff">
+  <!--   <div class="col-sm-1">
       <div id="subjects">
       </div>
-      <button id="add" style="margin-top: 37px; position: relative; bottom: 17px;" class="btn btn-sm btn-default">+</button>
-    </div>
-    <div class="col-sm-8"> <!-- Main Column -->
+      
+    </div> -->
+    
+    <div class="col-sm-9"> <!-- Main Column -->
       <div class="row">
         <div class="col-sm-2 day col-sm-offset-2" id="monday"><span>Monday</span></div>
         <div class="col-sm-2 day" id="tuesday"> <span>Tuesday</span></div>
@@ -63,7 +64,8 @@
       </div>
 
       <div class="row" name="#">
-        <div class="col-sm-3 col-sm-offset-6" id="buttons">
+        <div class="col-sm-1"><button id="add" style="margin-top: 37px; position: relative; bottom: 17px;" class="btn btn-sm btn-default">+</button></div>
+        <div class="col-sm-3 col-sm-offset-5" id="buttons">
           <ul class="pagination pagination-sm">
             <li><a href="##" id="back">&laquo;</a></li>
             <li><a href="##" id="save">Save</a></li>
@@ -94,14 +96,15 @@
     </div>
   </div>
 
-  <div class="container visible-xs"> <!-- Mobile Site -->
-        <!-- Nav tabs -->
-    <ul class="nav nav-tabs" id="mobile-tabs">
-    </ul>
-
-    <!-- Tab panes -->
-    <div class="tab-content" id="mobile-tab-content">
-    </div>
+  <div class="container visible-xs mAll">
+        
+        <center>
+        <div class="mobile">
+        </div>
+        </center>
+        <button id="mback" class="btn btn-default btn-xs mnav">&laquo;</button>
+        <button id="msave" class="btn btn-default btn-xs mnav">Save</button>
+        <button id="mnext" class="btn btn-default btn-xs mnav">&raquo;</button>
   </div>
 
 
@@ -139,7 +142,7 @@
       <div class="modal-body">
         <center>
         <button class="btn btn-lg btn-primary" href="#" id="goToLogin">Login</button>
-        <button class="btn btn-lg btn-primary" href="#" id="goToSignup">Signup</button>
+        <!-- <button class="btn btn-lg btn-primary" href="#" id="goToSignup">Signup</button> -->
         </center>
       </div>
     </div>

@@ -11,6 +11,29 @@ textarea {
 
 }
 
+.mnav {
+  position: fixed;
+}
+#mnext {
+  left: 85%;
+  top: 50%;
+}
+
+#mback {
+  top: 50%;
+  left: 10%;
+}
+#msave {
+  top: calc(50% + 25px);
+  left: 85%;
+}
+
+button.done {
+  position:absolute;
+  bottom:10px;
+  right:10px;
+}
+
 .navbar {
   border-radius: 0;
   line-height: 20px;
@@ -26,7 +49,7 @@ span#today {
 }
 #buttons {
   position: relative;
-  bottom: 17px;
+  left: 1%;
 }
 .weekendNote {
   width: 100%px;
@@ -50,7 +73,7 @@ span#today {
 .subj {
   /*display: table-cell;*/
   height: 70px;
-  width: 120%;
+  /*width: 120%;*/
   padding-top: 40px;
   border-width: 0px;
   /*vertical-align:right;*/
