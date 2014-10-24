@@ -96,17 +96,17 @@ app.get('/settings', function(req, res) {
           res.send({'settings': docs[0].settings});
         else {
           db.collection("users").findOneAndUpdate({'name': req.session.username}, {$set: {'colorCode': {
-            codeRed: 'red',
-            codeYellow: 'yellow',
-            codeGreen: '#00FF00',
-            codeWhite: ''
-          }}
+                                  codeRed: 'rgb(217, 115, 98)',
+                                  codeYellow: 'rgb(240, 214, 128)',
+                                  codeGreen: 'rgb(165, 230, 159)',
+                                  codeWhite: ''
+                                }}
           }, function() {
             var newSettings = docs[0].settings;
             newSettings.colorCode = {
-                                  codeRed: 'red',
-                                  codeYellow: 'yellow',
-                                  codeGreen: '#00FF00',
+                                  codeRed: 'rgb(217, 115, 98)',
+                                  codeYellow: 'rgb(240, 214, 128)',
+                                  codeGreen: 'rgb(165, 230, 159)',
                                   codeWhite: ''
                                 };
             res.send({'settings': newSettings});
@@ -207,11 +207,11 @@ function signup(req, res) {
                             ],
                     'theme': "default",
                     'colorCode': {
-                                  codeRed: 'red',
-                                  codeYellow: 'yellow',
-                                  codeGreen: '#00FF00',
+                                  codeRed: 'rgb(217, 115, 98)',
+                                  codeYellow: 'rgb(240, 214, 128)',
+                                  codeGreen: 'rgb(165, 230, 159)',
                                   codeWhite: ''
-                                 }
+                                }
                     }
         };
         

@@ -101,7 +101,19 @@ function getAssignmentValues() {
   var d = {};
   $('textarea').each(function (index, ta) {
     // with the cell's ID as the key, put the contents of the array, and the boolean of if it's completed or not, into the object.
-    d[ta.id] = [ta.value, $(this).css("text-decoration") == "line-through"]; 
+    
+    var code = '';
+    if ($(this).css("background-color") != "rgb(255, 255, 255)") {
+      for (var prop in ref.settings.colorCode) {
+        if (ref.settings.colorCode.hasOwnProperty(prop)) {
+          if (ref.settings.colorCode[prop] === $(this).css("background-color")) {
+            code = prop;
+            break;
+          }
+        }
+      }
+    }
+    d[ta.id] = [ta.value, $(this).css("text-decoration") == "line-through", code]; 
   });
   return d;
 }
@@ -113,6 +125,8 @@ function setAssignmentValues(d) {
       $(ta).val(d[ta.id][0]);
       if (d[ta.id][1])
         $(ta).css("text-decoration", "line-through");
+      if (d[ta.id][2])
+        $(ta).css("background-color", ref.settings.colorCode[d[ta.id][2]]);
     }
     else
       $(ta).val('');
@@ -181,11 +195,11 @@ function signup(user, pswd, c, fail) {
 function renderRows(rows) {
   var buttongroup = '<span class="tabuttons" style="display: none;"><div class="btn-group">\
   <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span class=caret></span></button>\
-  <ul class="dropdown-menu" role="menu">\
-  <li><a data-target="#" class="codeRed cc">Important</a></li>\
-  <li><a data-target="#" class="codeYellow cc">Moderate</a></li>\
-  <li><a data-target="#" class="codeGreen cc">Not Important</a></li>\
-  <li><a data-target="#" class="codeWhite cc">No Color</a></li>\
+  <ul class="dropdown-menu" role="menu" width="20px">\
+  <li><a data-target="#" class="codeRed cc" style="color: '+ref.settings.colorCode['codeRed']+';">&#x25a0;</a></li>\
+  <li><a data-target="#" class="codeYellow cc" style="color: '+ref.settings.colorCode['codeYellow']+';">&#x25a0;</a></li>\
+  <li><a data-target="#" class="codeGreen cc" style="color: '+ref.settings.colorCode['codeGreen']+';">&#x25a0;</a></li>\
+  <li><a data-target="#" class="codeWhite cc">ø</a></li>\
   </ul>\
   </div><button class="done btn btn-default btn-xs"><span class="glyphicon glyphicon-ok"></span></button></span></div>';
   if ($('.container').width() >= 720) {

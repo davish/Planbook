@@ -118,3 +118,6 @@ div#planner  {
 .cc {
   cursor: pointer;
 }
+.dropdown-menu {
+  min-width: 0px;
+}
