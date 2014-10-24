@@ -35,12 +35,10 @@ app.get('/', function(req, res) {
 
 // get this week's assignments, with req.session.username, req.body.monday.
 // return 404 if it doesn't exist, and let the client deal with it.
+/* Functional */
 app.get('/planner', function(req, res) {
   res.type('text/json');
-  console.log(req.session.username);
-  console.log(req.body.monday);
-  db.collection("assignments").find({$and: [{'name': req.session.username}, {'monday': req.body.monday}]}).toArray(function(err, docs) {
-    console.log(docs);
+  db.collection("assignments").find({$and: [{'name': req.session.username}, {'monday': req.param('monday')}]}).toArray(function(err, docs) {
     if (docs[0])
       res.send({'assignments': docs[0].data});
     else
@@ -50,6 +48,7 @@ app.get('/planner', function(req, res) {
 });
 
 // update this week's assignments, with req.session.username, req.body.monday and req.body.data
+/* Functional */
 app.post('/planner', function(req, res) {
   res.type('text/json');
   var assignments = db.collection("assignments").find(
@@ -87,13 +86,14 @@ app.post('/planner', function(req, res) {
 });
 
 // get req.session.username's settings and return it in JSON.
+/* Functional */
 app.get('/settings', function(req, res) {
   res.type('text/json');
-
   db.collection("users").find({'name': req.session.username}).toArray(function (err, docs) {
     if (!err) {
-      if (docs[0])
-        res.send({'data': settings});
+      if (docs[0])  {
+        res.send({'settings': docs[0].settings});
+      }
       else
         res.send(403)
     } else {
@@ -103,14 +103,16 @@ app.get('/settings', function(req, res) {
 });
 
 // update req.session.username's settings with req.body.settings.
+/* Functional */
 app.post('/settings', function(req, res) {
   res.type('text/json');
+  console.log(req.body.data)
   db.collection("users").findOneAndUpdate(
     {'name': req.session.username}, 
-    {$set: {'data': req.body.data}}, 
+    {$set: {'settings': req.body.settings}}, 
     function(err, result) {
       if (!err) {
-        res.send(200);
+        res.send({'settings': result.value.settings});
       } else {
         res.send(500);
       }
@@ -135,7 +137,6 @@ app.get('/session', function(req, res) {
 
 function login(req, res) {
   res.type('text/json');
-
   var options = {host: 'compsci.dalton.org',port: 8080, path: '/zbuttenwieser/validation/index.jsp?username='+req.body.username+'&password='+req.body.password};
   http.get(options, function(r) {
     switch (r.statusCode) {
@@ -184,7 +185,6 @@ function signup(req, res) {
         };
         
         db.collection("users").insert(user, function(err, result) {
-          console.log("hi");
           if (!err) {
             login(req, res);
           }

@@ -2,10 +2,6 @@ var ref = {
   'monday': getMonday(new Date()),
 };
 
-window.server = ''//'davish.iriscouch.com'; // hermes.local
-
-var db = null;
-var remoteCouch = false;
 $('document').ready(function() {
   $('.stuff').hide();
   $('.mAll').hide();
@@ -18,15 +14,29 @@ $('document').ready(function() {
         $('.stuff').show();
         $('.navbar').show()
         $('.mAll').show();
-        console.log(data);
         $('li#username').children('a').text(data.user);
         $('.loggedIn').show();
         $('.loggedOut').hide();
         $('textarea').each(function(index, attribute) {
           $(this).removeAttr("disabled");
         });
-        ref.settings = data.settings;
-        renderRows(ref.settings.rows);
+
+        $.ajax({
+          type: "GET",
+          url: "/settings", 
+          data: {
+            'settings': ref.settings
+          },
+          statusCode: { 
+            500: function() {
+              alert("There's been a server error. Contact NLTL for assistance.");
+            }
+          },
+          success: function(data) {
+            ref.settings = data.settings;
+            renderRows(ref.settings.rows);
+          }
+        });
 
       } else { // no one session for this browser found
         $('.choiceModal').modal({backdrop: 'static', 'keyboard': false});
@@ -105,6 +115,21 @@ function setAssignmentValues(d) {
     }
     else
       $(ta).val('');
+  });
+}
+
+function setSettings(s, callback) {
+  $.ajax({
+    type: "POST",
+    url: "/settings", 
+    data: {'settings': s},
+    statusCode: { 
+      200: callback,
+      500: function() {
+        alert("There's been a server error. Contact NLTL for assistance.");
+      }
+    },
+    success: callback
   });
 }
 

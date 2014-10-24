@@ -55,21 +55,9 @@ $('document').ready(function() {
   $('button#add').click(function() {
     ref.settings.rows.push("Class");
     // save
-    $.ajax({
-      type: "POST",
-      url: "/settings", 
-      data: {
-        'settings': ref.settings
-      },
-      statusCode: { 
-        500: function() {
-          alert("There's been a server error. Contact NLTL for assistance.");
-        }
-      },
-      success: function(data) {
-        renderRows(ref.settings.rows);
-        $('.subj#'+String(s.rows.length)).children('.subjectspan').trigger('dblclick');
-      }
+    setSettings(ref.settings, function(data) {
+      renderRows(ref.settings.rows);
+      $('.subj#'+String(ref.settings.rows.length)).children('.subjectspan').trigger('dblclick');
     });
   });
 
@@ -164,7 +152,7 @@ function taListen() {
       if (value.indexOf("test") != -1) {
         var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + (this.id[1]-1));
         var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).toISOString();
-        console.log(((d.getMonth()+1) + '/' + d.getDate() + '/' + d.getYear() % 100) + " " + ref.settings.rows[this.id[0]-1]);
+        //console.log(((d.getMonth()+1) + '/' + d.getDate() + '/' + d.getYear() % 100) + " " + ref.settings.rows[this.id[0]-1]);
       }
     }
   });
@@ -246,11 +234,8 @@ function subjectListen() {
     input.select();
 
     input.keydown(function(e) {
-      // console.log(e);
-      // console.log(e);
       if (e.keyCode == 13) {
         e.preventDefault();
-        // console.log(e);
         this.blur();
       }
     });
@@ -266,18 +251,9 @@ function subjectListen() {
       $(this).prop('contenteditable', false); // make it not editable
       ref.settings.rows[id-1] = subj; // actually change the name
       // Save the new settings
-      $.ajax({
-        type: "POST",
-        url: "/settings", 
-        data: {'settings': ref.settings},
-        statusCode: { 
-          500: function() {
-            alert("There's been a server error. Contact NLTL for assistance.");
-          }
-        },
-        success: function(data) {
-          renderRows(ref.settings.rows);
-        }
+
+      setSettings(ref.settings, function(data) {
+        renderRows(ref.settings.rows);
       });
     }
   });
@@ -304,21 +280,8 @@ function subjectListen() {
     if (confirm("Are you sure you want to delete " + ref.settings.rows[id-1] + "?")){
       ref.settings.rows.splice(id-1, 1); // splice out the row from settings
       // save
-
-      $.ajax({
-        type: "POST",
-        url: "/settings", 
-        data: {
-          'settings': ref.settings
-        },
-        statusCode: { 
-          500: function() {
-            alert("There's been a server error. Contact NLTL for assistance.");
-          }
-        },
-        success: function(data) {
-          renderRows(ref.settings.rows);
-        }
+      setSettings(ref.settings, function(data) {
+        renderRows(ref.settings.rows);
       });
     }
   });
