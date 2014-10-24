@@ -33,17 +33,69 @@ app.get('/', function(req, res) {
   res.render("index.html");
 });
 
-// get this week's assignments, with req.session.username, req.session.monday and req.body.assignments
+// get this week's assignments, with req.session.username, req.body.monday.
+// return 404 if it doesn't exist, and let the client deal with it.
 app.get('/planner', function(req, res) {
-    
+  res.type('text/json');
+
+  var assignments = db.assignments.findOne(
+  {
+    $and: 
+    [
+      {'name': req.session.username},
+      {'monday': req.body.monday}
+    ]
+  });
+  if (assignments) // if the assignment exists
+    res.send({'assignments': assignments.data});
+  else // send back 404, the client knows how to deal with it.
+    res.send(404);
+  
 });
 
-// update this week's assignments, with req.session.username, req.session.monday and req.body.assignments
+// update this week's assignments, with req.session.username, req.body.monday and req.body.assignments
+app.post('/planner', function(req, res) {
+  res.type('text/json');
+
+  var assignments = db.assignments.findOne(
+  {
+    $and: 
+    [
+      {'name': req.session.username},
+      {'monday': req.body.monday}
+    ]
+  });
+  if (assignments) { // update the document
+    db.collection("assignments").findOneAndReplace({_id: assignments._id}, {
+      'name': assignments.name,
+      'monday': assignments.monday,
+      'data': req.body.data
+    }, function (err, result) {
+      if (!err)
+        res.send(200);
+      else
+        res.send(500, err);
+    });
+  } else { // create a new document
+    db.collection("assignments").insert({
+      'name': req.session.name, 'monday': req.body.monday, 'data': req.body.data
+    }, function(err, result) {
+      if (!err)
+        res.send(200);
+      else
+        res.send(500, err);
+    });
+  }
+});
+
+// get req.session.username's settings and return it in JSON.
 app.get('/settings', function(req, res) {
-    
+  res.type('text/json');  
 });
-app.post('/settings', function(req, res) {
 
+// update req.session.username's settings with req.body.settings.
+app.post('/settings', function(req, res) {
+  res.type('text/json');
 })
 
 app.post('/signup', signup);
@@ -62,8 +114,9 @@ app.get('/session', function(req, res) {
 });
 
 function login(req, res) {
-  var options = {host: 'compsci.dalton.org',port: 8080, path: '/zbuttenwieser/validation/index.jsp?username='+req.body.username+'&password='+req.body.password};
   res.type('text/json');
+
+  var options = {host: 'compsci.dalton.org',port: 8080, path: '/zbuttenwieser/validation/index.jsp?username='+req.body.username+'&password='+req.body.password};
   http.get(options, function(r) {
     switch (r.statusCode) {
       case 200: // user exists in Dalton db
@@ -114,6 +167,13 @@ function signup(req, res) {
   }
 }
 
-var server = app.listen(app.get('port'), function() {
-  console.info('Listening on port %d', server.address().port);
-});
+MongoClient.connect('mongodb://localhost/planner', function(err, dbase)) {
+  if (!err) {
+    db = dbase;
+    var server = app.listen(app.get('port'), function() {
+      console.info('Listening on port %d', server.address().port);
+    });
+  } else {
+    console.error(err);
+  }
+}
