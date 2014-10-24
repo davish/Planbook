@@ -53,7 +53,7 @@ app.get('/planner', function(req, res) {
   
 });
 
-// update this week's assignments, with req.session.username, req.body.monday and req.body.assignments
+// update this week's assignments, with req.session.username, req.body.monday and req.body.data
 app.post('/planner', function(req, res) {
   res.type('text/json');
 
@@ -66,10 +66,8 @@ app.post('/planner', function(req, res) {
     ]
   });
   if (assignments) { // update the document
-    db.collection("assignments").findOneAndReplace({_id: assignments._id}, {
-      'name': assignments.name,
-      'monday': assignments.monday,
-      'data': req.body.data
+    db.collection("assignments").findOneAndUpdate({_id: assignments._id}, {
+      $set: {'data': req.body.data}
     }, function (err, result) {
       if (!err)
         res.send(200);
@@ -78,8 +76,8 @@ app.post('/planner', function(req, res) {
     });
   } else { // create a new document
     db.collection("assignments").insert({
-      'name': req.session.name, 'monday': req.body.monday, 'data': req.body.data
-    }, function(err, result) {
+      'name': req.session.name, 'monday': req.body.monday, 'data': req.body.data}, 
+    function(err, result) {
       if (!err)
         res.send(200);
       else
@@ -90,12 +88,31 @@ app.post('/planner', function(req, res) {
 
 // get req.session.username's settings and return it in JSON.
 app.get('/settings', function(req, res) {
-  res.type('text/json');  
+  res.type('text/json');
+
+  var settings = db.collection("users").findOne({'name': req.session.username}).settings;
+  if (settings)
+    res.send({'data': settings});
+  else
+    res.send(403);
+  
 });
 
 // update req.session.username's settings with req.body.settings.
 app.post('/settings', function(req, res) {
   res.type('text/json');
+
+  db.collection("users").findOneAndUpdate(
+    {'name': req.session.username}, 
+    {$set: {'data': req.body.data}}, 
+    function(err, result) {
+      if (!err) {
+        res.send(200);
+      } else {
+        res.send(500);
+      }
+    }
+  );
 })
 
 app.post('/signup', signup);
@@ -124,7 +141,7 @@ function login(req, res) {
         var u = db.users.findOne({'name': req.body.username});
         if (u) {
           req.session.username = req.body.username;
-          res.send(200); // send back that login went swimmingly
+          res.send({'settings': u.settings}); // send back that login went swimmingly
         }
         else // In Dalton, but first time using the service
             signup(req, res);
