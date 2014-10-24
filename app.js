@@ -145,8 +145,14 @@ function login(req, res) {
         db.collection("users").find({'name': req.body.username}).toArray(function(err, docs) {
           if (!err) {
             if (docs[0]) {
-              req.session.username = req.body.username;
-              res.send({'settings': docs[0].settings, 'user': req.body.username}); // send back that login went swimmingly
+              // update the lastLogin field, which is used for analytics
+              db.collection("users").findOneAndUpdate({'name': req.body.username}, {$set: {'lastLogin': new Date()}}, 
+                function(err, result) {
+                  req.session.username = req.body.username;
+                  res.send({'settings': docs[0].settings, 'user': req.body.username}); // send back that login went swimmingly
+                }
+              );
+              
             } else {
               signup(req, res);
             }
