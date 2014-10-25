@@ -1,5 +1,6 @@
 var ref = {
   'monday': getMonday(new Date()),
+  'lastUpdate': new Date()
 };
 
 $('document').ready(function() {
@@ -33,7 +34,6 @@ $('document').ready(function() {
             }
           },
           success: function(data) {
-            console.log(data);
             ref.settings = data.settings;
             renderRows(ref.settings.rows);
           }
@@ -51,10 +51,7 @@ $('document').ready(function() {
     }
   });
   drawDates();
-
   $("#subjects").append('<div class="row"><div class="col-sm-2 col-sm-offset-10" id="year"></div></div>')
-
-
 });
 
 function saveWeek(o) {
@@ -71,9 +68,11 @@ function saveWeek(o) {
       }
     },
     success: function(data) {
+      // if you haven't updated from THIS client to the DB in a while, it's gonna do some cool shit.
 
     }
   });
+  ref.lastUpdate = new Date(); 
 }
 
 function getWeek(c) {
@@ -100,7 +99,8 @@ function getWeek(c) {
 function getAssignmentValues() {
   var d = {};
   $('textarea').each(function (index, ta) {
-    // with the cell's ID as the key, put the contents of the array, and the boolean of if it's completed or not, into the object.
+    // with the cell's ID as the key, put the contents of the array, 
+    // and the boolean of if it's completed or not, into the object.
     
     var code = '';
     if ($(this).css("background-color") != "rgb(255, 255, 255)") {
@@ -207,7 +207,10 @@ function renderRows(rows) {
     $("#planner").html("");
     for (var i = 0; i < rows.length; i++) {
       var row = $("#planner").append('<div class="row"></div>');
-      row.append('<div class="subj col-sm-2" id="'+(i+1)+'"><span class="subjectspan">'+rows[i]+'</span> <span class="subjbtns" style="display: none;"><button class="edit btn btn-default btn-xs""><span class="glyphicon glyphicon-edit"></span></button> <button class="delete btn btn-xs btn-danger">-</button></span></div>');
+      row.append('<div class="subj col-sm-2" id="'+(i+1)+'">\
+        <span class="subjectspan">'+rows[i]+'</span> <span class="subjbtns" style="display: none;">\
+        <button class="edit btn btn-default btn-xs"">\<span class="glyphicon glyphicon-edit"></span></button>\
+        <button class="delete btn btn-xs btn-danger">-</button></span></div>');
       for (var j = 1; j <= 5; j++) {
         row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea>' + buttongroup);
       }
@@ -226,7 +229,6 @@ function renderRows(rows) {
   else { // Mobile Site
     var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     $(".mobile").html("");
-    // $(".mobile").append('<div class="row"><div class="col-sm-2">Monday</div><div class="col-sm-2">Tuesday</div><span>Wednesday</span><div class="col-sm-2">Thursday</div><div class="col-sm-2">Friday</div></div>');
     for (var j = 1; j <= 5; j++) {
       var row = $(".mobile").append('<div class="row"></div>');
       row.append('<div class="col-sm-2"><h3>'+days[j-1]+'<h3></div>');

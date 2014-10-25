@@ -159,14 +159,19 @@ function taListen() {
     saveWeek(getAssignmentValues());
   });
   $("textarea").keydown(function(e) {
+    // If it's been more than 30 seconds since you've updated from this device
+    var taID = this.id;
+    if (new Date().getTime() - ref.lastUpdate.getTime() > 30000) {
+      getWeek(function(assignments) {
+        // replace the server's version of what you're working on with your version
+        var newVersion = getAssignmentValues()[taID]
+        assignments[taID] = newVersion;
+        setAssignmentValues(assignments); // update the planner with the server's version of events.
+        saveWeek(getAssignmentValues());
+      });
+    }
     if (e.which == 13) {
       saveWeek(getAssignmentValues());
-      var value = $(this).val().toLowerCase();
-      if (value.indexOf("test") != -1) {
-        var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + (this.id[1]-1));
-        var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).toISOString();
-        //console.log(((d.getMonth()+1) + '/' + d.getDate() + '/' + d.getYear() % 100) + " " + ref.settings.rows[this.id[0]-1]);
-      }
     }
   });
 
@@ -192,7 +197,6 @@ function taListen() {
   $('.cc').unbind();
   $('.cc').click(function() {
     var code = this.classList[0];
-    console.log(code);
     var ta = $(this).parent().parent().parent().parent().parent().children('textarea')
     ta.css("background-color", ref.settings.colorCode[code]);
   });
