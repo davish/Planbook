@@ -127,6 +127,9 @@ function setAssignmentValues(d) {
         $(ta).css("text-decoration", "line-through");
       if (d[ta.id][2])
         $(ta).css("background-color", ref.settings.colorCode[d[ta.id][2]]);
+      else {
+        $(ta).css("background-color", "rgb(255, 255, 255)");
+      }
     }
     else
       $(ta).val('');
