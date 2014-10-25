@@ -122,10 +122,13 @@ function setAssignmentValues(d) {
   $('textarea').each(function (index, ta) {
     $(ta).css("text-decoration", "none solid rgb(0, 0, 0)");
     $(ta).css("background-color", "rgb(255, 255, 255)");
+    $(ta).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-unchecked"></span>')
     if (d[ta.id]) {
       $(ta).val(d[ta.id][0]);
-      if (d[ta.id][1])
+      if (d[ta.id][1]) {
         $(ta).css("text-decoration", "line-through");
+        $(ta).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-check"></span>')
+      }
       if (d[ta.id][2])
         $(ta).css("background-color", ref.settings.colorCode[d[ta.id][2]]);
     }

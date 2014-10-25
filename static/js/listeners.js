@@ -187,10 +187,14 @@ function taListen() {
   $('button.done').unbind();
   $('button.done').click(function() {
     var t = $(this).parent().parent().children("textarea");
-    if ($(t).css("text-decoration") == "none")
-        $(t).css("text-decoration", "line-through");
-    else 
+    if ($(t).css("text-decoration") == "none") {
+      $(t).css("text-decoration", "line-through");
+      $(t).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-check"></span>')
+    }
+    else {
       $(t).css("text-decoration", "none");
+      $(t).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-unchecked"></span>')
+    }
 
   });
 
