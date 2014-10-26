@@ -34,6 +34,7 @@ app.get('/', function(req, res) {
     res.render("planner.html"); // render planner
   else {
     var agent = req.headers['user-agent'].toLowerCase();
+    // if 'iphone', 'ipad', or 'android' can't be found in the user agent
     if (agent.indexOf('iphone') <= 0 && agent.indexOf('ipad') <= 0 && agent.indexOf('android') <= 0)
       res.render("homepage.html");
     else
@@ -44,7 +45,6 @@ app.get('/', function(req, res) {
 
 
 // get this week's assignments, with req.session.username, req.body.monday.
-// return 404 if it doesn't exist, and let the client deal with it.
 /* Functional */
 app.get('/planner', function(req, res) {
   res.type('text/json');
@@ -52,7 +52,7 @@ app.get('/planner', function(req, res) {
     if (docs[0])
       res.send({'assignments': docs[0].data});
     else
-      res.send(404);
+      res.send(404); // client deals with the 404.
   });
 
 });
