@@ -72,6 +72,8 @@ function saveWeek(o) {
 
     }
   });
+  if ($('#saveIndicator').children('span')[0].classList[1] == "glyphicon-ban-circle")
+      $('#saveIndicator').children('span').attr("class", "glyphicon glyphicon-ok-circle").attr("title", "All data is saved.");
   ref.lastUpdate = new Date(); 
 }
 

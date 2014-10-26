@@ -121,3 +121,8 @@ div#planner  {
 .dropdown-menu {
   min-width: 0px;
 }
+#saveIndicator {
+  position: absolute;
+  left: 0px;
+  top: 50px;
+}

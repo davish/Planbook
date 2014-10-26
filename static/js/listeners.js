@@ -170,6 +170,8 @@ function taListen() {
         saveWeek(getAssignmentValues());
       });
     }
+    if ($('#saveIndicator').children('span')[0].classList[1] == "glyphicon-ok-circle")
+      $('#saveIndicator').children('span').attr("class", "glyphicon glyphicon-ban-circle").attr("title", "some data is not saved.");
     if (e.which == 13) {
       saveWeek(getAssignmentValues());
     }
