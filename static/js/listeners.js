@@ -2,12 +2,6 @@
   Event Handlers
 */
 $('document').ready(function() {
-
-  /*
-    Window Close Confirmation
-  */
-  
-
   /* 
     Navigation Buttons
   */
@@ -19,10 +13,13 @@ $('document').ready(function() {
     saveWeek(getAssignmentValues()); // save the current state
     ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() - 7); // decrement by 1 week
     $('#sidebar').slide($(window).width(), 200);
-    $("#planner").slide($(window).width(), 200, function() {
-      getWeek(setAssignmentValues);
-      drawDates();
+    getWeek(function(o) {
+      $("#planner").slide($(window).width(), 200, function() {
+        setAssignmentValues(o);
+        drawDates();
+      });
     });
+
     
     if (ref.monday.toISOString().slice(0, 10) == getMonday(new Date()).toISOString().slice(0, 10))
       $('#sidebar').css("padding-top", "1px");
@@ -35,9 +32,11 @@ $('document').ready(function() {
     ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + 7);
 
     $('#sidebar').slide(-$(window).width(), 200);
-    $("#planner").slide(-$(window).width(), 200, function() {
-      getWeek(setAssignmentValues);
-      drawDates();
+    getWeek(function(o) {
+      $("#planner").slide(-$(window).width(), 200, function() {
+        setAssignmentValues(o);
+        drawDates();
+      });
     });
     
     if (ref.monday.toISOString().slice(0, 10) == getMonday(new Date()).toISOString().slice(0, 10))
@@ -46,7 +45,7 @@ $('document').ready(function() {
       $('#sidebar').css("padding-top", "0px");
     
   });
-
+  // Mobile navigation buttons
   $('#msave').click(function() {
     saveWeek(getAssignmentValues());
   });
@@ -74,77 +73,6 @@ $('document').ready(function() {
     });
   });
 
-  /*
-    Form buttons for AJAX
-  */
-  $("form#login").submit(function(e) {
-    e.preventDefault();
-    login($('#loginUsername').val().toLowerCase(), $('#loginPassword').val(), function(data) {
-      $('.stuff').show();
-      $('.navbar').show();
-      $('.mAll').show();
-
-      $('.loginModal').modal('hide');
-      $('li#username').children('a').text(data.user);
-      $('.loggedIn').show();
-      $('.loggedOut').hide();
-      $('#403').hide();
-      $('textarea').each(function(index, element) {
-        element.removeAttribute('disabled');
-      });
-    }, function(data) {
-      $('li#username').children('a').text('');
-      $('#403').text('The username and password entered does not match.');
-      $('#403').show();
-    });
-  });
-
-  $("form#signup").submit(function(e) {
-    e.preventDefault();
-    if ($('#signupPasswordVerify').val() == $('#signupPassword').val()) {    
-      signup($('#signupUsername').val().toLowerCase(), $('#signupPassword').val(), function(data) {
-        $('.stuff').show();
-        $('.navbar').show();
-        $('.mAll').show();
-
-        $('.signupModal').modal('hide');
-        $('li#username').children('a').text(data.user);
-        $('.loggedIn').show();
-        $('.loggedOut').hide();
-        $('#403').hide();
-        $('textarea').each(function(index, element) {
-          element.removeAttribute('disabled');
-        });
-      }, function(data) {
-        $('li#username').children('a').text('');
-        $('#403-1').text('This user already exists');
-        $('#403-1').show();
-      });
-    } else {
-      $('#403-1').text('The password you entered must match.');
-      $('#403-1').show();
-    }
-  });
-
-  $('#goToLogin').click(function() {
-    $('.choiceModal').modal('hide');
-    $('.loginModal').modal('show');
-  });
-
-  $('#goToSignup').click(function() {
-    $('.choiceModal').modal('hide');
-    $('.signupModal').modal('show');
-  });
-
-  $('.signupModal').on('hidden.bs.modal', function() {
-    if ($('li#username').children('a').text() == "")
-      $('.choiceModal').modal('show');
-  });
-
-  $('.loginModal').on('hidden.bs.modal', function() {
-    if ($('li#username').children('a').text() == "")
-      $('.choiceModal').modal('show');
-  });
   taListen();
   subjectListen();
 });
@@ -321,5 +249,4 @@ function subjectListen() {
   $('button.edit').click(function() {
       $(this).parent().parent().children('.subjectspan').trigger('dblclick');
   });
-
 }

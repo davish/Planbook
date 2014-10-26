@@ -33,11 +33,8 @@
 
         <ul class="nav navbar-nav navbar-right">
 
-          <li class="loggedOut"><a href="#" data-toggle="modal" data-target=".loginModal">Login</a></li>
-          <!-- <li class="loggedOut"><a href="#" data-toggle="modal" data-target=".signupModal">Sign Up</a></li> -->
-
-          <li class="loggedIn" id="username"> <a href="/settings" >  </a></li>
-          <li class="loggedIn" id="logoutButton"> <a href="/logout">Logout</a></li>
+          <li id="username"> <a href="/settings" >  </a></li>
+          <li id="logoutButton"> <a href="/logout">Logout</a></li>
           
         </ul>
       </div><!-- /.navbar-collapse -->
@@ -108,77 +105,6 @@
         <button id="msave" class="btn btn-default btn-xs mnav">Save</button>
         <button id="mnext" class="btn btn-default btn-xs mnav">&raquo;</button>
   </div>
-
-
-<div class="modal fade loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" id="login" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Log In</h4>
-      </div>
-      <div class="modal-body">
-        <form id="login">
-          <div class="form-group">
-            <input type="username" class="form-control" id="loginUsername" placeholder="Username">
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" id="loginPassword" placeholder="Password">
-          </div>
-          <button id="loginSubmit" class="btn btn-default">Submit</button>
-        </form>
-          <br>
-          <span id="403" class="text-danger" style="display: none;"></span>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="modal fade choiceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel"><center>You must be logged in to use the Planbook.</center></h4>
-      </div>
-      <div class="modal-body">
-        <center>
-        <button class="btn btn-lg btn-primary" href="#" id="goToLogin">Login</button>
-        <!-- <button class="btn btn-lg btn-primary" href="#" id="goToSignup">Signup</button> -->
-        </center>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="modal fade signupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" id="signup" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Sign Up</h4>
-      </div>
-      <div class="modal-body">
-        <form id="signup">
-          <div class="form-group">
-            <input type="username" class="form-control" id="signupUsername" placeholder="Enter desired username">
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" id="signupPassword" placeholder="Password">
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" id="signupPasswordVerify" placeholder="Verify Password">
-          </div>
-          <input type="submit" id="signupSubmit" class="btn btn-default"></button>
-        </form>
-        <br>
-        <span id="403-1" class="text-danger" style="display: none;"></span>
-      </div>
-    </div>
-  </div>
-</div>
-
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/pouchdb.min.js"></script>

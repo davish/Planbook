@@ -4,54 +4,24 @@ var ref = {
 };
 
 $('document').ready(function() {
-  $('.stuff').hide();
-  $('.mAll').hide();
-  $('.navbar').hide();
-  $.ajax({
-    url: "/session",
-    success: function(data) {
-      if (data.username) {
-        ref.user = data.username;
-        $('.stuff').show();
-        $('.navbar').show()
-        $('.mAll').show();
-        $('li#username').children('a').text(ref.user);
-        $('.loggedIn').show();
-        $('.loggedOut').hide();
-        $('textarea').each(function(index, attribute) {
-          $(this).removeAttr("disabled");
-        });
-
-        $.ajax({
-          type: "GET",
-          url: "/settings", 
-          data: {
-            'settings': ref.settings
-          },
-          statusCode: { 
-            500: function() {
-              alert("There's been a server error. Contact NLTL for assistance.");
-            }
-          },
-          success: function(data) {
-            ref.settings = data.settings;
-            renderRows(ref.settings.rows);
-          }
-        });
-
-      } else { // no one session for this browser found
-        $('.choiceModal').modal({backdrop: 'static', 'keyboard': false});
-        $('li#username').children('a').text('');
-        $('.loggedIn').hide();
-        $('.loggedOut').show();
-        $('textarea').each(function(index, attribute) {
-          $(this).attr("disabled", "");
-        });
+    $.ajax({
+      type: "GET",
+      url: "/settings", 
+      data: {
+        'settings': ref.settings
+      },
+      statusCode: { 
+        500: function() {
+          alert("There's been a server error. Contact NLTL for assistance.");
+        }
+      },
+      success: function(data) {
+        $('li#username').children('a').text(data.name);
+        ref.settings = data.settings;
+        renderRows(ref.settings.rows);
       }
-    }
-  });
+    });
   drawDates();
-  $("#subjects").append('<div class="row"><div class="col-sm-2 col-sm-offset-10" id="year"></div></div>')
 });
 
 function saveWeek(o) {
@@ -68,10 +38,10 @@ function saveWeek(o) {
       }
     },
     success: function(data) {
-      // if you haven't updated from THIS client to the DB in a while, it's gonna do some cool shit.
 
     }
   });
+  // if you haven't updated from THIS client to the DB in a while, it's gonna do some cool shit.
   if ($('#saveIndicator').children('span')[0].classList[1] == "glyphicon-ban-circle")
       $('#saveIndicator').children('span').attr("class", "glyphicon glyphicon-ok-circle").attr("title", "All data is saved.");
   ref.lastUpdate = new Date(); 
