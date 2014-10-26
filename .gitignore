@@ -1,5 +1,6 @@
 .DS_Store
-node_modules/
+node_modules/*
+!node_modules/whitelist.js
 references.js
 bfg-1.11.8.jar
 .git-old
