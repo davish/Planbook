@@ -1,0 +1,1 @@
+module.exports.whitelist = ['c17dh', 'c17rf', 'c17ak', 'c15zb1', 'c15am'];
