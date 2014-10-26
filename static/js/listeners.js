@@ -197,6 +197,7 @@ function taListen() {
       $(t).css("text-decoration", "none");
       $(t).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-unchecked"></span>')
     }
+    saveWeek(getAssignmentValues());
 
   });
 
