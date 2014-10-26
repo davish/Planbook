@@ -30,10 +30,15 @@ app.configure(function() {
 });
 
 app.get('/', function(req, res) {
-  if (req.session.username)
-    res.render("index.html");
-  else
-    res.render("homepage.html");
+  if (req.session.username) // if logged in
+    res.render("planner.html"); // render planner
+  else {
+    var agent = req.headers['user-agent'].toLowerCase();
+    if (agent.indexOf('iphone') <= 0 && agent.indexOf('ipad') <= 0 && agent.indexOf('android') <= 0)
+      res.render("homepage.html");
+    else
+      res.render("signin.html", {"error": ""});
+  }
 });
 
 
