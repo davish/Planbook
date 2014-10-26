@@ -30,8 +30,13 @@ app.configure(function() {
 });
 
 app.get('/', function(req, res) {
-  res.render("index.html");
+  if (req.session.username)
+    res.render("index.html");
+  else
+    res.render("homepage.html");
 });
+
+
 
 // get this week's assignments, with req.session.username, req.body.monday.
 // return 404 if it doesn't exist, and let the client deal with it.
@@ -93,7 +98,7 @@ app.get('/settings', function(req, res) {
     if (!err) {
       if (docs[0])  {
         if (docs[0].settings.colorCode)
-          res.send({'settings': docs[0].settings});
+          res.send({'settings': docs[0].settings, 'name': req.session.username});
         else {
           db.collection("users").findOneAndUpdate({'name': req.session.username}, {$set: {'colorCode': {
                                   codeRed: 'rgb(217, 115, 98)',
@@ -109,7 +114,7 @@ app.get('/settings', function(req, res) {
                                   codeGreen: 'rgb(165, 230, 159)',
                                   codeWhite: ''
                                 };
-            res.send({'settings': newSettings});
+            res.send({'settings': newSettings, 'name': req.session.username});
           });
         }
       }
@@ -141,6 +146,17 @@ app.post('/settings', function(req, res) {
 
 app.post('/signup', signup);
 
+app.get('/login', function(req, res) {
+  if (req.session.username)
+    res.redirect('/');
+  else {
+    if (req.param('why') == 'incorrect')
+      res.render('signin.html', {error: 'The username and password entered is incorrect.'});
+    else
+      res.render('signin.html', {error: ''});
+  }
+});
+
 app.post('/login', login);
 
 app.get('/logout', function(req, res) {
@@ -168,10 +184,10 @@ function login(req, res) {
               db.collection("users").findOneAndUpdate({'name': req.body.username}, {$set: {'lastLogin': new Date()}}, 
                 function(err, result) {
                   req.session.username = req.body.username;
-                  res.send({'settings': docs[0].settings, 'user': req.body.username}); // send back that login went swimmingly
+                  // res.send({'settings': docs[0].settings, 'user': req.body.username}); // send back that login went swimmingly
+                  res.redirect('/'); // redirect back to the homepage, which is now the Planner.
                 }
               );
-              
             } else {
               signup(req, res);
             }
@@ -181,7 +197,8 @@ function login(req, res) {
         });
         break;
       case 404: // not found in Dalton
-        res.send(403, {'message': 'The username and password entered do not match.'});
+        // res.send(404, {'message': 'The username and password entered do not match.'});
+        res.redirect('/login?why=incorrect')
         break;
     }
   }).on('error', function(e) {
@@ -223,7 +240,8 @@ function signup(req, res) {
             res.send(500, err);
         });
       } else {
-        res.send(403, {'message': 'The username and password entered do not match.'});
+        // res.send(403, {'message': 'The username and password already exist.'});
+        res.redirect('/login?why=incorrect')
       }
     } else {
       res.send(500, err);
