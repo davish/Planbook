@@ -3,6 +3,7 @@ var express = require("express"),
     MongoClient = require('mongodb').MongoClient;
 var http = require('http'),
     fs = require('fs');
+var whitelist = require('whitelist').whitelist;
 var db = null;
 
 app.configure("development", function() {
@@ -28,24 +29,43 @@ app.configure(function() {
   app.use(express.static(__dirname + '/static'));
 
 });
-
+// render the planner or the homepage depending on if you're logged in or not.
 app.get('/', function(req, res) {
   if (req.session.username) // if logged in
     res.render("planner.html"); // render planner
   else {
     var agent = req.headers['user-agent'].toLowerCase();
     // if 'iphone', 'ipad', or 'android' can't be found in the user agent
-    if (agent.indexOf('iphone') <= 0 && agent.indexOf('ipad') <= 0 && agent.indexOf('android') <= 0)
+    if (agent.indexOf('mobile') <= 0 || agent.indexOf('ipad') >= 0) // if 'mobile' isn't there or 'ipad' is there
       res.render("homepage.html");
     else
       res.render("signin.html", {"error": ""});
   }
 });
 
+// render login page.
+app.get('/login', function(req, res) {
+  if (req.session.username)
+    res.redirect('/');
+  else {
+    if (req.param('why') == 'incorrect')
+      res.render('signin.html', {error: 'The username and password entered is incorrect.'});
+    else if (req.param('why') == 'whitelist')
+      res.render('signin.html', {error: 'You do not have permission to use the planbook. If this is a mistake, contact Andrew Milich or Davis Haupt.'});
+    else
+      res.render('signin.html', {error: ''});
+  }
+});
+// login with req.body.username and req.body.password
+app.post('/login', login);
 
+// remove cookie from client, redirect to homepage.
+app.get('/logout', function(req, res) {
+  req.session.username = undefined;
+  res.redirect('/');
+});
 
 // get this week's assignments, with req.session.username, req.body.monday.
-/* Functional */
 app.get('/planner', function(req, res) {
   res.type('text/json');
   db.collection("assignments").find({$and: [{'name': req.session.username}, {'monday': req.param('monday')}]}).toArray(function(err, docs) {
@@ -54,11 +74,8 @@ app.get('/planner', function(req, res) {
     else
       res.send(404); // client deals with the 404.
   });
-
 });
-
 // update this week's assignments, with req.session.username, req.body.monday and req.body.data
-/* Functional */
 app.post('/planner', function(req, res) {
   res.type('text/json');
   var assignments = db.collection("assignments").find(
@@ -96,33 +113,12 @@ app.post('/planner', function(req, res) {
 });
 
 // get req.session.username's settings and return it in JSON.
-/* Functional */
 app.get('/settings', function(req, res) {
   res.type('text/json');
   db.collection("users").find({'name': req.session.username}).toArray(function (err, docs) {
     if (!err) {
-      if (docs[0])  {
-        if (docs[0].settings.colorCode)
-          res.send({'settings': docs[0].settings, 'name': req.session.username});
-        else {
-          db.collection("users").findOneAndUpdate({'name': req.session.username}, {$set: {'colorCode': {
-                                  codeRed: 'rgb(217, 115, 98)',
-                                  codeYellow: 'rgb(240, 214, 128)',
-                                  codeGreen: 'rgb(165, 230, 159)',
-                                  codeWhite: ''
-                                }}
-          }, function() {
-            var newSettings = docs[0].settings;
-            newSettings.colorCode = {
-                                  codeRed: 'rgb(217, 115, 98)',
-                                  codeYellow: 'rgb(240, 214, 128)',
-                                  codeGreen: 'rgb(165, 230, 159)',
-                                  codeWhite: ''
-                                };
-            res.send({'settings': newSettings, 'name': req.session.username});
-          });
-        }
-      }
+      if (docs[0])
+        res.send({'settings': docs[0].settings, 'name': req.session.username});
       else
         res.send(403)
     } else {
@@ -130,12 +126,9 @@ app.get('/settings', function(req, res) {
     }
   });
 });
-
 // update req.session.username's settings with req.body.settings.
-/* Functional */
 app.post('/settings', function(req, res) {
   res.type('text/json');
-  console.log(req.body.data)
   db.collection("users").findOneAndUpdate(
     {'name': req.session.username}, 
     {$set: {'settings': req.body.settings}}, 
@@ -147,36 +140,24 @@ app.post('/settings', function(req, res) {
       }
     }
   );
-})
-
-app.post('/signup', signup);
-
-app.get('/login', function(req, res) {
-  if (req.session.username)
-    res.redirect('/');
-  else {
-    if (req.param('why') == 'incorrect')
-      res.render('signin.html', {error: 'The username and password entered is incorrect.'});
-    else
-      res.render('signin.html', {error: ''});
-  }
 });
 
-app.post('/login', login);
+// get the reminders due today with req.session.username and 'new Date().toISOString().slice(0,10)' and return it in JSON.
+app.get('/reminders', function(req, res) {
 
-app.get('/logout', function(req, res) {
-  req.session.username = undefined;
-  res.redirect('/');
+});
+// add 1 or a batch or reminders in the valid JSON format to the db with req.session.username and req.body.reminders.
+app.post('/reminders', function(req, res) {
+
 });
 
-app.get('/session', function(req, res) {
-  res.send({
-    "username": req.session.username,
-  });
-});
-
+// validate user with req.body.username and req.body.password.
 function login(req, res) {
   res.type('text/json');
+  if (whitelist.join(' ').indexOf(req.body.username) <= -1) { // if they're not on the whitelist
+    res.redirect('/login?why=whitelist');
+    return; // stop here.
+  }
   var options = {host: 'compsci.dalton.org',port: 8080, path: '/zbuttenwieser/validation/index.jsp?username='+req.body.username+'&password='+req.body.password};
   http.get(options, function(r) {
     switch (r.statusCode) {
@@ -210,31 +191,31 @@ function login(req, res) {
     res.end(500);
   });
 }
-
+// add user to db
 function signup(req, res) {
   res.type('text/json');
   db.collection("users").find({'name': req.body.username}).toArray(function(err, docs) {
     if (!err) {
       if (docs[0] == undefined) {
         var user = { // create the user schema
-        name: req.body.username,
-        settings: {
-                    'rows': [
-                              "English", 
-                              "History", 
-                              "Math", 
-                              "Science", 
-                              "Language",
-                              "Other"
-                            ],
-                    'theme': "default",
-                    'colorCode': {
-                                  codeRed: 'rgb(217, 115, 98)',
-                                  codeYellow: 'rgb(240, 214, 128)',
-                                  codeGreen: 'rgb(165, 230, 159)',
-                                  codeWhite: ''
-                                }
-                    }
+          name: req.body.username,
+          settings: {
+                      'rows': [
+                                "English", 
+                                "History", 
+                                "Math", 
+                                "Science", 
+                                "Language",
+                                "Other"
+                              ],
+                      'theme': "default",
+                      'colorCode': {
+                                    codeRed: 'rgb(217, 115, 98)',
+                                    codeYellow: 'rgb(240, 214, 128)',
+                                    codeGreen: 'rgb(165, 230, 159)',
+                                    codeWhite: ''
+                                  }
+                      }
         };
         
         db.collection("users").insert(user, function(err, result) {
