@@ -73,6 +73,20 @@ $('document').ready(function() {
     });
   });
 
+  $("form#reminderSettings").submit(function(e) {
+    e.preventDefault();
+  });
+  $("button.remndr#cancel").click(function(e) {
+    $('.reminderSet').modal('toggle');
+  });
+  $('button.remndr#submit').click(function(e) {
+    var set = $(this).serializeArray();
+    if (!ref.settings.reminders) // if the reminders subobject doesn't exist
+      ref.settings.reminders = {}; // create it
+    ref.settings.reminders[$('label#code').text()] = {'freq': $('select#frequency').val(), 'interval': $('select#interval').val()}
+    console.log(ref.settings);
+    $('.reminderSet').modal('toggle');
+  });
   taListen();
   subjectListen();
 });
@@ -130,10 +144,25 @@ function taListen() {
   });
 
   $('.cc').unbind();
-  $('.cc').click(function() {
+  $('.cc').click(function() { // if they click on teh color code
     var code = this.classList[0];
-    var ta = $(this).parent().parent().parent().parent().parent().children('textarea')
-    ta.css("background-color", ref.settings.colorCode[code]);
+    var ta = $(this).parent().parent().parent().parent().parent().children('textarea');
+    ta.css("background-color", ref.settings.colorCode[code]); // set the background
+        
+    var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + (ta[0].id[1]-1));
+    var subject = ref.settings.rows[ta[0].id[0]-1];
+    console.log(d.toISOString().slice(0, 10) + ' ' + );
+     $.ajax({
+      type: 'POST',
+      url: '/reminders',
+      data: {
+        subject: ta[0].id[0]-1,
+        dueDate: d.toISOString().slice(0, 10),
+        details: ta.text(),
+        options: ref.settings.reminders[code]
+      }
+     });
+    
   });
 
   /*
@@ -145,15 +174,7 @@ function taListen() {
     isiOS = true;
   }
 
-  if (!isiOS){/*
-    $('textarea').dblclick(function() { // toggle between strikethrough and no styling on textareas
-      if ($(this).css("text-decoration") == "none")
-        $(this).css("text-decoration", "line-through");
-      else {
-        $(this).css("text-decoration", "none");
-      }
-    });*/
-  } else {
+  if (isiOS) {
     var action;
     $('textarea').bind('touchend', function(event){
       var now = new Date().getTime();
