@@ -9,9 +9,9 @@ var db = null;
 var settingsDefaults = {
                       'reminders': 
                         {
-                          'codeRed':    {frequency: '7', interval: '1'},
-                          'codeYellow': {frequency: '4', interval: '2'},
-                          'codeGreen':  {frequency: '0', interval: '0'}
+                          'codeRed':    {startReminding: '7', interval: '1'},
+                          'codeYellow': {startReminding: '4', interval: '2'},
+                          'codeGreen':  {startReminding: '0', interval: '0'}
                         }
                       }
 
@@ -180,7 +180,30 @@ app.get('/reminders', function(req, res) {
 // add 1 or a batch or reminders in the valid JSON format to the db with req.session.username and req.body.reminders.
 // if action=add, then add them. if action=remove, then remove them.
 app.post('/reminders', function(req, res) {
+  // Count backwards from the duedate, subtracting the number of days in the interval, so you get a date 
+  
+  /*
+    {
+        subject: [index in the user's rows object],
+        dueDate: d.toISOString().slice(0, 10),
+        details: [content of ],
+        options: startReminding and interval
+    }
 
+  */
+
+  console.log(req.body);
+
+  var dueDate = req.body.dueDate
+  var startReminders = new Date(req.body.dueDate);
+  startReminders.setDate(this.getDate()-startReminding)
+
+  for (var d = new Date(req.body.dueDate); d.getTime() > new Date(); d.setDate(d.getDate() - interval)) {
+    if (obj[d.toISOString().slice(0,10)])
+      obj[d.toISOString().slice(0,10)].push(metadata);
+    else
+      obj[d.toISOString().slice(0,10)] = [metadata];
+  }
 });
 
 // validate user with req.body.username and req.body.password.
@@ -231,28 +254,32 @@ function signup(req, res) {
       if (docs[0] == undefined) {
         var user = { // create the user schema
           name: req.body.username,
-          settings: {
-                      'rows': [
-                                "English", 
-                                "History", 
-                                "Math", 
-                                "Science", 
-                                "Language",
-                                "Other"
-                              ],
-                      'theme': "default",
-                      'colorCode': {
-                                    codeRed: 'rgb(217, 115, 98)',
-                                    codeYellow: 'rgb(240, 214, 128)',
-                                    codeGreen: 'rgb(165, 230, 159)',
-                                    codeWhite: ''
-                                  },
-                      'reminders': {
-                        'codeRed':    {frequency: '7', interval: '1'},
-                        'codeYellow': {frequency: '4', interval: '2'},
-                        'codeGreen':  {frequency: '0', interval: '0'}
-                      }
-                      }
+          settings: 
+          {
+            'rows': 
+            [
+              "English", 
+              "History", 
+              "Math", 
+              "Science", 
+              "Language",
+              "Other"
+            ],
+            'theme': "default",
+            'colorCode': 
+            {
+              codeRed: 'rgb(217, 115, 98)',
+              codeYellow: 'rgb(240, 214, 128)',
+              codeGreen: 'rgb(165, 230, 159)',
+              codeWhite: ''
+            },
+            'reminders': 
+            {
+              'codeRed':    {startReminding: '7', interval: '1'},
+              'codeYellow': {startReminding: '4', interval: '2'},
+              'codeGreen':  {startReminding: '0', interval: '0'}
+            }
+          }
         };
         
         db.collection("users").insert(user, function(err, result) {

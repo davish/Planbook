@@ -148,20 +148,22 @@ function taListen() {
     var code = this.classList[0];
     var ta = $(this).parent().parent().parent().parent().parent().children('textarea');
     ta.css("background-color", ref.settings.colorCode[code]); // set the background
-        
+
     var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + (ta[0].id[1]-1));
-    var subject = ref.settings.rows[ta[0].id[0]-1];
-    console.log(d.toISOString().slice(0, 10) + ' ' + );
-     $.ajax({
-      type: 'POST',
-      url: '/reminders',
-      data: {
+    // var subject = ref.settings.rows[ta[0].id[0]-1];
+    // console.log(d.toISOString().slice(0, 10) + ' ' + subject);
+    var reminderData = {
         subject: ta[0].id[0]-1,
         dueDate: d.toISOString().slice(0, 10),
-        details: ta.text(),
+        details: ta.val(),
+     /* options are interval (days btwn reminders), and startReminding (days before duedate when you start reminding)*/
         options: ref.settings.reminders[code]
-      }
-     });
+    }
+    $.ajax({
+      type: 'POST',
+      url: '/reminders',
+      data: reminderData
+    });
     
   });
 
