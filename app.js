@@ -6,6 +6,15 @@ var http = require('http'),
 var whitelist = require('whitelist').whitelist;
 var db = null;
 
+var settingsDefaults = {
+                      'reminders': 
+                        {
+                          'codeRed':    {frequency: '7', interval: '1'},
+                          'codeYellow': {frequency: '4', interval: '2'},
+                          'codeGreen':  {frequency: '0', interval: '0'}
+                        }
+                      }
+
 app.configure("development", function() {
   app.use(express.logger({'format': 'dev'}));
 });
@@ -117,12 +126,34 @@ app.get('/settings', function(req, res) {
   res.type('text/json');
   db.collection("users").find({'name': req.session.username}).toArray(function (err, docs) {
     if (!err) {
-      if (docs[0])
-        res.send({'settings': docs[0].settings, 'name': req.session.username});
-      else
-        res.send(403)
+      if (docs[0]) {
+        s = docs[0].settings;
+        var toAdd = 0;
+        for (var key in settingsDefaults) {
+          if (!s[key]) { // if the default isn't in there
+            toAdd++;
+            s[key] = settingsDefaults[key]; // add it to settings
+          }
+        }
+        if (toAdd) { // if anything has been added
+          db.collection("users").findOneAndUpdate(
+            {'name': req.session.username},
+            {$set: {settings: s}},
+            function(err, result) {
+              if (!err)
+                res.send({'settings': s, 'name': req.session.username})
+              else
+                res.send(500, err);
+            });
+        } else { // if no defaults need to be added
+          res.send({'settings': docs[0].settings, 'name': req.session.username});
+        }
+      }
+      else {
+        res.send(403) // user doesn't exist; forbidden
+      }
     } else {
-      res.send(500, err);
+      res.send(500, err); // err
     }
   });
 });
@@ -147,6 +178,7 @@ app.get('/reminders', function(req, res) {
 
 });
 // add 1 or a batch or reminders in the valid JSON format to the db with req.session.username and req.body.reminders.
+// if action=add, then add them. if action=remove, then remove them.
 app.post('/reminders', function(req, res) {
 
 });
@@ -214,7 +246,12 @@ function signup(req, res) {
                                     codeYellow: 'rgb(240, 214, 128)',
                                     codeGreen: 'rgb(165, 230, 159)',
                                     codeWhite: ''
-                                  }
+                                  },
+                      'reminders': {
+                        'codeRed':    {frequency: '7', interval: '1'},
+                        'codeYellow': {frequency: '4', interval: '2'},
+                        'codeGreen':  {frequency: '0', interval: '0'}
+                      }
                       }
         };
         
