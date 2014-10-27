@@ -119,6 +119,7 @@ div#planner  {
   cursor: pointer;
 }
 .dropdown-menu {
+  top: 20px;
   min-width: 0px;
 }
 #saveIndicator {
