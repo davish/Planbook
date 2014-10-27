@@ -12,8 +12,8 @@ $('document').ready(function() {
     // animation
     saveWeek(getAssignmentValues()); // save the current state
     ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() - 7); // decrement by 1 week
-    $('#sidebar').slide($(window).width(), 200);
     getWeek(function(o) {
+      $('#sidebar').slide($(window).width(), 200);
       $("#planner").slide($(window).width(), 200, function() {
         setAssignmentValues(o);
         drawDates();
@@ -31,8 +31,8 @@ $('document').ready(function() {
     saveWeek(getAssignmentValues());
     ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + 7);
 
-    $('#sidebar').slide(-$(window).width(), 200);
     getWeek(function(o) {
+      $('#sidebar').slide(-$(window).width(), 200);
       $("#planner").slide(-$(window).width(), 200, function() {
         setAssignmentValues(o);
         drawDates();
