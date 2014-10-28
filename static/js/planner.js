@@ -21,6 +21,17 @@ $('document').ready(function() {
         renderRows(ref.settings.rows);
       }
     });
+
+    /*$.ajax({
+      type: 'GET',
+      url: '/reminders',
+      data: {
+        'today': new Date().toISOString().slice(0,10)
+      },
+      success: function(data) {
+        console.log(data);
+      }
+    });*/
   drawDates();
 });
 
