@@ -2,8 +2,8 @@ var express = require("express"),
     app = express(),
     MongoClient = require('mongodb').MongoClient;
 var fs = require('fs');
-global.whitelist = require('whitelist').whitelist;
 var routes = require('./routes/index.js');
+global.whitelist = require('whitelist').whitelist;
 global.db = null;
 
 
