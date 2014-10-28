@@ -196,14 +196,15 @@ app.post('/reminders', function(req, res) {
 
   var dueDate = req.body.dueDate
   var startReminders = new Date(req.body.dueDate);
-  startReminders.setDate(this.getDate()-startReminding)
+  startReminders.setDate(startReminders.getDate()-req.body.startReminding);
 
-  for (var d = new Date(req.body.dueDate); d.getTime() > new Date(); d.setDate(d.getDate() - interval)) {
-    if (obj[d.toISOString().slice(0,10)])
-      obj[d.toISOString().slice(0,10)].push(metadata);
-    else
-      obj[d.toISOString().slice(0,10)] = [metadata];
+  var reminders = [];
+
+  for (var d = new Date(dueDate); d.getTime() > startReminders.getTime(); d.setDate(d.getDate() - req.body.interval)) {
+    reminders.push({subject: req.body.subject, dueDate: dueDate, details: req.body.details});
   }
+
+  console.log(reminders);
 });
 
 // validate user with req.body.username and req.body.password.
