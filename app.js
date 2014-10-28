@@ -6,8 +6,6 @@ var routes = require('./routes/index.js');
 global.whitelist = require('whitelist').whitelist;
 global.db = null;
 
-
-
 app.configure("development", function() {
   app.use(express.logger({'format': 'dev'}));
 });
