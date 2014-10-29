@@ -6,10 +6,10 @@ module.exports = {
         if (docs[0]) {
           s = docs[0].settings;
           var toAdd = 0;
-          for (var key in settingsDefaults) {
+          for (var key in module.exports.defaults) {
             if (!s[key]) { // if the default isn't in there
               toAdd++;
-              s[key] = settingsDefaults[key]; // add it to settings
+              s[key] = module.exports.defaults[key]; // add it to settings
             }
           }
           if (toAdd) { // if anything has been added
@@ -50,11 +50,28 @@ module.exports = {
   }
 };
 
-var settingsDefaults = {
-                      'reminders': 
-                        {
-                          'codeRed':    {startReminding: '7', interval: '1'},
-                          'codeYellow': {startReminding: '4', interval: '2'},
-                          'codeGreen':  {startReminding: '0', interval: '0'}
-                        }
-                      }
+module.exports.defaults = {
+                            'rows': 
+                            [
+                              "English", 
+                              "History", 
+                              "Math", 
+                              "Science", 
+                              "Language",
+                              "Other"
+                            ],
+                            'theme': "default",
+                            'colorCode': 
+                            {
+                              codeRed: 'rgb(217, 115, 98)',
+                              codeYellow: 'rgb(240, 214, 128)',
+                              codeGreen: 'rgb(165, 230, 159)',
+                              codeWhite: ''
+                            },
+                            'reminders': 
+                            {
+                              'codeRed':    {startReminding: '7', interval: '1'},
+                              'codeYellow': {startReminding: '4', interval: '2'},
+                              'codeGreen':  {startReminding: '0', interval: '0'}
+                            }
+                          }

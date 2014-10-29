@@ -1,5 +1,4 @@
 var http = require('http');
-
 // validate user with req.body.username and req.body.password.
 module.exports = {
   get: function(req, res) { // render login page.
@@ -38,7 +37,6 @@ function login(req, res) {
               db.collection("users").findOneAndUpdate({'name': req.body.username}, {$set: {'lastLogin': new Date()}}, 
                 function(err, result) {
                   req.session.username = req.body.username;
-                  // res.send({'settings': docs[0].settings, 'user': req.body.username}); // send back that login went swimmingly
                   res.redirect('/'); // redirect back to the homepage, which is now the Planner.
                 }
               );
@@ -67,32 +65,8 @@ function signup(req, res) {
       if (docs[0] == undefined) {
         var user = { // create the user schema
           name: req.body.username,
-          settings: 
-          {
-            'rows': 
-            [
-              "English", 
-              "History", 
-              "Math", 
-              "Science", 
-              "Language",
-              "Other"
-            ],
-            'theme': "default",
-            'colorCode': 
-            {
-              codeRed: 'rgb(217, 115, 98)',
-              codeYellow: 'rgb(240, 214, 128)',
-              codeGreen: 'rgb(165, 230, 159)',
-              codeWhite: ''
-            },
-            'reminders': 
-            {
-              'codeRed':    {startReminding: '7', interval: '1'},
-              'codeYellow': {startReminding: '4', interval: '2'},
-              'codeGreen':  {startReminding: '0', interval: '0'}
-            }
-          }
+          settings: require('./settings.js').defaults,
+          registrationDate: new Date()
         };
         
         db.collection("users").insert(user, function(err, result) {
