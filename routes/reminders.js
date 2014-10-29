@@ -2,8 +2,8 @@ module.exports = {
   /* get the reminders due today with req.session.username and 
   'new Date().toISOString().slice(0,10)' and return it in JSON.*/
   get: function(req, res) {
-    /*res.type('text/json');
-    db.collection("reminders").find({
+    res.type('text/json');
+    /*db.collection("reminders").find({
       'name': req.session.username, 
       'reminderDate': new Date(req.param('today')).toISOString().slice(0,10)
     }).toArray(function(err, docs) {
@@ -18,7 +18,7 @@ module.exports = {
      if action=add, then add them. if action=remove, then remove them.*/
   post: function(req, res) {
     res.type('text/json');
-    // Count backwards from the duedate, subtracting the number of days in the interval, so you get a date 
+    /*// Count backwards from the duedate, subtracting the number of days in the interval, so you get a date 
     var dueDate = req.body.dueDate;
     var startReminders = new Date(req.body.dueDate);
     startReminders.setDate(startReminders.getDate()-req.body.options.startReminding);
@@ -40,7 +40,7 @@ module.exports = {
         res.end(200);
       else
         res.end(500, err);
-    });
+    });*/
     res.send(404, {'message': 'Coming Soon'});
   }
 };
