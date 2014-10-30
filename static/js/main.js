@@ -6,7 +6,7 @@ var ref = {
 $('document').ready(function() {
     $.ajax({
       type: "GET",
-      url: "/settings", 
+      url: "/settings?json=true", 
       data: {
         'settings': ref.settings
       },
