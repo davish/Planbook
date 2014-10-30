@@ -113,7 +113,7 @@ function taListen() {
       });
     }
     if ($('#saveIndicator').children('span')[0].classList[1] == "glyphicon-ok-circle")
-      $('#saveIndicator').children('span').attr("class", "glyphicon glyphicon-ban-circle").attr("title", "some data is not saved.");
+      $('#saveIndicator').children('span').attr("class", "glyphicon glyphicon-ban-circle").parent().attr("data-original-title", "Click to save data.");
     if (e.which == 13) {
       saveWeek(getAssignmentValues());
     }
