@@ -97,7 +97,7 @@ span#today {
   border-width: 1px;
 }
 .note#box {
-  height: 119px;
+  height: 259px;
   border-bottom-width: 2px;
 }
 
@@ -123,7 +123,10 @@ div#planner  {
   min-width: 0px;
 }
 #saveIndicator {
-  position: absolute;
-  left: 0px;
-  top: 50px;
+
+}
+div#navbtns {
+  position: relative;
+  bottom: 17px;
+  left: 61px;
 }

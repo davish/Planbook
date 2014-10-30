@@ -41,6 +41,11 @@
     </nav>
 
     <div class="container hidden-xs">
+    <div class="row" id="navbtns">
+      <div class="col-sm-1 col-sm-offset-1"><button class="btn btn-primary btn-xs" id="back">&laquo;</button></div>
+      <div class="col-sm-1 col-sm-offset-3"><button class="btn btn-primary btn-xs" id="saveIndicator" data-toggle="tooltip" data-placement="bottom" title="All data is saved." onclick="saveWeek(getAssignmentValues());"><span class="glyphicon glyphicon-ok-circle"></span></button></div>
+      <div class="col-sm-1 col-sm-offset-3"><button class="btn btn-primary btn-xs" id="next">&raquo;</button></div>
+    </div>
     <div class="row row-offcanvas row-offcanvas-right stuff">
 
   <!--   <div class="col-sm-1">
@@ -50,6 +55,7 @@
     </div> -->
     
     <div class="col-sm-9"> <!-- Main Column -->
+
       <div class="row">
         <div class="col-sm-2 day col-sm-offset-2" id="monday"><span>Monday</span></div>
         <div class="col-sm-2 day" id="tuesday"> <span>Tuesday</span></div>
@@ -57,19 +63,13 @@
         <div class="col-sm-2 day" id="thursday"> <span>Thursday</span></div>
         <div class="col-sm-2 day" id="friday"> <span>Friday</span></div>
       </div>
+
       <div id="planner">
 
       </div>
 
       <div class="row" name="#">
         <div class="col-sm-1"><button id="add" style="margin-top: 37px; position: relative; bottom: 17px;" class="btn btn-sm btn-default">+</button></div>
-        <div class="col-sm-3 col-sm-offset-5" id="buttons">
-          <ul class="pagination pagination-sm">
-            <li><a href="##" id="back">&laquo;</a></li>
-            <li><a href="##" id="save">Save</a></li>
-            <li><a href="##" id="next">&raquo;</a></li>
-          </ul>
-        </div>
       </div>
     </div>
     <div class="col-sm-3" id="sidebar"> 
@@ -88,10 +88,9 @@
         </div>
       </div>
       <div class="row">
+      </div>
 
-    </div>
   </div>
-  <button class="btn btn-default btn-sm" id="saveIndicator" data-toggle="tooltip" data-placement="bottom" title="All data is saved." onclick="saveWeek(getAssignmentValues());"><span class="glyphicon glyphicon-ok-circle"></span></button>
     </div>
   </div>
 
@@ -109,7 +108,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/listeners.js"></script>
-
+    <script>$('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});</script>
     <!-- // <script src="js/snake.js"></script> -->
 
   </body>
