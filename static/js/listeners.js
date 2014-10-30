@@ -5,10 +5,10 @@ $('document').ready(function() {
   /* 
     Navigation Buttons
   */
-  $('a#save').click(function() {
+  $('#save').click(function() {
     saveWeek(getAssignmentValues());
   });
-  $('a#back').click(function() {
+  $('#back').click(function() {
     // animation
     saveWeek(getAssignmentValues()); // save the current state
     ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() - 7); // decrement by 1 week
@@ -27,7 +27,7 @@ $('document').ready(function() {
       $('#sidebar').css("padding-top", "0px");
     
   });
-  $('a#next').click(function() {
+  $('#next').click(function() {
     saveWeek(getAssignmentValues());
     ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + 7);
 
