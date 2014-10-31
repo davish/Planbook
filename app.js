@@ -31,7 +31,7 @@ app.configure(function() {
 });
 // render the planner or the homepage depending on if you're logged in or not.
 app.get('/', function(req, res) {
-  if (req.session.username) // if logged in
+  /*if (req.session.username) // if logged in
     res.render("planner.html"); // render planner
   else {
     var agent = req.headers['user-agent'].toLowerCase();
@@ -40,7 +40,9 @@ app.get('/', function(req, res) {
       res.render("homepage.html");
     else
       res.render("signin.html", {"error": ""});
-  }
+  }*/
+  res.send("<h1>The Planbook is under maintenance.</h1><br><h2>We appoligize for the inconvenience, and hope to be back shortly.</h2>");
+
 });
 
 
