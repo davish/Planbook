@@ -41,12 +41,11 @@ function saveWeek(o) {
     statusCode: {
       500: function() {
         alert("There's been a server error. Contact NLTL for assistance.");
-      }
-    },
-    success: function(data) {
-      // if you haven't updated from THIS client to the DB in a while, it's gonna do some cool shit.
-      if ($('#saveIndicator').children('span')[0].classList[1] == "glyphicon-ban-circle")
+      },
+      200: function() {
+        if ($('#saveIndicator').children('span')[0].classList[1] == "glyphicon-ban-circle")
           $('#saveIndicator').children('span').attr("class", "glyphicon glyphicon-ok-circle").parent().attr("data-original-title", "All data is saved."); 
+      }
     }
   });
   ref.lastUpdate = new Date(); 
