@@ -20,11 +20,10 @@ $('document').ready(function() {
       });
     });
 
-    
-    if (ref.monday.toISOString().slice(0, 10) == getMonday(new Date()).toISOString().slice(0, 10))
-      $('#sidebar').css("padding-top", "1px");
-    else
-      $('#sidebar').css("padding-top", "0px");
+    // if (ref.monday.toISOString().slice(0, 10) == getMonday(new Date()).toISOString().slice(0, 10))
+    //   $('#sidebar').css("padding-top", "1px");
+    // else
+    //   $('#sidebar').css("padding-top", "0px");
     
   });
   $('#next').click(function() {
@@ -39,10 +38,10 @@ $('document').ready(function() {
       });
     });
     
-    if (ref.monday.toISOString().slice(0, 10) == getMonday(new Date()).toISOString().slice(0, 10))
-      $('#sidebar').css("padding-top", "1px");
-    else
-      $('#sidebar').css("padding-top", "0px");
+    // if (ref.monday.toISOString().slice(0, 10) == getMonday(new Date()).toISOString().slice(0, 10))
+    //   $('#sidebar').css("padding-top", "1px");
+    // else
+    //   $('#sidebar').css("padding-top", "0px");
     
   });
   // Mobile navigation buttons
@@ -65,27 +64,19 @@ $('document').ready(function() {
 
   // add subject
   $('button#add').click(function() {
-    ref.settings.rows.push("Class");
     // save
+    var id = 0;
+    for (var i = 0; i < ref.settings.rows.length; i++) {
+      if (ref.settings.rows[i][1] >= id) {
+        id = parseInt(ref.settings.rows[i][1])+1
+      }
+    }
+    ref.settings.rows.push(["Class", id]);
+    console.log(id);
     setSettings(ref.settings, function(data) {
       renderRows(ref.settings.rows);
-      $('.subj#'+String(ref.settings.rows.length)).children('.subjectspan').trigger('dblclick');
+      $('.subj#'+id).children('.subjectspan').trigger('dblclick');
     });
-  });
-
-  $("form#reminderSettings").submit(function(e) {
-    e.preventDefault();
-  });
-  $("button.remndr#cancel").click(function(e) {
-    $('.reminderSet').modal('toggle');
-  });
-  $('button.remndr#submit').click(function(e) {
-    var set = $(this).serializeArray();
-    if (!ref.settings.reminders) // if the reminders subobject doesn't exist
-      ref.settings.reminders = {}; // create it
-    ref.settings.reminders[$('label#code').text()] = {'freq': $('select#frequency').val(), 'interval': $('select#interval').val()}
-    console.log(ref.settings);
-    $('.reminderSet').modal('toggle');
   });
   taListen();
   subjectListen();
@@ -232,9 +223,13 @@ function subjectListen() {
     $(this).remove();
     if (id != 0) {
       $(this).prop('contenteditable', false); // make it not editable
-      ref.settings.rows[id-1] = subj; // actually change the name
+      for (var i = 0; i < ref.settings.rows.length; i++) {
+        if (ref.settings.rows[i][1] == id) {
+          ref.settings.rows[i][0] = subj; // actually change the name
+          break;
+        }
+      }
       // Save the new settings
-
       setSettings(ref.settings, function(data) {
         renderRows(ref.settings.rows);
       });
@@ -261,7 +256,12 @@ function subjectListen() {
   $('button.delete').click(function() {
     var id = $(this).parent().parent()[0].id;
     if (confirm("Are you sure you want to delete " + ref.settings.rows[id-1] + "?")){
-      ref.settings.rows.splice(id-1, 1); // splice out the row from settings
+      for (var i = 0; i < ref.settings.rows.length; i++) {
+        if (ref.settings.rows[i][1] == id) {
+          ref.settings.rows.splice(i, 1); // splice out the row from settings
+          break;
+        }
+      }
       // save
       setSettings(ref.settings, function(data) {
         renderRows(ref.settings.rows);

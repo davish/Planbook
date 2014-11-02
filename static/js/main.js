@@ -18,20 +18,15 @@ $('document').ready(function() {
       success: function(data) {
         $('li#username').children('a').text(data.name);
         ref.settings = data.settings;
+
+        if (typeof(ref.settings.rows[0]) != "object") { // if it's the old settings format
+          for (var i = 0; i < ref.settings.rows.length; i++)
+            ref.settings.rows[i] = [ref.settings.rows[i], i+1];
+          
+        }
         renderRows(ref.settings.rows);
       }
     });
-
-    /*$.ajax({
-      type: 'GET',
-      url: '/reminders',
-      data: {
-        'today': new Date().toISOString().slice(0,10)
-      },
-      success: function(data) {
-        console.log(data);
-      }
-    });*/
   drawDates();
 });
 
@@ -84,7 +79,6 @@ function getAssignmentValues() {
   $('textarea').each(function (index, ta) {
     // with the cell's ID as the key, put the contents of the array, 
     // and the boolean of if it's completed or not, into the object.
-    
     var code = '';
     if ($(this).css("background-color") != "rgb(255, 255, 255)") {
       for (var prop in ref.settings.colorCode) {
@@ -193,12 +187,13 @@ function renderRows(rows) {
     $("#planner").html("");
     for (var i = 0; i < rows.length; i++) {
       var row = $("#planner").append('<div class="row"></div>');
-      row.append('<div class="subj col-sm-2" id="'+(i+1)+'">\
-        <span class="subjectspan">'+rows[i]+'</span> <span class="subjbtns" style="display: none;">\
+      // set ID to rows[i][1] 
+      row.append('<div class="subj col-sm-2" id="'+rows[i][1]+'">\
+        <span class="subjectspan">'+rows[i][0]+'</span> <span class="subjbtns" style="display: none;">\
         <button class="edit btn btn-default btn-xs"">\<span class="glyphicon glyphicon-edit"></span></button>\
         <button class="delete btn btn-xs btn-danger">-</button></span></div>');
       for (var j = 1; j <= 5; j++) {
-        row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea>' + buttongroup);
+        row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(rows[i][1]) + String(j)+'"></textarea>' + buttongroup);
       }
     }
     var labs = $("#planner").append('<div class="row"></div>');
