@@ -22,7 +22,7 @@ $('document').ready(function() {
         if (typeof(ref.settings.rows[0]) != "object") { // if it's the old settings format
           for (var i = 0; i < ref.settings.rows.length; i++)
             ref.settings.rows[i] = [ref.settings.rows[i], i+1];
-          
+          setSettings(ref.settings, function() {});
         }
         renderRows(ref.settings.rows);
       }
