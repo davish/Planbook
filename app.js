@@ -11,11 +11,17 @@ global.whitelist = require('whitelist').whitelist;
 global.db = null;
 
 app.configure("development", function() {
+  app.use(express.cookieParser());
+
   app.use(express.logger({'format': 'dev'}));
-  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(express.session({
+    secret: "keyboard cat",
+  }));
 });
 
 app.configure("production", function() {
+  app.use(express.cookieParser());
+
   app.use(express.logger({'stream': fs.createWriteStream('log.txt')}));
   app.use(express.session({
     secret: "keyboard cat",
@@ -29,10 +35,7 @@ app.configure(function() {
   app.set('views', __dirname + '/views');
   app.set('port', (process.env.PORT || process.argv[2] || 5000));
   
-  app.use(express.cookieParser());
   app.use(express.bodyParser());
-  
-  
   
   app.use(app.router);
   app.use(express.static(__dirname + '/static'));
