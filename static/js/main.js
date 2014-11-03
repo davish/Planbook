@@ -38,7 +38,8 @@ $('document').ready(function() {
               var dd = (new Date(data[r].dueDate).getMonth()+1) + '/' + new Date(data[r].dueDate).getDate()
               $('.notifications').append('<li><a href="#" class="reminder">'+data[r].description+'<br>'+dd+'</a></li>');
             }
-          }  
+            drawDates();
+          }
         });
       }
     });
@@ -82,6 +83,7 @@ function getWeek(c) {
       }
     },
     success: function(data) {
+      ref.friday = data.friday;
       c(JSON.parse(data.assignments));
     }
   });
@@ -260,10 +262,14 @@ function drawDates() {
     $('.day').each(function(index, element) {
       var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + index);
       var isToday = (d.getFullYear = new Date().getFullYear && d.getMonth() == new Date().getMonth() && d.getDate() == new Date().getDate())
-      if (isToday)
-        $(element).html('<span id="today">' + $(element).children('span').html() + '</span> ' + (d.getMonth()+1) + '/' + d.getDate());
+      if (index == 4)
+        $(element).html('<span>' + 'Friday ' + (ref.friday || '') + ' ' + '</span> ' + (d.getMonth()+1) + '/' + d.getDate());
       else
         $(element).html('<span>' + $(element).children('span').html() + '</span> ' + (d.getMonth()+1) + '/' + d.getDate());
+      if (isToday)
+        $(element).children('span').attr('id', 'today')
+      else
+        $(element).children('span').attr('id', ''); 
     });
   } else {
     var i = 0;

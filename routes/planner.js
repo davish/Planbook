@@ -1,9 +1,10 @@
+var fridays = require('./fridays.js');
 module.exports = {
   get: function(req, res) { // get this week's assignments, with req.session.username, req.body.monday.
     res.type('text/json');
     db.collection("assignments").find({$and: [{'name': req.session.username}, {'monday': req.param('monday')}]}).toArray(function(err, docs) {
       if (docs[0])
-        res.send({'assignments': docs[0].data});
+        res.send({'assignments': docs[0].data, 'friday': fridays[req.param('monday')]});
       else
         res.send(404); // client deals with the 404.
     });
