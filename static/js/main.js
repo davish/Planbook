@@ -25,6 +25,21 @@ $('document').ready(function() {
           setSettings(ref.settings, function() {});
         }
         renderRows(ref.settings.rows);
+
+        $.ajax({
+          type: "GET",
+          url: "/reminders",
+          data: {
+            today: new Date().toISOString().slice(0,10)
+          },
+          success: function(data) {
+            $('.notifications').html("");
+            for (var r in data) {
+              var dd = (new Date(data[r].dueDate).getMonth()+1) + '/' + new Date(data[r].dueDate).getDate()
+              $('.notifications').append('<li><a href="#" class="reminder">'+data[r].description+'<br>'+dd+'</a></li>');
+            }
+          }  
+        });
       }
     });
   drawDates();
@@ -174,7 +189,7 @@ function signup(user, pswd, c, fail) {
 function renderRows(rows) {
   var buttongroup = '<span class="tabuttons" style="display: none;"><div class="btn-group">\
   <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span class=caret></span></button>\
-  <ul class="dropdown-menu" role="menu" width="20px">\
+  <ul class="dropdown-menu cCodes" role="menu" width="20px">\
   <li><a data-target="#" class="codeRed cc" style="color: '+ref.settings.colorCode['codeRed']+';">&#x25a0;</a></li>\
   <li><a data-target="#" class="codeYellow cc" style="color: '+ref.settings.colorCode['codeYellow']+';">&#x25a0;</a></li>\
   <li><a data-target="#" class="codeGreen cc" style="color: '+ref.settings.colorCode['codeGreen']+';">&#x25a0;</a></li>\
@@ -262,19 +277,6 @@ function drawDates() {
         $(element).parent().html('<h3>'+$(element).text()+ '</h3>' + (d.getMonth()+1) + '/' + d.getDate());
     });
   }
-}
-
-function getReminders(d) {
-  $.ajax({
-    type: "GET",
-    url: "/reminders",
-    data: {
-      today: d.toISOString().slice(0,10)
-    },
-    success: function(d) {
-      console.log(d);
-    }
-  });
 }
 
 $.fn.slide = function(dist, t, c) {
