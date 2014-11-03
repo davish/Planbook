@@ -19,12 +19,6 @@ $('document').ready(function() {
         drawDates();
       });
     });
-
-    // if (ref.monday.toISOString().slice(0, 10) == getMonday(new Date()).toISOString().slice(0, 10))
-    //   $('#sidebar').css("padding-top", "1px");
-    // else
-    //   $('#sidebar').css("padding-top", "0px");
-    
   });
   $('#next').click(function() {
     saveWeek(getAssignmentValues());
@@ -37,12 +31,6 @@ $('document').ready(function() {
         drawDates();
       });
     });
-    
-    // if (ref.monday.toISOString().slice(0, 10) == getMonday(new Date()).toISOString().slice(0, 10))
-    //   $('#sidebar').css("padding-top", "1px");
-    // else
-    //   $('#sidebar').css("padding-top", "0px");
-    
   });
   // Mobile navigation buttons
   $('#msave').click(function() {
@@ -140,21 +128,20 @@ function taListen() {
     var ta = $(this).parent().parent().parent().parent().parent().children('textarea');
     ta.css("background-color", ref.settings.colorCode[code]); // set the background
 
-    /*var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + (ta[0].id[1]-1));
     // var subject = ref.settings.rows[ta[0].id[0]-1];
     // console.log(d.toISOString().slice(0, 10) + ' ' + subject);
+    // options are interval (days btwn reminders), and startReminding (days before duedate when you start reminding)
     var reminderData = {
-        subject: ta[0].id[0]-1,
-        dueDate: d.toISOString().slice(0, 10),
-        details: ta.val(),
-     // options are interval (days btwn reminders), and startReminding (days before duedate when you start reminding)
+        box: ta[0].id,
+        monday: ref.monday.toISOString().slice(0, 10),
         options: ref.settings.reminders[code]
     }
+
     $.ajax({
       type: 'POST',
       url: '/reminders',
       data: reminderData
-    });*/
+    });
     
   });
 
