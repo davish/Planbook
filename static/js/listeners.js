@@ -150,17 +150,20 @@ function taListen() {
     // var subject = ref.settings.rows[ta[0].id[0]-1];
     // console.log(d.toISOString().slice(0, 10) + ' ' + subject);
     // options are interval (days btwn reminders), and startReminding (days before duedate when you start reminding)
-    var reminderData = {
-        box: ta[0].id,
-        monday: ref.monday.toISOString().slice(0, 10),
-        options: ref.settings.reminders[code]
-    }
+    ref.settings.reminders[code] = {startReminding: '1', interval: '1'};
+    if (code != 'codeGreen') {
+      var reminderData = {
+          box: ta[0].id,
+          monday: ref.monday.toISOString().slice(0, 10),
+          options: ref.settings.reminders[code]
+      }
 
-    $.ajax({
-      type: 'POST',
-      url: '/reminders',
-      data: reminderData
-    });
+      $.ajax({
+        type: 'POST',
+        url: '/reminders',
+        data: reminderData
+      });
+    }
     saveWeek(getAssignmentValues());
   });
 

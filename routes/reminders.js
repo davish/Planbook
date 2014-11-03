@@ -69,8 +69,7 @@ module.exports = {
             reminderDate: d.toISOString().slice(0,10)
           });
         }
-        var r = db.collection("reminders")
-        r.insert(reminders, function(err, result) {
+        db.collection("reminders").insert(reminders, function(err, result) {
           if (!err)
             res.send(200);
           else

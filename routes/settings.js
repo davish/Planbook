@@ -77,6 +77,6 @@ module.exports.defaults = {
                             {
                               'codeRed':    {startReminding: '7', interval: '1'},
                               'codeYellow': {startReminding: '4', interval: '2'},
-                              'codeGreen':  {startReminding: '0', interval: '0'}
+                              'codeGreen':  {startReminding: '1', interval: '1'}
                             }
                           }
