@@ -118,12 +118,12 @@ div#planner  {
 .cc {
   cursor: pointer;
 }
-.dropdown-menu {
+.cCodes {
   top: 20px;
   min-width: 0px;
 }
-#saveIndicator {
-
+a.reminder {
+  font-size: 10px;
 }
 div#navbtns {
   position: relative;
