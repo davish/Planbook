@@ -57,8 +57,8 @@ app.post('/planner', routes.planner.post);
 app.get('/settings', routes.settings.get);
 app.post('/settings', routes.settings.post);
 
-// app.get('/reminders', routes.reminders.get);
-// app.post('/reminders', routes.reminders.post);
+app.get('/reminders', routes.reminders.get);
+app.post('/reminders', routes.reminders.post);
 
 MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
   if (!err) {
