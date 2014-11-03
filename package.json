@@ -8,6 +8,7 @@
   "dependencies": {
     "express": "3.x",
     "mongodb": "~2.0",
-    "ejs": "*"
+    "ejs": "*",
+    "connect-redis": "*"
   }
 }
