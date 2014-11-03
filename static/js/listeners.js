@@ -32,6 +32,21 @@ $('document').ready(function() {
       });
     });
   });
+
+  $(document).bind('keydown', 'meta+s', function(e) {
+    e.preventDefault();
+    saveWeek(getAssignmentValues());
+  });
+
+  $(document).bind('keydown', 'meta+right', function(e) {
+    e.preventDefault();
+    $('#next').click();
+  });
+  $(document).bind('keydown', 'meta+left', function(e) {
+    e.preventDefault();
+    $('#back').click();
+  });
+
   // Mobile navigation buttons
   $('#msave').click(function() {
     saveWeek(getAssignmentValues());
@@ -72,6 +87,10 @@ $('document').ready(function() {
 
 function taListen() {
   $("textarea").unbind();
+  $("textarea").bind('keydown', 'meta+s', function(e) {
+    e.preventDefault();
+    saveWeek(getAssignmentValues());
+  });
   /*
     Keypress listener, for parsing and using inputs to different textareas.
     Will get quite large as features such as lab requests are added.
