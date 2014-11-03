@@ -142,7 +142,7 @@ function taListen() {
       url: '/reminders',
       data: reminderData
     });
-    
+    saveWeek(getAssignmentValues());
   });
 
   /*
