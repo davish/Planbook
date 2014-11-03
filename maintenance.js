@@ -1,6 +1,11 @@
 var express = require("express"),
   app = express();
 
+
+app.configure(function() {  
+  app.set('port', (process.env.PORT || process.argv[2] || 5000));
+});
+
 app.get('/', function(req, res) {
   res.send("<h1>The Planbook is undergoing maintenance.</h1><h3>We thank you for your patience and hope to resume service shortly.</h3>");
 });
