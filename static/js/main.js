@@ -264,6 +264,19 @@ function drawDates() {
   }
 }
 
+function getReminders(d) {
+  $.ajax({
+    type: "GET",
+    url: "/reminders",
+    data: {
+      today: d.toISOString().slice(0,10)
+    },
+    success: function(d) {
+      console.log(d);
+    }
+  });
+}
+
 $.fn.slide = function(dist, t, c) {
   // Slide an element to the left or right by a certaind distance, in pixels.
   var element = this[0];
@@ -284,28 +297,6 @@ $.fn.slide = function(dist, t, c) {
           c();
   });
   $(element).css("position", p);
-}
-
-function setReminder(obj, date, interval, metadata) {
-  /*
-    Structure of obj:
-    Keys are Date ISOStrings, values are arrays with each reminder being an object, with metadata such as the message, duedate, subject, etc.
-
-    Interval is in days.
-    Metadata is another object, with, well, metadata.
-  */
-
-  var dueDate = new Date(date).stripTime();
-
-  // Count backwards from the duedate, subtracting the number of days in the interval, so you get a date 
-  for (var d = dueDate; d.getTime() > new Date().stripTime(); d.setDate(d.getDate() - interval)) {
-    if (obj[d.toISOString().slice(0,10)])
-      obj[d.toISOString().slice(0,10)].push(metadata);
-    else
-      obj[d.toISOString().slice(0,10)] = [metadata];
-  };
-
-  return obj;
 }
 
 Date.prototype.stripTime = function() {
