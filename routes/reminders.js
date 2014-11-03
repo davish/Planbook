@@ -59,13 +59,13 @@ module.exports = {
         var dueDate = new Date(m.getFullYear(), 
           m.getMonth(), 
           m.getDate() + parseInt(req.body.box.split('').reverse()[0])-1);
-
-
+        var dd = dueDate.toISOString().slice(0,10);
         for (var d = dueDate; d.getTime() > startReminders.getTime(); d.setDate(d.getDate() - req.body.options.interval)) {
           reminders.push({
             name: req.session.username, 
             box: req.body.box, 
             monday: req.body.monday,
+            dueDate: dd,
             reminderDate: d.toISOString().slice(0,10)
           });
         }
