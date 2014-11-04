@@ -195,6 +195,7 @@ function renderRows(rows) {
   <li><a data-target="#" class="codeRed cc" style="color: '+ref.settings.colorCode['codeRed']+';">&#x25a0;</a></li>\
   <li><a data-target="#" class="codeYellow cc" style="color: '+ref.settings.colorCode['codeYellow']+';">&#x25a0;</a></li>\
   <li><a data-target="#" class="codeGreen cc" style="color: '+ref.settings.colorCode['codeGreen']+';">&#x25a0;</a></li>\
+  <li><a data-target="#" class="reminderSet" style="cursor: pointer;">R</a></li>\
   <li><a data-target="#" class="codeWhite cc">ø</a></li>\
   </ul>\
   </div><button class="done btn btn-default btn-xs"><span class="glyphicon glyphicon-ok"></span></button></span></div>';
