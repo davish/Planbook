@@ -30,7 +30,7 @@ module.exports = {
           var m = new Date(req.body.monday);
           var startReminders = new Date(m.getFullYear(), 
             m.getMonth(), 
-            m.getDate() + ((req.body.box.split('').reverse()[0]-1) - req.body.options.startReminding));
+            m.getDate() + ((req.body.box.split('').reverse()[0]-1) - req.body.options.startReminding)-1);
 
           var dueDate = new Date(m.getFullYear(), 
             m.getMonth(), 
