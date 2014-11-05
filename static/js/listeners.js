@@ -9,28 +9,37 @@ $('document').ready(function() {
     saveWeek(getAssignmentValues());
   });
   $('#back').click(function() {
-    // animation
-    saveWeek(getAssignmentValues()); // save the current state
-    ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() - 7); // decrement by 1 week
-    getWeek(function(o) {
-      $('#sidebar').slide($(window).width(), 200);
-      $("#planner").slide($(window).width(), 200, function() {
-        setAssignmentValues(o);
-        drawDates();
+
+    if (!ref.turnInProgress) {
+      ref.turnInProgress = true;
+      // animation
+      saveWeek(getAssignmentValues()); // save the current state
+      ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() - 7); // decrement by 1 week
+      getWeek(function(o) {
+        $('#sidebar').slide($(window).width(), 200);
+        $("#planner").slide($(window).width(), 200, function() {
+          setAssignmentValues(o);
+          drawDates();
+          ref.turnInProgress = false;
+        });
       });
-    });
+    }
   });
   $('#next').click(function() {
-    saveWeek(getAssignmentValues());
-    ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + 7);
+    if (!ref.turnInProgress) {
+      ref.turnInProgress = true;
+      saveWeek(getAssignmentValues());
+      ref.monday = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + 7);
 
-    getWeek(function(o) {
-      $('#sidebar').slide(-$(window).width(), 200);
-      $("#planner").slide(-$(window).width(), 200, function() {
-        setAssignmentValues(o);
-        drawDates();
+      getWeek(function(o) {
+        $('#sidebar').slide(-$(window).width(), 200);
+        $("#planner").slide(-$(window).width(), 200, function() {
+          setAssignmentValues(o);
+          drawDates();
+          ref.turnInProgress = false;
+        });
       });
-    });
+    }
   });
 
   $(document).bind('keydown', 'meta+s', function(e) {
