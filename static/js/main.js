@@ -48,7 +48,6 @@ function saveWeek(o) {
       }
     }
   });
-  getReminders();
   ref.lastUpdate = new Date(); 
 }
 

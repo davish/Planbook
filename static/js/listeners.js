@@ -123,6 +123,22 @@ function taListen() {
       $('#saveIndicator').children('span').attr("class", "glyphicon glyphicon-ban-circle").parent().attr("data-original-title", "Click to save data.");
     if (e.which == 13) {
       saveWeek(getAssignmentValues());
+    } else if (e.which == 8) {
+      if ($(this).text() == '') {
+        $.ajax({
+          method: 'POST',
+          url: '/reminders',
+          data: {
+            box: taID,
+            monday: ref.monday.toISOString().slice(0, 10)
+          },
+          statusCode: {
+            200: function() {
+              getReminders();
+            }
+          }
+        });
+      }
     }
   });
 
@@ -148,6 +164,11 @@ function taListen() {
         data: {
           box: t[0].id,
           monday: ref.monday.toISOString().slice(0, 10)
+        },
+        statusCode: {
+          200: function() {
+            getReminders();
+          }
         }
       });
     }
@@ -193,6 +214,11 @@ function taListen() {
           options: {
             startReminding: parseInt($(this).parent().children('.r').val()),
             interval: 1
+          }
+        },
+        statusCode: {
+          200: function() {
+            getReminders();
           }
         }
       });
