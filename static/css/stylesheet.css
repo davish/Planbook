@@ -28,7 +28,7 @@ textarea {
   left: 85%;
 }
 
-span.tabuttons {
+div.tabuttons {
   position:absolute;
   bottom:1px;
   right:0px;
