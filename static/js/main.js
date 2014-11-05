@@ -25,22 +25,7 @@ $('document').ready(function() {
           setSettings(ref.settings, function() {});
         }
         renderRows(ref.settings.rows);
-
-        $.ajax({
-          type: "GET",
-          url: "/reminders",
-          data: {
-            today: new Date().toISOString().slice(0,10)
-          },
-          success: function(data) {
-            $('.notifications').html("");
-            for (var r in data) {
-              var dd = (new Date(data[r].dueDate).getMonth()+1) + '/' + new Date(data[r].dueDate).getDate()
-              $('.notifications').append('<li><a href="#" class="reminder">'+data[r].description+'<br>'+dd+'</a></li>');
-            }
-            drawDates();
-          }
-        });
+        getReminders();
       }
     });
   drawDates();
@@ -84,6 +69,7 @@ function getWeek(c) {
     },
     success: function(data) {
       ref.friday = data.friday;
+      getReminders();
       c(JSON.parse(data.assignments));
     }
   });
@@ -144,6 +130,24 @@ function setSettings(s, callback) {
   });
 }
 
+function getReminders() {
+  $.ajax({
+    type: "GET",
+    url: "/reminders",
+    data: {
+      today: new Date().toISOString().slice(0,10)
+    },
+    success: function(data) {
+      $('.notifications').html("");
+      for (var r in data) {
+        var dd = (new Date(data[r].dueDate).getMonth()+1) + '/' + new Date(data[r].dueDate).getDate()
+        $('.notifications').append('<li><a href="#" class="reminder">'+data[r].description+'<br>'+data[r].dueDate+'</a></li>');
+      }
+      drawDates();
+    }
+  });
+}
+
 function login(user, pswd, c, fail) {
   $.ajax({ // now get a new auth cookie from couch
     type: "POST",
@@ -189,16 +193,18 @@ function signup(user, pswd, c, fail) {
 
 
 function renderRows(rows) {
-  var buttongroup = '<span class="tabuttons" style="display: none;"><div class="btn-group">\
+  var buttongroup = '\
+  <div class="btn-group tabuttons" style="display: none;">\
+  <button class="btn btn-default btn-xs reminderSet"><span class="glyphicon glyphicon-exclamation-sign"></span></button>\
   <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span class=caret></span></button>\
+  <button class="done btn btn-default btn-xs"><span class="glyphicon glyphicon-ok"></span></button>\
   <ul class="dropdown-menu cCodes" role="menu" width="20px">\
   <li><a data-target="#" class="codeRed cc" style="color: '+ref.settings.colorCode['codeRed']+';">&#x25a0;</a></li>\
   <li><a data-target="#" class="codeYellow cc" style="color: '+ref.settings.colorCode['codeYellow']+';">&#x25a0;</a></li>\
   <li><a data-target="#" class="codeGreen cc" style="color: '+ref.settings.colorCode['codeGreen']+';">&#x25a0;</a></li>\
-  <li><a data-target="#" class="reminderSet" style="cursor: pointer;">R</a></li>\
   <li><a data-target="#" class="codeWhite cc">ø</a></li>\
   </ul>\
-  </div><button class="done btn btn-default btn-xs"><span class="glyphicon glyphicon-ok"></span></button></span></div>';
+  </div>';
   if ($('.container').width() >= 720) {
     $("#planner").html("");
     for (var i = 0; i < rows.length; i++) {

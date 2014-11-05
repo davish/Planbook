@@ -121,21 +121,30 @@ function taListen() {
   Setting assignment as done
   */
   $('textarea').parent().mouseenter(function() {
-    $(this).children("span.tabuttons").show();
+    $(this).children(".tabuttons").show();
   });
   $('textarea').parent().mouseleave(function() {
-     $(this).children("span.tabuttons").hide();
+     $(this).children(".tabuttons").hide();
   });
   $('button.done').unbind();
   $('button.done').click(function() {
     var t = $(this).parent().parent().children("textarea");
+    console.log();
     if ($(t).css("text-decoration") == "none") {
       $(t).css("text-decoration", "line-through");
-      $(t).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-check"></span>')
+      $(t).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-check"></span>');
+      $.ajax({
+        method: 'POST',
+        url: '/reminders',
+        data: {
+          box: t[0].id,
+          monday: ref.monday.toISOString().slice(0, 10)
+        }
+      });
     }
     else {
       $(t).css("text-decoration", "none");
-      $(t).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-unchecked"></span>')
+      $(t).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-unchecked"></span>');
     }
     saveWeek(getAssignmentValues());
 
@@ -144,28 +153,48 @@ function taListen() {
   $('.cc').unbind();
   $('.cc').click(function() { // if they click on teh color code
     var code = this.classList[0];
-    var ta = $(this).parent().parent().parent().parent().parent().children('textarea');
+    var ta = $(this).parent().parent().parent().parent().children('textarea');
     ta.css("background-color", ref.settings.colorCode[code]); // set the background
 
-    // var subject = ref.settings.rows[ta[0].id[0]-1];
-    // console.log(d.toISOString().slice(0, 10) + ' ' + subject);
-    // options are interval (days btwn reminders), and startReminding (days before duedate when you start reminding)
-    ref.settings.reminders[code] = {startReminding: '1', interval: '1'};
-    if (code != 'codeGreen') {
-      var reminderData = {
-          box: ta[0].id,
-          monday: ref.monday.toISOString().slice(0, 10),
-          options: ref.settings.reminders[code]
-      }
+    saveWeek(getAssignmentValues());
+  });
+
+  $('.reminderSet').unbind();
+  $('.reminderSet').click(function() {
+    var max = 7;
+    var html = 'Start reminding me\
+                <input type="number" class="r" name="amountInput" value="1" style="width:35px;" disabled/>\
+                days before.\
+                <input type="range" name="amountRange" min="1" max="'+max+'" value="0" oninput="$(this).parent().children(\'input.r\').val(this.value)" />\
+                <button class="btn btn-primary btn-xs reminderSubmit">Submit</button>'
+    var box = $(this).parent().parent().children('textarea');
+    $(box).popover({content: html, html: 'true', placement: 'top'}).popover('show');
+    $('.reminderSubmit').unbind();
+    $('.reminderSubmit').click(function() {
+      var b = $(this).parent().parent().parent().children();
+      $('.reminderSubmit').unbind();
+      b.popover('hide');
+
+      console.log(parseInt($(this).parent().children('.r').val())+1)
 
       $.ajax({
         type: 'POST',
         url: '/reminders',
-        data: reminderData
+        data: {
+          box: box.attr('id'),
+          monday: ref.monday.toISOString().slice(0, 10),
+          description: b.val(),
+          options: {
+            startReminding: parseInt($(this).parent().children('.r').val())+1,
+            interval: 1
+          }
+        }
       });
-    }
-    saveWeek(getAssignmentValues());
+
+    });
   });
+
+
 
   /*
     Double tap/Double click for setting assignments as completed.
