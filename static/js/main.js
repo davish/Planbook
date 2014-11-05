@@ -25,7 +25,6 @@ $('document').ready(function() {
           setSettings(ref.settings, function() {});
         }
         renderRows(ref.settings.rows);
-        getReminders();
       }
     });
   drawDates();
@@ -49,6 +48,7 @@ function saveWeek(o) {
       }
     }
   });
+  getReminders();
   ref.lastUpdate = new Date(); 
 }
 
@@ -141,8 +141,9 @@ function getReminders() {
       $('.notifications').html("");
       for (var r in data) {
         var dd = (new Date(data[r].dueDate).getMonth()+1) + '/' + new Date(data[r].dueDate).getDate()
-        $('.notifications').append('<li><a href="#" class="reminder">'+data[r].description+'<br>'+data[r].dueDate+'</a></li>');
+        $('.notifications').append('<li><a href="#" class="reminder">'+data[r].description+'<br>Due Date: '+data[r].dueDate+'</a></li>');
       }
+      $('#numNotifications').text(data.length);
       drawDates();
     }
   });

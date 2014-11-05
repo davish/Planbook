@@ -174,9 +174,6 @@ function taListen() {
       var b = $(this).parent().parent().parent().children();
       $('.reminderSubmit').unbind();
       b.popover('hide');
-
-      console.log(parseInt($(this).parent().children('.r').val())+1)
-
       $.ajax({
         type: 'POST',
         url: '/reminders',
