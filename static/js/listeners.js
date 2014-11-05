@@ -191,7 +191,7 @@ function taListen() {
           monday: ref.monday.toISOString().slice(0, 10),
           description: b.val(),
           options: {
-            startReminding: parseInt($(this).parent().children('.r').val())+1,
+            startReminding: parseInt($(this).parent().children('.r').val()),
             interval: 1
           }
         }
