@@ -196,14 +196,15 @@ function taListen() {
                 <input type="number" class="r" name="amountInput" value="1" style="width:35px;" disabled/>\
                 days before.\
                 <input type="range" name="amountRange" min="1" max="'+max+'" value="0" oninput="$(this).parent().children(\'input.r\').val(this.value)" />\
-                <button class="btn btn-primary btn-xs reminderSubmit">Submit</button>'
+                <button class="btn btn-primary btn-xs reminderSubmit">Submit</button>\
+                <button class="btn btn-warning btn-xs reminderCancel">Cancel</button>'
     var box = $(this).parent().parent().children('textarea');
     $(box).popover({content: html, html: 'true', placement: 'top'}).popover('show');
     $('.reminderSubmit').unbind();
     $('.reminderSubmit').click(function() {
       var b = $(this).parent().parent().parent().children();
       $('.reminderSubmit').unbind();
-      b.popover('hide');
+      b.popover('destroy');
       $.ajax({
         type: 'POST',
         url: '/reminders',
@@ -222,8 +223,13 @@ function taListen() {
           }
         }
       });
-
     });
+    $('.reminderCancel').unbind();
+    $('.reminderCancel').click(function() {
+      $('.reminderCancel').unbind();
+      var b = $(this).parent().parent().parent().children();
+      b.popover('destroy');
+    })
   });
 
 
