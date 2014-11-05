@@ -38,10 +38,10 @@ module.exports = {
 
           var startReminders = new Date(dueDate.getFullYear(), 
             dueDate.getMonth(), 
-            dueDate.getDate() - req.body.options.startReminding);
+            dueDate.getDate() - (req.body.options.startReminding));
 
           var dd = dueDate.toISOString().slice(0,10);
-          
+          dueDate.setDate(dueDate.getDate()-1); // don't need to be reminded day-of
           var reminders = [];
           for (var d = dueDate; d.getTime() > startReminders.getTime(); d.setDate(d.getDate() - req.body.options.interval)) {
             reminders.push({
