@@ -14,6 +14,7 @@ module.exports = {
     }
   },
   post: function(req, res) { // login with req.body.username and req.body.password
+    console.log(req.body);
     if (whitelist.join(' ').indexOf(req.body.username) <= -1) { // if they're not on the whitelist
       res.redirect('/login?why=whitelist');
       return; // stop here.
