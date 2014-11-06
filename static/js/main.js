@@ -137,13 +137,15 @@ function getReminders() {
       today: new Date().toISOString().slice(0,10)
     },
     success: function(data) {
-      $('.notifications').html("");
-      for (var r in data) {
+      data.sort(function(a, b) { // sort the reminders, so that the ones with due dates the first get shown first.
+        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      });
+      $('.notifications').html(""); // reset notifications
+      for (var r in data) { // render notifications
         var dd = (new Date(data[r].dueDate).getMonth()+1) + '/' + new Date(data[r].dueDate).getDate()
         $('.notifications').append('<li><a href="#" class="reminder">'+data[r].description+'<br>Due Date: '+data[r].dueDate+'</a></li>');
       }
-      $('#numNotifications').text(data.length);
-      drawDates();
+      $('#numNotifications').text(data.length); // add counter
     }
   });
 }
@@ -236,7 +238,7 @@ function renderRows(rows) {
       var row = $(".mobile").append('<div class="row"></div>');
       row.append('<div class="col-sm-2"><h3>'+days[j-1]+'<h3></div>');
       for (var i = 0; i < rows.length; i++) {
-        row.append('<div class="col-sm-2"><h4>'+rows[i]+'</h4><textarea class="ta" id="'+ String(i+1) + String(j)+'"></textarea></div>')
+        row.append('<div class="col-sm-2"><h4>'+rows[i][0]+'</h4><textarea class="ta" id="'+ String(rows[i][1]) + String(j)+'"></textarea></div>')
       }
     }
     taListen();

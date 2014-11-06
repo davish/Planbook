@@ -31,7 +31,6 @@ module.exports = {
 
           var m = new Date(req.body.monday);
 
-          
           var dueDate = new Date(m.getFullYear(), 
             m.getMonth(), 
             m.getDate() + parseInt(req.body.box.split('').reverse()[0])-1);
