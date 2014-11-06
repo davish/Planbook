@@ -14,7 +14,6 @@ module.exports = {
     }
   },
   post: function(req, res) { // login with req.body.username and req.body.password
-    // console.log(req.body);
     if (whitelist.join(' ').indexOf(req.body.username) <= -1) { // if they're not on the whitelist
       res.redirect('/login?why=whitelist');
       return; // stop here.
@@ -27,7 +26,6 @@ module.exports = {
 };
 
 function login(req, res) {
-  console.log(req.body.username);
   res.type('text/json');
   var options = {host: 'compsci.dalton.org',port: 8080, path: '/zbuttenwieser/validation/index.jsp?username='+req.body.username+'&password='+req.body.password};
   http.get(options, function(r) {
