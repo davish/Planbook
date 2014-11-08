@@ -36,6 +36,8 @@ app.configure("production", function() {
 
   app.set('port', process.env.PORT || 80);
   app.set('sslPort', 443);
+  app.set('certificate', fs.readFileSync('/home/ubuntu/sslcert/certificate.pem', 'utf8'));
+  app.set('privateKey', fs.readFileSync('/home/ubuntu/sslcert/private-key.pem', 'utf8'));
 });
 
 app.configure(function() {  
