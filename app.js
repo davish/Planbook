@@ -93,7 +93,6 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
       console.info('Listening on port %d', app.get('port'));
     });
     var options = {key: app.get('privateKey'), cert: app.get('certificate')};
-    console.log(options);
     https.createServer(options, app).listen(app.get('sslPort'), '0.0.0.0', function() {
       console.info('HTTPS listening on port %d', app.get('sslPort'));
     });
