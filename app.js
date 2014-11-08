@@ -23,6 +23,7 @@ app.configure("development", function() {
   }));
 
   app.set('port', process.env.PORT || process.argv[2] || 5000);
+  app.set('sslPort', 8443);
   app.set('certificate', fs.readFileSync('/Users/davis/Desktop/sslcert/server.crt', 'utf8'));
   app.set('privateKey', fs.readFileSync('/Users/davis/Desktop/sslcert/server.key', 'utf8'));
 });
@@ -92,7 +93,7 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
       console.info('Listening on port %d', app.get('port'));
     });
     var options = {key: app.get('privateKey'), cert: app.get('certificate')};
-    https.createServer(options, app).listen(app.get('sslPort'), function() {
+    https.createServer(options, app).listen(app.get('sslPort'), '0.0.0.0', function() {
       console.info('HTTPS listening on port %d', app.get('sslPort'));
     });
   } else {
