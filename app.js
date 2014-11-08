@@ -1,9 +1,13 @@
+var http = require('http'),
+    https = require('https');
 var express = require("express"),
-    app = express(),
-    MongoClient = require('mongodb').MongoClient,
+    app = express();
+var MongoClient = require('mongodb').MongoClient,
     RedisStore = require('connect-redis')(express.session);
-
 var fs = require('fs');
+// var privateKey  = fs.readFileSync('/home/ubuntu/sslcert/server.key', 'utf8');
+// var certificate = fs.readFileSync('/home/ubuntu/sslcert/server.crt', 'utf8');
+
 var routes = require('./routes/index.js');
 
 
@@ -17,6 +21,8 @@ app.configure("development", function() {
   app.use(express.session({
     secret: "keyboard cat",
   }));
+
+  app.set('port', process.env.PORT || process.argv[2] || 5000);
 });
 
 app.configure("production", function() {
@@ -27,13 +33,15 @@ app.configure("production", function() {
     secret: "keyboard cat",
     store: new RedisStore({ host: 'localhost', port: 6379})
   }));
+
+  app.set('port', process.env.PORT || 80);
+  app.set('sslPort', 443);
 });
 
 app.configure(function() {  
   app.engine("html", require("ejs").renderFile);
   app.set('view engine', 'html');
   app.set('views', __dirname + '/views');
-  app.set('port', (process.env.PORT || process.argv[2] || 5000));
   
   app.use(express.bodyParser());
   
@@ -75,9 +83,15 @@ app.post('/reminders', routes.reminders.post);
 MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
   if (!err) {
     db = dbase;
-    var server = app.listen(app.get('port'), function() {
-      console.info('Listening on port %d', server.address().port);
+
+    http.createServer(app).listen(app.get('port'), function() {
+      console.info('Listening on port %d', app.get('port'));
     });
+    if (app.get('sslPort')) {
+      https.createServer({key: app.get('privateKey'), cert: app.get('certificate')}, app).listen('443', function() {
+        console.info('HTTPS listening on port %d', 443);
+      });
+    }
   } else {
     console.error(err);
   }
