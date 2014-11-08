@@ -90,7 +90,9 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
       console.info('Listening on port %d', app.get('port'));
     });
     if (app.get('sslPort')) {
-      https.createServer({key: app.get('privateKey'), cert: app.get('certificate')}, app).listen('443', function() {
+      var options = {key: app.get('privateKey'), cert: app.get('certificate')};
+      console.log(options);
+      https.createServer(options, app).listen('443', function() {
         console.info('HTTPS listening on port %d', 443);
       });
     }
