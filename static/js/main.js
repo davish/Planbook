@@ -217,14 +217,14 @@ function renderRows(rows) {
         <button class="edit btn btn-default btn-xs"">\<span class="glyphicon glyphicon-edit"></span></button>\
         <button class="delete btn btn-xs btn-danger">-</button></span></div>');
       for (var j = 1; j <= 5; j++) {
-        row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(rows[i][1]) + String(j)+'"></textarea>' + buttongroup);
+        row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(rows[i][1]) + String(j)+'"></textarea>' + buttongroup + '</div>');
       }
     }
     var labs = $("#planner").append('<div class="row"></div>');
     labs.append('<div class="subj col-sm-2" id="0">Labs</div>');
 
     for (var j = 1; j <= 5; j++) {
-      labs.append('<div class="col-sm-2"><textarea class="labs ta" id="0' + String(j)+'"></textarea></div>');
+      labs.append('<div class="col-sm-2"><textarea class="labs ta" id="0' + String(j)+'"></textarea>'+ buttongroup +'</div>');
     }
     taListen();
     subjectListen();
