@@ -71,12 +71,7 @@ module.exports.defaults = {
                               codeRed: 'rgb(217, 115, 98)',
                               codeYellow: 'rgb(240, 214, 128)',
                               codeGreen: 'rgb(165, 230, 159)',
+                              codeBlue: ''
                               codeWhite: ''
-                            },
-                            'reminders': 
-                            {
-                              'codeRed':    {startReminding: '7', interval: '1'},
-                              'codeYellow': {startReminding: '4', interval: '2'},
-                              'codeGreen':  {startReminding: '1', interval: '1'}
                             }
                           }
