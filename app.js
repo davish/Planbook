@@ -57,7 +57,6 @@ app.configure(function() {
 
 function requireHTTPS(req, res, next) {
   if (!req.secure) {
-      console.log("not secure");
       //FYI this should work for local development as well
       return res.redirect('https://' + req.get('host') + req.url);
   }
