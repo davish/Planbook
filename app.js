@@ -43,7 +43,8 @@ app.configure("production", function() {
   app.set('privateKey', fs.readFileSync('/home/ubuntu/sslcert/server.key', 'utf8'));
 });
 
-app.configure(function() {  
+app.configure(function() { 
+  app.use(requireHTTPS); 
   app.engine("html", require("ejs").renderFile);
   app.set('view engine', 'html');
   app.set('views', __dirname + '/views');
@@ -52,8 +53,17 @@ app.configure(function() {
   
   app.use(app.router);
   app.use(express.static(__dirname + '/static'));
-
 });
+
+function requireHTTPS(req, res, next) {
+  if (!req.secure) {
+      console.log("not secure");
+      //FYI this should work for local development as well
+      return res.redirect('https://' + req.get('host') + req.url);
+  }
+  next();
+}
+
 // render the planner or the homepage depending on if you're logged in or not.
 app.get('/', function(req, res) {
   if (req.session.username) // if logged in
