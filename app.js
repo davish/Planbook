@@ -38,7 +38,7 @@ app.configure("production", function() {
   }));
 
   app.set('port', process.env.PORT || 80);
-  app.set('sslPort', 443);
+  app.set('sslPort', 8443);
   app.set('certificate', fs.readFileSync('/home/ubuntu/sslcert/server.crt', 'utf8'));
   app.set('privateKey', fs.readFileSync('/home/ubuntu/sslcert/server.key', 'utf8'));
 });
@@ -89,11 +89,13 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
   if (!err) {
     db = dbase;
 
-    http.createServer(app).listen(app.get('port'), function() {
+    var insecure = http.createServer(app)
+    var secure = https.createServer({key: app.get('privateKey'), cert: app.get('certificate')}, app)
+
+    insecure.listen(app.get('port'), function() {
       console.info('Listening on port %d', app.get('port'));
     });
-    var options = {key: app.get('privateKey'), cert: app.get('certificate')};
-    https.createServer(options, app).listen(app.get('sslPort'), '0.0.0.0', function() {
+    secure.listen(app.get('sslPort'), function() {
       console.info('HTTPS listening on port %d', app.get('sslPort'));
     });
   } else {
