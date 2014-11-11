@@ -27,7 +27,6 @@ $('document').ready(function() {
         renderRows(ref.settings.rows);
       }
     });
-  drawDates();
 });
 
 function saveWeek(o) {
@@ -69,6 +68,7 @@ function getWeek(c) {
     success: function(data) {
       ref.friday = data.friday;
       getReminders();
+      drawDates();
       c(JSON.parse(data.assignments));
     }
   });

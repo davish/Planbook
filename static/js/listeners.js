@@ -19,7 +19,6 @@ $('document').ready(function() {
         $('#sidebar').slide($(window).width(), 200);
         $("#planner").slide($(window).width(), 200, function() {
           setAssignmentValues(o);
-          drawDates();
           ref.turnInProgress = false;
         });
       });
@@ -35,7 +34,6 @@ $('document').ready(function() {
         $('#sidebar').slide(-$(window).width(), 200);
         $("#planner").slide(-$(window).width(), 200, function() {
           setAssignmentValues(o);
-          drawDates();
           ref.turnInProgress = false;
         });
       });
