@@ -195,17 +195,21 @@ function signup(user, pswd, c, fail) {
 
 
 function renderRows(rows) {
+
+  var ccs = "";
+  for (var key in ref.settings.colorCode) {
+    if (key == 'codeWhite')
+      ccs = ccs+ '<li><a data-target="#" class="'+key+' cc">ø</a></li>';
+    else
+      ccs = ccs+ '<li><a data-target="#" class="'+key+' cc" style="color:'+ref.settings.colorCode[key]+'">&#x25a0;</a></li>';
+  }
+
   var buttongroup = '\
   <div class="btn-group tabuttons" style="display: none;">\
   <button class="btn btn-default btn-xs reminderSet"><span class="glyphicon glyphicon-exclamation-sign"></span></button>\
   <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span class=caret></span></button>\
   <button class="done btn btn-default btn-xs"><span class="glyphicon glyphicon-ok"></span></button>\
-  <ul class="dropdown-menu cCodes" role="menu" width="20px">\
-  <li><a data-target="#" class="codeRed cc" style="color: '+ref.settings.colorCode['codeRed']+';">&#x25a0;</a></li>\
-  <li><a data-target="#" class="codeYellow cc" style="color: '+ref.settings.colorCode['codeYellow']+';">&#x25a0;</a></li>\
-  <li><a data-target="#" class="codeGreen cc" style="color: '+ref.settings.colorCode['codeGreen']+';">&#x25a0;</a></li>\
-  <li><a data-target="#" class="codeWhite cc">ø</a></li>\
-  </ul>\
+  <ul class="dropdown-menu cCodes" role="menu" width="20px">'+ccs+'</ul>\
   </div>';
   if ($('.container').width() >= 720) {
     $("#planner").html("");

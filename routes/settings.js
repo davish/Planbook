@@ -13,6 +13,10 @@ module.exports = {
                 s[key] = module.exports.defaults[key]; // add it to settings
               }
             }
+            if (!s['colorCode']['codeWhite']) {
+              toAdd++;
+              s['colorCode'] = module.exports.defaults['colorCode'];
+            }
             if (toAdd) { // if anything has been added
               db.collection("users").findOneAndUpdate(
                 {'name': req.session.username},
@@ -68,10 +72,11 @@ module.exports.defaults = {
                             'theme': "default",
                             'colorCode': 
                             {
-                              codeRed: 'rgb(217, 115, 98)',
+                              codeRed:    'rgb(217, 115, 98)',
                               codeYellow: 'rgb(240, 214, 128)',
-                              codeGreen: 'rgb(165, 230, 159)',
-                              codeBlue: ''
-                              codeWhite: ''
+                              codeGreen:  'rgb(165, 230, 159)',
+                              codeBlue:   'rgb(126, 178, 255)',
+                              codeGray:   'rgb(184, 184, 184)',
+                              codeWhite:  'rgb(255, 255, 255)'
                             }
                           }
