@@ -208,6 +208,7 @@ function taListen() {
         url: '/reminders',
         data: {
           box: box.attr('id'),
+          colorCode: box.css('background-color'),
           monday: ref.monday.toISOString().slice(0, 10),
           description: b.val(),
           options: {

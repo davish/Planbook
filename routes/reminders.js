@@ -47,6 +47,7 @@ module.exports = {
               name: req.session.username, 
               box: req.body.box, 
               monday: req.body.monday,
+              colorCode: req.body.colorCode,
               dueDate: dd,
               reminderDate: d.toISOString().slice(0,10),
               description: req.body.description

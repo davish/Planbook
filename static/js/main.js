@@ -142,8 +142,8 @@ function getReminders() {
       });
       $('.notifications').html(""); // reset notifications
       for (var r in data) { // render notifications
-        var dd = (new Date(data[r].dueDate).getMonth()+1) + '/' + new Date(data[r].dueDate).getDate()
-        $('.notifications').append('<li><a href="#" class="reminder">'+data[r].description+'<br>Due Date: '+data[r].dueDate+'</a></li>');
+        var dd = (new Date(data[r].dueDate).getMonth()+1) + '/' + new Date(data[r].dueDate).getDate();
+        $('.notifications').append('<li><a href="#" class="reminder" style="background-color: '+data[r].colorCode+'">'+data[r].description+'<br>Due Date: '+data[r].dueDate+'</a></li>');
       }
       $('#numNotifications').text(data.length); // add counter
     }
