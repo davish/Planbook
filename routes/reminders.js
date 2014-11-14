@@ -33,14 +33,16 @@ module.exports = {
 
           var dueDate = new Date(m.getFullYear(), 
             m.getMonth(), 
-            m.getDate() + parseInt(req.body.box.split('').reverse()[0])-1);
+            m.getDate() + parseInt(req.body.box.split('').reverse()[0]));
+
+          // console.log(req.body.options.startReminding);
 
           var startReminders = new Date(dueDate.getFullYear(), 
             dueDate.getMonth(), 
-            dueDate.getDate() - (req.body.options.startReminding+1));
+            dueDate.getDate() - (parseInt(req.body.options.startReminding)+1));
 
           var dd = dueDate.toISOString().slice(0,10);
-          
+
           var reminders = [];
           for (var d = dueDate; d.getTime() > startReminders.getTime(); d.setDate(d.getDate() - req.body.options.interval)) {
             reminders.push({

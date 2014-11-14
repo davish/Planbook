@@ -23,9 +23,9 @@ app.configure("development", function() {
   }));
 
   app.set('port', process.env.PORT || process.argv[2] || 5000);
-  app.set('sslPort', 8443);
-  app.set('certificate', fs.readFileSync('/Users/davis/Desktop/sslcert/server.crt', 'utf8'));
-  app.set('privateKey', fs.readFileSync('/Users/davis/Desktop/sslcert/server.key', 'utf8'));
+  // app.set('sslPort', 8443);
+  // app.set('certificate', fs.readFileSync('/Users/davis/Desktop/sslcert/server.crt', 'utf8'));
+  // app.set('privateKey', fs.readFileSync('/Users/davis/Desktop/sslcert/server.key', 'utf8'));
 });
 
 app.configure("production", function() {
@@ -41,10 +41,11 @@ app.configure("production", function() {
   app.set('sslPort', 443);
   app.set('certificate', fs.readFileSync('/home/ubuntu/sslcert/server.crt', 'utf8'));
   app.set('privateKey', fs.readFileSync('/home/ubuntu/sslcert/server.key', 'utf8'));
+  app.use(requireHTTPS); 
+
 });
 
 app.configure(function() { 
-  app.use(requireHTTPS); 
   app.engine("html", require("ejs").renderFile);
   app.set('view engine', 'html');
   app.set('views', __dirname + '/views');
@@ -99,14 +100,16 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
     db = dbase;
 
     var insecure = http.createServer(app)
-    var secure = https.createServer({key: app.get('privateKey'), cert: app.get('certificate')}, app)
 
     insecure.listen(app.get('port'), function() {
       console.info('Listening on port %d', app.get('port'));
     });
-    secure.listen(app.get('sslPort'), function() {
-      console.info('HTTPS listening on port %d', app.get('sslPort'));
-    });
+    if (app.get('sslPort')) {
+      var secure = https.createServer({key: app.get('privateKey'), cert: app.get('certificate')}, app)
+      secure.listen(app.get('sslPort'), function() {
+        console.info('HTTPS listening on port %d', app.get('sslPort'));
+      });
+    }
   } else {
     console.error(err);
   }

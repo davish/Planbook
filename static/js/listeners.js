@@ -198,6 +198,7 @@ function taListen() {
                 <button class="btn btn-warning btn-xs reminderCancel">Cancel</button>'
     var box = $(this).parent().parent().children('textarea');
     $(box).popover({content: html, html: 'true', placement: 'top'}).popover('show');
+    
     $('.reminderSubmit').unbind();
     $('.reminderSubmit').click(function() {
       var b = $(this).parent().parent().parent().children();
