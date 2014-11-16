@@ -35,8 +35,6 @@ module.exports = {
             m.getMonth(), 
             m.getDate() + parseInt(req.body.box.split('').reverse()[0]));
 
-          // console.log(req.body.options.startReminding);
-
           var startReminders = new Date(dueDate.getFullYear(), 
             dueDate.getMonth(), 
             dueDate.getDate() - (parseInt(req.body.options.startReminding)+1));
