@@ -130,6 +130,9 @@ function setSettings(s, callback) {
 }
 
 function getReminders() {
+  $('textarea').each(function() {
+    $(this).children('div').children('button.reminderSet').css('color', '');
+  });
   $.ajax({
     type: "GET",
     url: "/reminders",
@@ -137,6 +140,8 @@ function getReminders() {
       today: new Date().toISOString().slice(0,10)
     },
     success: function(data) {
+      ref.reminders = data;
+
       data.sort(function(a, b) { // sort the reminders, so that the ones with due dates the first get shown first.
         return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
       });
