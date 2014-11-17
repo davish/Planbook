@@ -19,13 +19,11 @@ app.configure("development", function() {
 
   app.use(express.logger({'format': 'dev'}));
   app.use(express.session({
+    cookie: {maxAge: 7 * 24 * 60 * 60 * 1000},
     secret: "keyboard cat",
   }));
 
   app.set('port', process.env.PORT || process.argv[2] || 5000);
-  // app.set('sslPort', 8443);
-  // app.set('certificate', fs.readFileSync('/Users/davis/Desktop/sslcert/server.crt', 'utf8'));
-  // app.set('privateKey', fs.readFileSync('/Users/davis/Desktop/sslcert/server.key', 'utf8'));
 });
 
 app.configure("production", function() {
@@ -33,6 +31,7 @@ app.configure("production", function() {
 
   app.use(express.logger({'stream': fs.createWriteStream('log.txt')}));
   app.use(express.session({
+    cookie: {maxAge: 7 * 24 * 60 * 60 * 1000},
     secret: "keyboard cat",
     store: new RedisStore({ host: 'localhost', port: 6379})
   }));
