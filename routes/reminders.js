@@ -24,8 +24,6 @@ module.exports = {
     }, function(err, result) {
       if (!err) {
         if (req.body.options) { // if there aren't options the client just wants to delete reminders
-          var offset = req.body.box.split('').reverse()[0]-1;
-
           var m = new Date(req.body.monday);
 
           var dueDate = new Date(m.getFullYear(), 
