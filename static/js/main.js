@@ -59,6 +59,7 @@ function getWeek(c) {
     },
     statusCode: {
       404: function() { // if week doesn't exist
+        drawDates();
         c(genBlankAssignments());
       },
       500: function() {
