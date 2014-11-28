@@ -4,9 +4,9 @@ module.exports = {
   get: function(req, res) {
     res.type('text/json');
     db.collection("reminders").find({
-      name: req.session.username,
+      name: req.session.username/*,
       dueDate: {$gte: new Date(req.param('today'))},
-      startReminding: {$lt: new Date(req.param('today'))}
+      startReminding: {$lt: new Date(req.param('today'))}*/
     }).toArray(function(err, reminders) {
       if (!err) // gotta get the contents of the reminders, since they're not static.
         res.send(reminders);

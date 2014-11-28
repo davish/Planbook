@@ -6,7 +6,7 @@ module.exports = {
       if (docs[0])
         res.send({'assignments': docs[0].data, 'friday': fridays[req.param('monday')]});
       else
-        res.send(404); // client deals with the 404.
+        res.send(404, {'friday': fridays[req.param('monday')]}); // client deals with the 404.
     });
   },
   post: function(req, res) { // update this week's assignments, with req.session.username, req.body.monday and req.body.data

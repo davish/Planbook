@@ -58,7 +58,7 @@ function getWeek(c) {
       monday: ref.monday.toISOString().slice(0, 10) 
     },
     statusCode: {
-      404: function() { // if week doesn't exist
+      404: function(data) { // if week doesn't exist
         ref.friday = data.friday;
         drawDates();
         getReminders();
@@ -150,14 +150,19 @@ function getReminders() {
       data.sort(function(a, b) { // sort the reminders, so that the ones with due dates the first get shown first.
         return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
       });
+      var len = 0;
       $('.notifications').html(""); // reset notifications
       for (var r in data) { // render notifications
-        var dd = new Date(data[r].dueDate).toLocaleString();
-        dd = dd.slice(0, dd.indexOf(','));
-        $('.notifications').append('<li><a href="#" class="reminder" style="background-color: '+data[r].colorCode+'">'+data[r].description+'<br>Due Date: '+dd+'</a></li>');
-        $('#' + data[r].box).parent().children('div').children('.reminderSet').css('color', 'orange');
+        if (data[r].monday == ref.monday.toISOString().slice(0, 10))
+          $('#' + data[r].box).parent().children('div').children('.reminderSet').css('color', 'orange');
+        if (new Date(data[r].dueDate).getTime() > new Date().getTime() && new Date(data[r].startReminding).getTime() < new Date().getTime()) {
+          var dd = new Date(data[r].dueDate).toLocaleString();
+          dd = dd.slice(0, dd.indexOf(','));
+          $('.notifications').append('<li><a href="#" class="reminder" style="background-color: '+data[r].colorCode+'">'+data[r].description+'<br>Due Date: '+dd+'</a></li>');
+          len++;
+        }
       }
-      $('#numNotifications').text(data.length); // add counter
+      $('#numNotifications').text(len); // add counter
     }
   });
 }
