@@ -35,6 +35,7 @@ module.exports = {
             dueDate.getDate() - (parseInt(req.body.options.startReminding)+1));
 
           var reminders = {
+            startRemindingNum: req.body.options.startReminding,
             startReminding: startReminders,
             dueDate: dueDate,
 

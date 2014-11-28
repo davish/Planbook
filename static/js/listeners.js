@@ -189,14 +189,27 @@ function taListen() {
 
   $('.reminderSet').unbind();
   $('.reminderSet').click(function() {
-    var max = 7;
-    var html = 'Start reminding me\
-                <input type="number" class="r" name="amountInput" value="1" style="width:35px;" disabled/>\
-                days before.\
-                <input type="range" name="amountRange" min="1" max="'+max+'" value="0" oninput="$(this).parent().children(\'input.r\').val(this.value)" />\
-                <button class="btn btn-primary btn-xs reminderSubmit">Submit</button>\
-                <button class="btn btn-warning btn-xs reminderCancel">Cancel</button>'
     var box = $(this).parent().parent().children('textarea');
+    var daysBefore = '1';
+    var prev = false;
+    // search for reminder in array
+    for (var i = 0; i < ref.reminders.length; i++) {
+      if (ref.reminders[i].monday == ref.monday.toISOString().slice(0, 10) && ref.reminders[i].box == box[0].id) {
+        daysBefore = ref.reminders[i].startRemindingNum || '1';
+        prev = true;
+      }
+    }
+
+    var max = 14;
+    var html = '<span class="reminderCancel">x</span>\
+                Start reminding me\
+                <input type="number" class="r" name="amountInput" value="'+daysBefore+'" style="width:35px;" disabled/>\
+                days before.\
+                <input type="range" name="amountRange" min="1" max="'+max+'" value="'+daysBefore+'" oninput="$(this).parent().children(\'input.r\').val(this.value)" />\
+                <button class="btn btn-primary btn-xs reminderSubmit">'+(prev ? 'Update' : 'Submit')+'</button>\
+                <button class="btn btn-danger  btn-xs reminderRemove">Remove</button>'
+
+
     $(box).popover({content: html, html: 'true', placement: 'top'}).popover('show');
     
     $('.reminderSubmit').unbind();
@@ -229,7 +242,26 @@ function taListen() {
       $('.reminderCancel').unbind();
       var b = $(this).parent().parent().parent().children();
       b.popover('destroy');
-    })
+    });
+
+    $('.reminderRemove').unbind();
+    $('.reminderRemove').click(function() {
+      var b = $(this).parent().parent().parent().children();
+      b.popover('destroy');
+      $.ajax({
+        method: 'POST',
+        url: '/reminders',
+        data: {
+          box: box[0].id,
+          monday: ref.monday.toISOString().slice(0, 10)
+        },
+        statusCode: {
+          200: function() {
+            getReminders();
+          }
+        }
+      });
+    });
   });
 
 

@@ -125,6 +125,14 @@ div#planner  {
 a.reminder {
   font-size: 10px;
 }
+
+.reminderCancel {
+  position: absolute;
+  right: 1px;
+  top: -1px;
+  cursor: pointer;
+}
+
 div#navbtns {
   position: relative;
   bottom: 17px;

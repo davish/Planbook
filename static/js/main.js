@@ -59,7 +59,9 @@ function getWeek(c) {
     },
     statusCode: {
       404: function() { // if week doesn't exist
+        ref.friday = data.friday;
         drawDates();
+        getReminders();
         c(genBlankAssignments());
       },
       500: function() {
@@ -142,7 +144,9 @@ function getReminders() {
     },
     success: function(data) {
       ref.reminders = data;
-
+      $('textarea').each(function() {
+        $(this).parent().children('div').children('.reminderSet').css('color', '');
+      });
       data.sort(function(a, b) { // sort the reminders, so that the ones with due dates the first get shown first.
         return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
       });
@@ -151,6 +155,7 @@ function getReminders() {
         var dd = new Date(data[r].dueDate).toLocaleString();
         dd = dd.slice(0, dd.indexOf(','));
         $('.notifications').append('<li><a href="#" class="reminder" style="background-color: '+data[r].colorCode+'">'+data[r].description+'<br>Due Date: '+dd+'</a></li>');
+        $('#' + data[r].box).parent().children('div').children('.reminderSet').css('color', 'orange');
       }
       $('#numNotifications').text(data.length); // add counter
     }
