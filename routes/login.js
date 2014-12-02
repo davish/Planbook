@@ -17,12 +17,14 @@ module.exports = {
     /*if (whitelist.join(' ').indexOf(req.body.username) <= -1) { // if they're not on the whitelist
       res.redirect('/login?why=whitelist');
       return; // stop here.
-    } else if (!req.body.password) {
+    } else */
+
+    if (!req.body.password) {
       res.redirect('/login?why=incorrect')
     } else {
       login(req, res);
-    }*/
-    login(req, res);
+    }
+    // login(req, res);
   }
 };
 
