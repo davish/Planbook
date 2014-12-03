@@ -94,6 +94,10 @@ app.post('/settings', routes.settings.post);
 app.get('/reminders', routes.reminders.get);
 app.post('/reminders', routes.reminders.post);
 
+app.get('/feedback', function(req, res) {
+  res.send('<center><iframe src="https://docs.google.com/forms/d/15stup9XejMQ0nAFdn-Ucbumv6s6KN92tssBrlAj3A3c/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>');
+})
+
 MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
   if (!err) {
     db = dbase;
