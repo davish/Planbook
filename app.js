@@ -5,8 +5,6 @@ var express = require("express"),
 var MongoClient = require('mongodb').MongoClient,
     RedisStore = require('connect-redis')(express.session);
 var fs = require('fs');
-// var privateKey  = fs.readFileSync('/home/ubuntu/sslcert/server.key', 'utf8');
-// var certificate = fs.readFileSync('/home/ubuntu/sslcert/server.crt', 'utf8');
 
 var routes = require('./routes/index.js');
 
@@ -38,8 +36,6 @@ app.configure("production", function() {
 
   app.set('port', process.env.PORT || 80);
   app.set('sslPort', 443);
-  app.set('certificate', fs.readFileSync('/home/ubuntu/sslcert/server.crt', 'utf8'));
-  app.set('privateKey', fs.readFileSync('/home/ubuntu/sslcert/server.key', 'utf8'));
   app.use(requireHTTPS); 
 
 });
@@ -108,7 +104,14 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
       console.info('Listening on port %d', app.get('port'));
     });
     if (app.get('sslPort')) {
-      var secure = https.createServer({key: app.get('privateKey'), cert: app.get('certificate')}, app)
+      var secure = https.createServer({
+        cert: fs.readFileSync('/home/ubuntu/sslcert/server.crt', 'utf8'), 
+        key: fs.readFileSync('/home/ubuntu/sslcert/server.key', 'utf8'),
+        ca: [
+          fs.readFileSync('/home/ubuntu/sslcert/intermediate.pem', 'utf8'),
+          fs.readFileSync('/home/ubuntu/sslcert/root.pem', 'utf8')
+        ]
+      }, app)
       secure.listen(app.get('sslPort'), function() {
         console.info('HTTPS listening on port %d', app.get('sslPort'));
       });
