@@ -91,7 +91,7 @@ app.get('/reminders', routes.reminders.get);
 app.post('/reminders', routes.reminders.post);
 
 app.get('/feedback', function(req, res) {
-  res.send('<center><iframe style="width:100%; height: 100%;" src="https://docs.google.com/forms/d/15stup9XejMQ0nAFdn-Ucbumv6s6KN92tssBrlAj3A3c/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>');
+  res.send('<center><a href="/">Back to Planner</a><br><iframe style="width:100%; height: 100%;" src="https://docs.google.com/forms/d/15stup9XejMQ0nAFdn-Ucbumv6s6KN92tssBrlAj3A3c/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>');
 })
 
 MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
@@ -116,6 +116,15 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
         console.info('HTTPS listening on port %d', app.get('sslPort'));
       });
     }
+
+    /* var emailLoop = setInterval(function() {
+      db.collection('reminders').find({query: {
+        dueDate: {$gte: new Date(req.param('today'))},
+        startReminding: {$lt: new Date(req.param('today'))
+      }, 
+      $orderby: {'name': 1}
+     }, 1000*60*30);*/
+
   } else {
     console.error(err);
   }
