@@ -30,7 +30,7 @@ module.exports = {
             m.getMonth(), 
             m.getDate() + parseInt(req.body.box.split('').reverse()[0]));
 
-          dueDate.setHours(23, 59, 59, 999); // Until the end of the day
+          dueDate.setHours(23, 59, 59, 0); // Until the end of the day
 
           var startReminders = new Date(dueDate.getFullYear(), 
             dueDate.getMonth(), 
