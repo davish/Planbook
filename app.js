@@ -184,7 +184,7 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
       } else {
         console.log("Not 7AM or 3PM. Won't send an email.")
       }
-     }, 1000*10); // check once per hour
+     }, 1000*60*60); // check once per hour
 
   } else {
     console.error(err);
