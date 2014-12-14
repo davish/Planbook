@@ -102,6 +102,14 @@ app.get('/friday', function(req, res) {
   res.send(String(f));
 })
 
+var transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'daltonplanbook@gmail.com',
+        pass: 'theimpregnablecindylou'
+    }
+});
+
 MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
   if (!err) {
     db = dbase;
@@ -127,7 +135,8 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
 
     var emailLoop = setInterval(function() {
       var now = new Date();
-      if (now.getHours() == 9 || now.getHours() == 15) {
+      if (((now.getDay > 0 || now.getDay < 6) && (now.getHours() == 9 || now.getHours() == 15)) || ((now.getDay == 0 || now.getDay == 6) && now.getHours() == 12)) {
+        console.log("It's time to send out emails.")
         db.collection('reminders').find({query: {
             dueDate: {$gte: new Date()},
             startReminding: {$lt: new Date()}
@@ -171,6 +180,8 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
             console.log(err);
           }
         });
+      } else {
+        console.log("Not 7AM or 3PM. Won't send an email.")
       }
      }, 1000*60*60); // check once per hour
 
