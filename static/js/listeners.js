@@ -230,7 +230,7 @@ function taListen() {
           description: b.val(),
           options: {
             startReminding: parseInt($(this).parent().children('.r').val()),
-            dueDate: d.toUTCString(),
+            dueDate: d.toJSON(),
             interval: 1
           }
         },
