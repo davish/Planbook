@@ -6,6 +6,7 @@ var MongoClient = require('mongodb').MongoClient,
     RedisStore = require('connect-redis')(express.session);
 var fs = require('fs');
 
+var nodemailer = require('nodemailer');
 var routes = require('./routes/index.js');
 
 
@@ -124,13 +125,54 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
       });
     }
 
-    /* var emailLoop = setInterval(function() {
-      db.collection('reminders').find({query: {
-        dueDate: {$gte: new Date(req.param('today'))},
-        startReminding: {$lt: new Date(req.param('today'))
-      }, 
-      $orderby: {'name': 1}
-     }, 1000*60*30);*/
+    var emailLoop = setInterval(function() {
+      var now = new Date();
+      if (now.getHours() == 9 || now.getHours() == 15) {
+        db.collection('reminders').find({query: {
+            dueDate: {$gte: new Date()},
+            startReminding: {$lt: new Date()}
+          }, 
+          $orderby: {'name': 1}
+        }).toArray(function(err, docs) {
+          if (!err) {
+            currentUser = docs[0].name;
+            currentRems = [];
+            docs.push({});
+            for (var i in docs) {
+
+              if (currentUser != docs[i].name) {
+                console.log(currentUser + "@dalton.org");
+                var messageHTML = "Hello "+currentUser+"! <br><br> Looks like you've set " + currentRems.length + " reminders for yourself. Here they are: <br> <ul>";
+                for (var j in currentRems) {
+                  messageHTML = messageHTML + "<li>" + currentRems[j].description + "<br>"+"Due: "+ new Date(currentRems[j].dueDate).toLocaleDateString() +"</li>";
+                }
+                messageHTML = messageHTML + "</ul><br> Thanks for using the Planbook!";
+
+                var mailOptions = {
+                  from: 'Dalton Planbook <daltonplanbook@gmail.com>', // sender address
+                  to: currentUser + "@dalton.org", // list of receivers
+                  subject: 'Your Reminders for ' + new Date().toLocaleDateString(), // Subject line
+                  text: messageHTML, // plaintext body
+                  html: messageHTML // html body
+                };
+                transporter.sendMail(mailOptions, function(error, info){
+                  if(error) {
+                    console.log(error);
+                  } else {
+                    console.log('Message sent to '+currentUser+"@dalton.org"+': ' + info.response);
+                  }
+                });
+                currentRems = [];
+                currentUser = docs[i].name;
+              }
+              currentRems.push(docs[i]);
+            }
+          } else {
+            console.log(err);
+          }
+        });
+      }
+     }, 1000*60*60); // check once per hour
 
   } else {
     console.error(err);

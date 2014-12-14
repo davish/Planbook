@@ -28,7 +28,7 @@ module.exports = {
 
           var dueDate = new Date(m.getFullYear(), 
             m.getMonth(), 
-            m.getDate() + parseInt(req.body.box.split('').reverse()[0])-1);
+            m.getDate() + parseInt(req.body.box.split('').reverse()[0]));
 
           dueDate.setHours(23, 59, 59, 0); // Until the end of the day
 
