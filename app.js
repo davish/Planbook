@@ -133,7 +133,7 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
       });
     }
 
-    var emailLoop = setInterval(function() {
+    /*var emailLoop = setInterval(function() {
       console.log("email");
       var now = new Date();
       if (((now.getDay() > 0 || now.getDay() < 6) && (now.getHours() == 9 || now.getHours() == 13)) || ((now.getDay() == 0 || now.getDay() == 6) && now.getHours() == 11)) {
@@ -184,7 +184,7 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
       } else {
         console.log("Not 7AM or 3PM. Won't send an email.")
       }
-     }, 1000*60*60); // check once per hour
+     }, 1000*60*60); // check once per hour*/
 
   } else {
     console.error(err);
