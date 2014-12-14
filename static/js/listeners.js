@@ -217,6 +217,9 @@ function taListen() {
       var b = $(this).parent().parent().parent().children();
       $('.reminderSubmit').unbind();
       b.popover('destroy');
+      var d = new Date(ref.monday.getFullYear(), 
+            ref.monday.getMonth(), 
+            ref.monday.getDate() + parseInt(box.attr('id').split('').reverse()[0]-1));
       $.ajax({
         type: 'POST',
         url: '/reminders',
@@ -227,6 +230,7 @@ function taListen() {
           description: b.val(),
           options: {
             startReminding: parseInt($(this).parent().children('.r').val()),
+            dueDate: d.toUTCString(),
             interval: 1
           }
         },
