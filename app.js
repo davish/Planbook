@@ -92,6 +92,13 @@ app.post('/reminders', routes.reminders.post);
 
 app.get('/feedback', function(req, res) {
   res.send('<center><a href="/">Back to Planner</a><br><iframe style="width:100%; height: 100%;" src="https://docs.google.com/forms/d/15stup9XejMQ0nAFdn-Ucbumv6s6KN92tssBrlAj3A3c/viewform?embedded=true" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>');
+});
+app.get('/friday', function(req, res) {
+  res.set('Content-Type', 'text/plain');
+  var d = new Date();
+  d = new Date(d.getFullYear(), d.getMonth(), d.getDate() - (d.getDay() - 1));
+  var f = require('./routes/fridays.js')[d.toISOString().slice(0, 10)];
+  res.send(String(f));
 })
 
 MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {

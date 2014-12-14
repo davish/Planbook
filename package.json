@@ -9,6 +9,7 @@
     "express": "3.x",
     "mongodb": "~2.0",
     "ejs": "*",
-    "connect-redis": "*"
+    "connect-redis": "*",
+    "nodemailer": "*"
   }
 }
