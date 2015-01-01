@@ -2,6 +2,35 @@
   Event Handlers
 */
 $('document').ready(function() {
+
+  /*
+    Planbook initialization
+  */
+  $.ajax({
+    type: "GET",
+    url: "/settings?json=true", 
+    data: {
+      'settings': ref.settings
+    },
+    statusCode: { 
+      500: function() {
+        alert("There's been a server error. Contact NLTL for assistance.");
+      }
+    },
+    success: function(data) {
+      $('li#username').children('a').text(data.name);
+      ref.settings = data.settings;
+
+      if (typeof(ref.settings.rows[0]) != "object") { // if it's the old settings format
+        for (var i = 0; i < ref.settings.rows.length; i++)
+          ref.settings.rows[i] = [ref.settings.rows[i], i+1];
+        setSettings(ref.settings, function() {});
+      }
+      renderRows(ref.settings.rows);
+    }
+  });
+
+
   /* 
     Navigation Buttons
   */

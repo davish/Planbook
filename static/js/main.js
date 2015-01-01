@@ -4,33 +4,11 @@ var ref = {
 };
 
 $('document').ready(function() {
-    $.ajax({
-      type: "GET",
-      url: "/settings?json=true", 
-      data: {
-        'settings': ref.settings
-      },
-      statusCode: { 
-        500: function() {
-          alert("There's been a server error. Contact NLTL for assistance.");
-        }
-      },
-      success: function(data) {
-        $('li#username').children('a').text(data.name);
-        ref.settings = data.settings;
 
-        if (typeof(ref.settings.rows[0]) != "object") { // if it's the old settings format
-          for (var i = 0; i < ref.settings.rows.length; i++)
-            ref.settings.rows[i] = [ref.settings.rows[i], i+1];
-          setSettings(ref.settings, function() {});
-        }
-        renderRows(ref.settings.rows);
-      }
-    });
 });
 
 function saveWeek(o) {
-  $.ajax({ // now get a new auth cookie from couch
+  $.ajax({
     type: "POST",
     url: "/planner", 
     data: {
@@ -72,6 +50,11 @@ function getWeek(c) {
       ref.friday = data.friday;
       getReminders();
       drawDates();
+      
+      var a = JSON.parse(data.announcements);
+      $('.announcement').each(function() {
+        $(this).html(a[$(this).attr('id')] || "");
+      });
       c(JSON.parse(data.assignments));
     }
   });
@@ -102,14 +85,14 @@ function setAssignmentValues(d) {
   $('textarea').each(function (index, ta) {
     $(ta).css("text-decoration", "none solid rgb(0, 0, 0)");
     $(ta).css("background-color", "rgb(255, 255, 255)");
-    $(ta).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-unchecked"></span>')
+    $(ta).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-unchecked"></span>');
     if (d[ta.id]) {
       $(ta).val(d[ta.id][0]);
-      if (d[ta.id][1]) {
-        $(ta).css("text-decoration", "line-through");
-        $(ta).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-check"></span>')
+      if (d[ta.id][1]) { // if the "done" button's been checked
+        $(ta).css("text-decoration", "line-through"); // strikethrough the box
+        $(ta).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-check"></span>');
       }
-      if (d[ta.id][2])
+      if (d[ta.id][2]) // if there's a color, set it
         $(ta).css("background-color", ref.settings.colorCode[d[ta.id][2]]);
     }
     else
@@ -228,9 +211,9 @@ function renderRows(rows) {
   <ul class="dropdown-menu cCodes" role="menu" width="20px">'+ccs+'</ul>\
   </div>';
   if ($('.container').width() >= 720) {
-    $("#planner").html("");
+    $("#classes").html("");
     for (var i = 0; i < rows.length; i++) {
-      var row = $("#planner").append('<div class="row"></div>');
+      var row = $("#classes").append('<div class="row"></div>');
       // set ID to rows[i][1] 
       row.append('<div class="subj col-sm-2" id="'+rows[i][1]+'">\
         <span class="subjectspan">'+rows[i][0]+'</span> <span class="subjbtns" style="display: none;">\
@@ -240,7 +223,7 @@ function renderRows(rows) {
         row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(rows[i][1]) + String(j)+'"></textarea>' + buttongroup + '</div>');
       }
     }
-    var labs = $("#planner").append('<div class="row"></div>');
+    var labs = $("#classes").append('<div class="row"></div>');
     labs.append('<div class="subj col-sm-2" id="0">Labs</div>');
 
     for (var j = 1; j <= 5; j++) {

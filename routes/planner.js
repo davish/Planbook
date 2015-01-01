@@ -2,11 +2,15 @@ var fridays = require('./fridays.js');
 module.exports = {
   get: function(req, res) { // get this week's assignments, with req.session.username, req.body.monday.
     res.type('text/json');
-    db.collection("assignments").find({$and: [{'name': req.session.username}, {'monday': req.param('monday')}]}).toArray(function(err, docs) {
-      if (docs[0])
-        res.send({'assignments': docs[0].data, 'friday': fridays[req.param('monday')]});
-      else
-        res.send(404, {'friday': fridays[req.param('monday')]}); // client deals with the 404.
+    db.collection("assignments").find({$and: [{'name': req.session.username}, {'monday': req.param('monday')}]}).toArray(function(err, week) {
+      db.collection("announcements").find({'monday': req.param('monday')}).toArray(function(err, announcements) {
+        if (week[0]) {
+          res.send({'assignments': docs[0].data, 'friday': fridays[req.param('monday')], 'announcements': announcements[0].data});
+        }
+        else {
+          res.send({'assignments': '{}', 'friday': fridays[req.param('monday')], 'announcements': announcements[0].data});
+        }
+      });
     });
   },
   post: function(req, res) { // update this week's assignments, with req.session.username, req.body.monday and req.body.data
