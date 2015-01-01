@@ -106,6 +106,9 @@ app.get('/admin', function(req, res) {
   res.render('admin.html');
 });
 
+app.get('/announcements', routes.announcements.get);
+app.post('/announcements', routes.announcements.post);
+
 var transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
