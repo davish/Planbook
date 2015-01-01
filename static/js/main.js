@@ -212,7 +212,6 @@ function signup(user, pswd, c, fail) {
 
 
 function renderRows(rows) {
-
   var ccs = "";
   for (var key in ref.settings.colorCode) {
     if (key == 'codeWhite')
@@ -270,7 +269,6 @@ function renderRows(rows) {
     drawDates();
     getWeek(setAssignmentValues);
   }
-
 }
 
 function getMonday(d) {
