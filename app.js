@@ -103,7 +103,10 @@ app.get('/friday', function(req, res) {
 });
 
 app.get('/admin', function(req, res) {
-  res.render('admin.html');
+  if (req.session.username == 'c17ak' || req.session.username == 'c17dh' || req.session.username == 'c15am')
+    res.render('admin.html');
+  else
+    res.redirect('/');
 });
 
 app.get('/announcements', routes.announcements.get);
