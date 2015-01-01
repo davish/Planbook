@@ -100,7 +100,11 @@ app.get('/friday', function(req, res) {
   d = new Date(d.getFullYear(), d.getMonth(), d.getDate() - (d.getDay() - 1));
   var f = require('./routes/fridays.js')[d.toISOString().slice(0, 10)];
   res.send(String(f));
-})
+});
+
+app.get('/admin', function(req, res) {
+  res.render('admin.html');
+});
 
 var transporter = nodemailer.createTransport({
     service: 'Gmail',
