@@ -4,12 +4,14 @@ module.exports = {
     res.type('text/json');
     db.collection("assignments").find({$and: [{'name': req.session.username}, {'monday': req.param('monday')}]}).toArray(function(err, week) {
       db.collection("announcements").find({'monday': req.param('monday')}).toArray(function(err, announcements) {
+        
+
         if (week[0]) {
           console.log(week[0]);
-          res.send({'assignments': week[0].data || '{}', 'friday': fridays[req.param('monday')], 'announcements': announcements[0].data|| '{}'});
+          res.send({'assignments': week[0].data, 'friday': fridays[req.param('monday')], 'announcements': announcements[0] ? announcements[0].data: '{}'});
         }
         else {
-          res.send({'assignments': '{}', 'friday': fridays[req.param('monday')], 'announcements': announcements[0].data|| '{}'});
+          res.send({'assignments': '{}', 'friday': fridays[req.param('monday')], 'announcements': announcements[0] ? announcements[0].data: '{}'});
         }
       });
     });
