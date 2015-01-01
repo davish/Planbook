@@ -11,6 +11,21 @@ textarea {
 
 }
 
+.announcement {
+  /*width: 100%;*/
+  height: 56px;
+  border: solid;
+  border-width: 1px;
+  border-color: #777;
+}
+
+.head {
+  height: 20px;
+  border: solid;
+  border-width: 1px;
+  border-color: #777;
+}
+
 .mnav {
   position: fixed;
 }
