@@ -100,6 +100,12 @@ $('document').ready(function() {
     getWeek(setAssignmentValues);
     drawDates();
   });
+  $('#mdays').change(function() {
+    $('#' + ref.visibleDay).hide();
+    $('#' + $("select option:selected").text()).show();
+    ref.visibleDay = $( "select option:selected" ).text();
+    console.log($( "select option:selected" ).text());
+  });
 
   // add subject
   $('button#add').click(function() {
@@ -220,12 +226,12 @@ function taListen() {
   $('.reminderSet').click(function() {
     var box = $(this).parent().parent().children('textarea');
     var daysBefore = '1';
-    var prev = false;
+    var prev = false; // flag to see if there's been a reminder set for this box already, so we can display right amount of days
     // search for reminder in array
     for (var i = 0; i < ref.reminders.length; i++) {
       if (ref.reminders[i].monday == ref.monday.toISOString().slice(0, 10) && ref.reminders[i].box == box[0].id) {
         daysBefore = ref.reminders[i].startRemindingNum || '1';
-        prev = true;
+        prev = true; 
       }
     }
 
@@ -249,6 +255,7 @@ function taListen() {
       var d = new Date(ref.monday.getFullYear(), 
             ref.monday.getMonth(), 
             ref.monday.getDate() + parseInt(box.attr('id').split('').reverse()[0]-1));
+      console.log(box.val());
       $.ajax({
         type: 'POST',
         url: '/reminders',
@@ -256,7 +263,7 @@ function taListen() {
           box: box.attr('id'),
           colorCode: box.css('background-color'),
           monday: ref.monday.toISOString().slice(0, 10),
-          description: b.val(),
+          description: box.val(),
           options: {
             startReminding: parseInt($(this).parent().children('.r').val()),
             dueDate: d.toJSON(),

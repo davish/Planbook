@@ -43,6 +43,11 @@ textarea {
   left: 85%;
 }
 
+#mdays {
+  -webkit-appearance: menulist-button;
+  font-size: 30px;
+}
+
 div.tabuttons {
   position:absolute;
   bottom:1px;

@@ -238,17 +238,18 @@ function renderRows(rows) {
     var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     $(".mobile").html("");
     for (var j = 1; j <= 5; j++) {
-      var row = $(".mobile").append('<div class="row"></div>');
-      row.append('<div class="col-sm-2"><h3>'+days[j-1]+'<h3></div>');
+      $(".mobile").append('<div class="row" style="display: none;" id="'+days[j-1]+'"></div>');
+      var row = $('#'+days[j-1])
+      // row.append('<div class="col-sm-2"><h3>'+days[j-1]+'<h3></div>');
       for (var i = 0; i < rows.length; i++) {
-        row.append('<div class="col-sm-2"><h4>'+rows[i][0]+'</h4><textarea class="ta" id="'+ String(rows[i][1]) + String(j)+'"></textarea></div>')
+        row.append('<div class="col-sm-2"><h4>'+rows[i][0]+'</h4><textarea class="ta" id="'+ String(rows[i][1]) + String(j)+'"></textarea>'+buttongroup+'</div>');
+        
       }
+      row.append('<div class="col-sm-2"><h4>Lab</h4><textarea class="ta" id="0'+String(j)+'"></textarea>'+buttongroup+'</div>')
     }
+    ref.visibleDay = "Monday";
+    $('#Monday').show();
     taListen();
-    $("textarea").each(function() {
-      //$(this).prop("readonly", true);
-      $(this).css("width", "50%")
-    });
     drawDates();
     getWeek(setAssignmentValues);
   }
