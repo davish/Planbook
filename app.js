@@ -108,6 +108,10 @@ app.get('/admin', function(req, res) {
   else
     res.redirect('/');
 });
+app.get('/about', function(req, res) {
+  res.render('about.html');
+});
+
 
 app.get('/announcements', routes.announcements.get);
 app.post('/announcements', routes.announcements.post);
