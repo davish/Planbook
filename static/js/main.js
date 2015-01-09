@@ -289,10 +289,11 @@ function drawDates() {
       var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
       var d = new Date(ref.monday.getFullYear(), ref.monday.getMonth(), ref.monday.getDate() + days.indexOf($(element).text()));
       var isToday = (d.getFullYear = new Date().getFullYear && d.getMonth() == new Date().getMonth() && d.getDate() == new Date().getDate())
-      if (isToday)
-        $(element).parent().html('<h3><em><u>'+$(element).text()+ '</u></em></h3>' + (d.getMonth()+1) + '/' + d.getDate());
-      else
+      if (index == 4) {
+        $(element).parent().html('<h3>'+$(element).text()+ '</h3>' + (d.getMonth()+1) + '/' + d.getDate() + (ref.friday || ''));
+      } else {
         $(element).parent().html('<h3>'+$(element).text()+ '</h3>' + (d.getMonth()+1) + '/' + d.getDate());
+      }
     });
   }
 }
