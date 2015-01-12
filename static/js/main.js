@@ -133,6 +133,12 @@ function getReminders() {
       data.sort(function(a, b) { // sort the reminders, so that the ones with due dates the first get shown first.
         return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
       });
+
+      var classes = {};
+      for (var i = 0; i < ref.settings.rows.length; i++) {
+        classes[ref.settings.rows[i][1]] = ref.settings.rows[i][0];
+      }
+
       var len = 0;
       $('.notifications').html(""); // reset notifications
       for (var r in data) { // render notifications
@@ -141,7 +147,7 @@ function getReminders() {
         if (new Date(data[r].dueDate).getTime() > new Date().getTime() && new Date(data[r].startReminding).getTime() < new Date().getTime()) {
           var dd = new Date(data[r].dueDate).toLocaleString();
           dd = dd.slice(0, dd.indexOf(','));
-          $('.notifications').append('<li><a href="#" class="reminder" style="background-color: '+data[r].colorCode+'">'+data[r].description+'<br>Due Date: '+dd+'</a></li>');
+          $('.notifications').append('<li><a href="#" class="reminder" style="background-color: '+data[r].colorCode+'">'+data[r].description+'<br> in '+classes[data[r].box.slice(0,1)]+'<br>Due Date: '+dd+'</a></li>');
           len++;
         }
       }
