@@ -147,7 +147,7 @@ function getReminders() {
         if (new Date(data[r].dueDate).getTime() > new Date().getTime() && new Date(data[r].startReminding).getTime() < new Date().getTime()) {
           var dd = new Date(data[r].dueDate).toLocaleString();
           dd = dd.slice(0, dd.indexOf(','));
-          $('.notifications').append('<li><a href="#" class="reminder" style="background-color: '+data[r].colorCode+'">'+data[r].description+'<br> in '+classes[data[r].box.slice(0,1)]+'<br>Due Date: '+dd+'</a></li>');
+          $('.notifications').append('<li><a href="#" class="reminder" style="background-color: '+data[r].colorCode+'">'+data[r].description+'<br> in '+(classes[data[r].box.slice(0,1)] || 'Labs')+'<br>Due Date: '+dd+'</a></li>');
           len++;
         }
       }
