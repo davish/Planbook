@@ -11,6 +11,13 @@ textarea {
 
 }
 
+#numNotifications {
+  background-color: red;
+  border-radius: 2px;
+  padding: 4px;
+  padding-right: 5px;
+}
+
 .announcement {
   /*width: 100%;*/
   height: 56px;
