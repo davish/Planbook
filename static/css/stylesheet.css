@@ -25,6 +25,10 @@ textarea {
   border-width: 1px;
   border-color: #777;
 }
+.w {
+  width: 100%;
+  height: 105px;
+}
 
 .mnav {
   position: fixed;
@@ -79,7 +83,7 @@ span#today {
 }
 .weekendNote {
   width: 100%px;
-  height: 140px;
+  height: 105px;
   border-width: 1px;
 }
 
