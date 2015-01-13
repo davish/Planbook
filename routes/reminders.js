@@ -43,6 +43,8 @@ module.exports = {
             description: req.body.description,
             colorCode: req.body.colorCode,
 
+            dateWritten: new Date(),
+
             name: req.session.username
           };
           db.collection("reminders").insert(reminders, function(err, result) {

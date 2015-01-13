@@ -33,7 +33,7 @@ function login(req, res) {
           if (!err) {
             if (docs[0]) {
               // update the lastLogin field, which is used for analytics
-              db.collection("users").findOneAndUpdate({'name': req.body.username}, {$set: {'lastLogin': new Date()}}, 
+              db.collection("users").findOneAndUpdate({'name': req.body.username}, {$set: {'lastLogin': new Date(), 'lastAccess': new Date()}}, 
                 function(err, result) {
                   req.session.username = req.body.username;
                   res.redirect('/'); // redirect back to the homepage, which is now the Planner.

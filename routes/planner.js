@@ -12,6 +12,9 @@ module.exports = {
         }
       });
     });
+    db.collection("users").findOneAndUpdate({'name': req.session.username}, {$set: {'lastAccess': new Date()}}, function(err, result) {
+      // don't do anything, just be happy! this doesn't really matter if it fails.
+    });
   },
   post: function(req, res) { // update this week's assignments, with req.session.username, req.body.monday and req.body.data
     res.type('text/json');
