@@ -13,6 +13,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap-colorpicker.min.css" rel="stylesheet" media="screen">
     
     <style>
       body {
@@ -52,9 +53,8 @@
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
-
+            <li id="username"> <a data-target="#">  </a></li>
             <li id="logoutButton"> <a href="/logout">Logout</a></li>
-            
           </ul>
         </div><!-- /.navbar-collapse -->
       </div>
@@ -63,9 +63,18 @@
     <div class="container">
 
       <div class="starter-template">
-        <h1>Bootstrap starter template</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+        <h1>Settings Page</h1>
+        <p class="lead">Here, you can update what colors you want for color coding, as well as update your notification settings.</p>
       </div>
+
+      <div class="subjects">
+
+      </div>
+
+      <button onclick="saveColors()">Save Colors</button>
+     <footer>
+        <p><a href="/about">Created by Davis Haupt in 2014-15</a><a style="float:right;" href="/feedback">Feedback</a></p>
+    </footer>
 
     </div><!-- /.container -->
 
@@ -73,9 +82,76 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script>$('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});</script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.hotkeys.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-colorpicker.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+          
+          $.ajax({
+            type: "GET",
+            url: "/settings?json=true", 
+            data: {
+              'settings': ref.settings
+            },
+            statusCode: { 
+              500: function() {
+                alert("There's been a server error. Contact NLTL for assistance.");
+              }
+            },
+            success: function(data) {
+              $('li#username').children('a').text(data.name);
+              ref.settings = data.settings;
+
+              var d = ['codeRed', 'codeYellow', 'codeBlue', 'codeGray', 'codeGreen'];
+              var s = '<div class="input-group colors">\
+                                  <input type="text" value="" class="color-input" class="form-control" />\
+                                  <span class="input-group-addon" class="picker"><i></i></span>\
+                                </div>';
+              for (var i = 0; i < d.length; i++) {
+                $('.subjects').append('<div id='+d[i]+' class="input-group colors">\
+                                  <input type="text" value="'+rgbToHex(ref.settings.colorCode[d[i]])+'" class="color-input" class="form-control" />\
+                                  <span class="input-group-addon" style="border-radius: 4px;"><i></i></span>\
+                                </div>');
+                console.log(ref.settings.colorCode[d[i]]);
+              }
+
+              $(function(){
+                $('.colors').colorpicker();
+              });
+              
+            }
+          });
+            function rgbToHex(s) {
+              var result = /rgb\((\d+), (\d+), (\d+)\)/.exec(s);
+              return "#" + ((1 << 24) + (parseInt(result[1]) << 16) + (parseInt(result[2]) << 8) + parseInt(result[3])).toString(16).slice(1);
+            }
+            function hexToRgb(hex) {
+              var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+              return result ? 'rgb(' + parseInt(result[1], 16) + ', ' + parseInt(result[2], 16) + ', ' + parseInt(result[3], 16) + ')' : null;
+            }
+            function saveColors() {
+              var colors = {};
+              $('.colorpicker-element').each(function() {
+                ref.settings.colorCode[this.id] = hexToRgb($(this).children('input')[0].value);
+              });
+              console.log(ref.settings.colorCode);
+              setSettings(ref.settings, function() {});
+            }
+    </script>
+    <style>
+    .color-input {
+      display: none;
+    }
+    .picker {
+      border-radius: 4px;
+      border-left-width: 2px;
+    }
+    .colors {
+      width: 10px;
+    }
+    </style>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
   </body>
