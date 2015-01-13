@@ -30,17 +30,29 @@
   </head>
 
   <body>
+<nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Planbook</a>
+        </div>
 
-    <div class="container">
-      <div class="header">
-        <nav>
-          <ul class="nav nav-pills pull-right">
-            <li role="presentation"><a href="/">Planbook</a></li>
-            <li role="presentation" class="active"><a href="#">About</a></li>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul class="nav navbar-nav">
+          <li>
+          <a href="/about">About</a>
+          </li>
           </ul>
-        </nav>
-        <h3 class="text-muted">Planbook</h3>
-      </div>
+        </div><!-- /.navbar-collapse -->
+      </nav>
+    <div class="container">
+      
 
       <div>
         <h1>About the Planbook</h1>
@@ -77,8 +89,11 @@
     <script src="js/ie10-viewport-bug-workaround.js"></script>
     <style>
   /* Space out content a bit */
+  .navbar {
+    border-radius: 0px;
+  }
 body {
-  padding-top: 20px;
+  /*padding-top: 20px;*/
   padding-bottom: 20px;
 }
 
