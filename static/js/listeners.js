@@ -104,7 +104,6 @@ $('document').ready(function() {
     $('#' + ref.visibleDay).hide();
     $('#' + $("select option:selected").text()).show();
     ref.visibleDay = $( "select option:selected" ).text();
-    console.log($( "select option:selected" ).text());
   });
 
   // add subject
@@ -117,7 +116,6 @@ $('document').ready(function() {
       }
     }
     ref.settings.rows.push(["Class", id]);
-    console.log(id);
     setSettings(ref.settings, function(data) {
       renderRows(ref.settings.rows);
       $('.subj#'+id).children('.subjectspan').trigger('dblclick');
@@ -187,7 +185,6 @@ function taListen() {
   $('button.done').unbind();
   $('button.done').click(function() {
     var t = $(this).parent().parent().children("textarea");
-    console.log();
     if ($(t).css("text-decoration") == "none") {
       $(t).css("text-decoration", "line-through");
       $(t).parent().children(".tabuttons").children('.done').html('<span class="glyphicon glyphicon-check"></span>');
@@ -255,13 +252,17 @@ function taListen() {
       var d = new Date(ref.monday.getFullYear(), 
             ref.monday.getMonth(), 
             ref.monday.getDate() + parseInt(box.attr('id').split('').reverse()[0]-1));
-      console.log(box.val());
+      var ccde = '';
+      for (var prop in ref.settings.colorCode) {
+        if(ref.settings.colorCode[prop] == box.css('background-color'))
+          ccde = prop;
+      }
       $.ajax({
         type: 'POST',
         url: '/reminders',
         data: {
           box: box.attr('id'),
-          colorCode: box.css('background-color'),
+          colorCode: ccde,
           monday: ref.monday.toISOString().slice(0, 10),
           description: box.val(),
           options: {

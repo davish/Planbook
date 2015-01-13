@@ -147,7 +147,7 @@ function getReminders() {
         if (new Date(data[r].dueDate).getTime() > new Date().getTime() && new Date(data[r].startReminding).getTime() < new Date().getTime()) {
           var dd = new Date(data[r].dueDate).toLocaleString();
           dd = dd.slice(0, dd.indexOf(','));
-          $('.notifications').append('<li><a href="#" class="reminder" style="background-color: '+data[r].colorCode+'">'+data[r].description+'<br> in '+(classes[data[r].box.slice(0,1)] || 'Labs')+'<br>Due Date: '+dd+'</a></li>');
+          $('.notifications').append('<li><a href="#" class="reminder" style="background-color: '+ref.settings.colorCode[data[r].colorCode]+'">'+data[r].description+'<br> in '+(classes[data[r].box.slice(0,1)] || 'Labs')+'<br>Due Date: '+dd+'</a></li>');
           len++;
         }
       }
@@ -247,7 +247,6 @@ function renderRows(rows) {
       $(".mobile").append('<div class="row" style="display: none;" id="'+days[j-1]+'"></div>');
       var row = $('#'+days[j-1])
       row.append('<div class="col-sm-2"><h3>'+days[j-1]+'<h3></div>');
-      console.log(days[j-1]);
       for (var i = 0; i < rows.length; i++) {
         row.append('<div class="col-sm-2"><h4>'+rows[i][0]+'</h4><textarea class="ta" id="'+ String(rows[i][1]) + String(j)+'"></textarea>'+buttongroup+'</div>');
       }
