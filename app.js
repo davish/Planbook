@@ -60,6 +60,7 @@ function requireHTTPS(req, res, next) {
   next();
 }
 
+
 // render the planner or the homepage depending on if you're logged in or not.
 app.get('/', function(req, res) {
   if (req.session.username) // if logged in
@@ -112,6 +113,21 @@ app.get('/about', function(req, res) {
   res.render('about.html');
 });
 
+app.get('/analytics', function(req, res) {
+  var since = req.param("since");
+  var d = new Date();
+  if (!since) {
+    var d = new Date(1);
+  } else {
+    d = new Date(new Date().setDate(new Date().getDate()-since));
+  }
+  db.collection("users").find({lastAccess: {$gte: d}}).toArray(function(err, data1) {
+    db.collection("reminders").find({dateWritten: {$gte: d}}).toArray(function(err, data2) {
+      res.type('json');
+      res.send({activeUsers: data1.length, remindersSet: data2.length, since: d.toISOString()});
+    })
+  });
+});
 
 app.get('/announcements', routes.announcements.get);
 app.post('/announcements', routes.announcements.post);
