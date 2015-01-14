@@ -152,7 +152,7 @@ function getReminders() {
         }
       }
       if (len == 0) {
-        $('.notifications').append('<li><a href="#">It doesn\'t seem like you have reminders set. Mouse over a box, and hit the <span class="glyphicon glyphicon-exclamation-sign"></span> to set reminders for yourself.</a></li>')
+        $('.notifications').append('<li><a href="#">It doesn\'t seem like you have reminders set.<br> Mouse over a box, and hit the <span class="glyphicon glyphicon-exclamation-sign"></span><br>to set reminders for yourself.</a></li>')
       }
 
       $('#numNotifications').text(len); // add counter
