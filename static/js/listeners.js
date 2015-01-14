@@ -264,7 +264,7 @@ function taListen() {
           box: box.attr('id'),
           colorCode: ccde,
           monday: ref.monday.toISOString().slice(0, 10),
-          description: box.val(),
+          description: box.val().escapeHTML(),
           options: {
             startReminding: parseInt($(this).parent().children('.r').val()),
             dueDate: d.toJSON(),
