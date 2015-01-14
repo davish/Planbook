@@ -162,7 +162,7 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
         console.info('HTTPS listening on port %d', app.get('sslPort'));
       });
     }
-    // app.enable('mailCheckable');
+    app.enable('mailCheckable');
     var emailLoop = setInterval(function() {
       var now = new Date();
       if ((now.getHours()-5 == 8) && app.enabled('mailCheckable')) {
@@ -287,7 +287,7 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
           }
         })
       }
-      else if(now.getHours() - 5 != 7 && now.getHours()-5 == 15) {
+      else if(now.getHours() - 5 != 8 && now.getHours()-5 == 15) {
         console.log("Not 7AM or 3PM. Won't send an email.")
         app.enable("mailCheckable");
       }
