@@ -26,6 +26,8 @@ textarea {
   border-color: #777;
 }
 
+
+
 .head {
   height: 20px;
   border: solid;
@@ -97,6 +99,7 @@ span#today {
 .input-group {
   width: 50%;
 }
+
 .choiceModal {
   padding-top: 15%;
 }

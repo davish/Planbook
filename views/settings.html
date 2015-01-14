@@ -71,7 +71,13 @@
 
       </div>
 
-      <button onclick="saveColors()">Save Colors</button>
+    <!--   <div class="checkboxes">
+      <br><br>
+      Morning Emails: <input type="checkbox" id="morningEmails" /><br>
+      Afternoon Emails: <input type="checkbox" id="afternoonEmails" />
+      </div> -->
+
+      <button onclick="saveColors()">Save Settings</button>
      <footer>
         <p><a href="/about">Created by Davis Haupt in 2014-15</a><a style="float:right;" href="/feedback">Feedback</a></p>
     </footer>
@@ -105,18 +111,15 @@
               ref.settings = data.settings;
 
               var d = ['codeRed', 'codeYellow', 'codeBlue', 'codeGray', 'codeGreen'];
-              var s = '<div class="input-group colors">\
-                                  <input type="text" value="" class="color-input" class="form-control" />\
-                                  <span class="input-group-addon" class="picker"><i></i></span>\
-                                </div>';
               for (var i = 0; i < d.length; i++) {
-                $('.subjects').append('<div id='+d[i]+' class="input-group colors">\
+                $('.subjects').append('<span id='+d[i]+' class="input-group colors">\
                                   <input type="text" value="'+rgbToHex(ref.settings.colorCode[d[i]])+'" class="color-input" class="form-control" />\
                                   <span class="input-group-addon" style="border-radius: 4px;"><i></i></span>\
-                                </div>');
-                console.log(ref.settings.colorCode[d[i]]);
+                                </span>');
               }
 
+              $('#morningEmails').prop("checked", ref.settings["morningEmails"]);
+              $('#afternoonEmails').prop("checked", ref.settings["afternoonEmails"]);
               $(function(){
                 $('.colors').colorpicker();
               });
@@ -136,6 +139,8 @@
               $('.colorpicker-element').each(function() {
                 ref.settings.colorCode[this.id] = hexToRgb($(this).children('input')[0].value);
               });
+              ref.settings["morningEmails"] = $('#morningEmails').prop("checked") == "true";
+              ref.settings["afternoonEmails"] = $('#afternoonEmails').prop("checked") == "true";
               console.log(ref.settings.colorCode);
               setSettings(ref.settings, function() {});
             }
@@ -150,6 +155,11 @@
     }
     .colors {
       width: 10px;
+      float: left;
+      margin-right: 30px;
+    }
+    .subjects {
+      overflow: hidden;
     }
     </style>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
