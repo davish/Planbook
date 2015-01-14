@@ -71,11 +71,11 @@
 
       </div>
 
-    <!--   <div class="checkboxes">
+      <div class="checkboxes">
       <br><br>
       Morning Emails: <input type="checkbox" id="morningEmails" /><br>
       Afternoon Emails: <input type="checkbox" id="afternoonEmails" />
-      </div> -->
+      </div>
 
       <button onclick="saveColors()">Save Settings</button>
      <footer>
@@ -118,8 +118,8 @@
                                 </span>');
               }
 
-              $('#morningEmails').prop("checked", ref.settings["morningEmails"]);
-              $('#afternoonEmails').prop("checked", ref.settings["afternoonEmails"]);
+              // $('#morningEmails').prop("checked", ref.settings["morningEmails"]);
+              // $('#afternoonEmails').prop("checked", ref.settings["afternoonEmails"]);
               $(function(){
                 $('.colors').colorpicker();
               });
@@ -139,8 +139,8 @@
               $('.colorpicker-element').each(function() {
                 ref.settings.colorCode[this.id] = hexToRgb($(this).children('input')[0].value);
               });
-              ref.settings["morningEmails"] = $('#morningEmails').prop("checked") == "true";
-              ref.settings["afternoonEmails"] = $('#afternoonEmails').prop("checked") == "true";
+              // ref.settings["morningEmails"] = $('#morningEmails').prop("checked") == "true";
+              // ref.settings["afternoonEmails"] = $('#afternoonEmails').prop("checked") == "true";
               console.log(ref.settings.colorCode);
               setSettings(ref.settings, function() {});
             }
