@@ -78,5 +78,7 @@ module.exports.defaults = {
                               codeBlue:   'rgb(126, 178, 255)',
                               codeGray:   'rgb(184, 184, 184)',
                               codeWhite:  'rgb(255, 255, 255)'
-                            }
+                            },
+                            'morningEmails': true,
+                            'afternoonEmails': true
                           }

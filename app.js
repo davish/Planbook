@@ -162,15 +162,15 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
         console.info('HTTPS listening on port %d', app.get('sslPort'));
       });
     }
-
-    /*var emailLoop = setInterval(function() {
-      console.log("email");
+    app.enable('mailCheckable');
+    var emailLoop = setInterval(function() {
       var now = new Date();
-      if (((now.getDay() > 0 || now.getDay() < 6) && (now.getHours() == 9 || now.getHours() == 13)) || ((now.getDay() == 0 || now.getDay() == 6) && now.getHours() == 11)) {
+      if ((now.getHours()-5 == 8) && app.enabled('mailCheckable')) {
+        app.disable('mailCheckable');
         console.log("It's time to send out emails.")
         db.collection('reminders').find({query: {
             dueDate: {$gte: new Date()},
-            startReminding: {$lt: new Date()}
+            startReminding: {$lte: new Date()}
           }, 
           $orderby: {'name': 1}
         }).toArray(function(err, docs) {
@@ -179,40 +179,117 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
             currentRems = [];
             docs.push({});
             for (var i in docs) {
+              if (currentUser != docs[i].name) { // if we're onto a new user
 
-              if (currentUser != docs[i].name) {
-                console.log(currentUser + "@dalton.org");
-                var messageHTML = "Hello "+currentUser+"! <br><br> Looks like you've set " + currentRems.length + " reminders for yourself. Here they are: <br> <ul>";
-                for (var j in currentRems) {
-                  messageHTML = messageHTML + "<li>" + currentRems[j].description + "<br>"+"Due: "+ new Date(currentRems[j].dueDate).toLocaleDateString() +"</li>";
-                }
-                messageHTML = messageHTML + "</ul><br> Thanks for using the Planbook!";
+                db.collection("users").find({'name': currentUser}).toArray(function(err, usr) { // get that user's settings
+                  if (usr[0] && usr[0].settings.morningEmails) {
+                    var classes = {};
+                    for (var a = 0; a < usr[0].settings.rows.length; a++) {
+                      classes[usr[0].settings.rows[a][1]] = usr[0].settings.rows[a][0];
+                    }
+                    console.log(currentUser + "@dalton.org");
+                    var messageHTML = "Good Morning "+currentUser+"! <br><br> Looks like you've set " + currentRems.length + " reminders for yourself. Here they are: <br> <ul>";
+                    for (var j in currentRems) {
+                      if (currentRems[j].box) {
+                        messageHTML = messageHTML + "<li>" + currentRems[j].description + "<br>"+"Due: "+ new Date(currentRems[j].dueDate).toLocaleDateString() +"\
+                        in: "+(currentRems[j].box ? classes[currentRems[j].box.slice(0,1)] : '[]')+"</li>";
+                      }
+                    }
+                    messageHTML = messageHTML + "</ul><br> Thanks for using the Planbook!";
 
-                var mailOptions = {
-                  from: 'Dalton Planbook <daltonplanbook@gmail.com>', // sender address
-                  to: currentUser + "@dalton.org", // list of receivers
-                  subject: 'Your Reminders for ' + new Date().toLocaleDateString(), // Subject line
-                  text: messageHTML, // plaintext body
-                  html: messageHTML // html body
-                };
-                transporter.sendMail(mailOptions, function(error, info){
-                  if(error) {
-                    console.log(error);
-                  } else {
-                    console.log('Message sent to '+currentUser+"@dalton.org"+': ' + info.response);
+                    var mailOptions = {
+                      from: 'Dalton Planbook <daltonplanbook@gmail.com>', // sender address
+                      to: currentUser + "@dalton.org", // list of receivers
+                      subject: 'Your Reminders for ' + new Date().toLocaleDateString(), // Subject line
+                      text: messageHTML, // plaintext body
+                      html: messageHTML // html body
+                    };
+                    transporter.sendMail(mailOptions, function(error, info){
+                      if(error) {
+                        console.log(error);
+                      } else {
+                        console.log('Message sent to '+currentUser+"@dalton.org"+': ' + info.response);
+                      }
+                    });
+                    currentRems = [];
+                    currentUser = docs[i].name;
                   }
                 });
-                currentRems = [];
-                currentUser = docs[i].name;
+
+                
               }
+
+
               currentRems.push(docs[i]);
             }
           } else {
             console.log(err);
           }
         });
-      } else {
+      } 
+      else if ((now.getHours()-5 == 15) && app.enabled('mailCheckable')) {
+        app.disable('mailCheckable');
+        var m = new Date();
+        m = new Date(m.getFullYear(), m.getMonth(), m.getDate() - (m.getDay() - 1));
+        db.collection("users").find().toArray(function(err, docs) {
+          if (!err) {
+            for (var i = 0; i < docs.length; i++) {
+              var username = docs[i].name;
+              console.log(username);
+              var rows = docs[i].settings.rows;
+              if (docs[i].settings.afternoonEmails) {
+                db.collection("assignments").find({name: username, monday: m.toISOString().slice(0, 10)}).toArray(function(err, asst) {
+                  if (!err) {
+                    if (asst[0]) {
+                      var assignment = JSON.parse(asst[0].data);
+                      // now, get the assignments for that day from all the classes, and put it into an email.
+                      // use the settings object for the user to get the different class names.
+                      
+                      var messageHTML = "Good Afternoon! <br><br>Here is the homework that you have due tomorrow:<br> <ul>";
+                      var numOfWrites = 0;
+                      for (var j = 0; j < rows.length; j++) {
+                          var indx = now.getDay()+rows[j][1];
+                          var d = assignment[indx];
+                          if (d && d[0]) {
+                            messageHTML = messageHTML + '<li>'+ rows[j][0] + ': ';
+                            messageHTML = messageHTML + d[0] + '</li>';
+                            numOfWrites++;
+                          }
+                      }
+                      messageHTML = messageHTML + '</ul><br> Thanks for using the Planbook!'
+                      if (numOfWrites > 0) {
+                        var mailOptions = {
+                          from: 'Dalton Planbook <daltonplanbook@gmail.com>', // sender address
+                          to: username + "@dalton.org", // list of receivers
+                          subject: 'Your Homework for tonight, ' + new Date().toLocaleDateString(), // Subject line
+                          text: messageHTML, // plaintext body
+                          html: messageHTML // html body
+                        }; 
+                        transporter.sendMail(mailOptions, function(error, info){
+                          if(error) {
+                            console.log(error);
+                          } else {
+                            console.log('Message sent to '+username+"@dalton.org"+': ' + info.response);
+                          }
+                        });
+                      }
+                    }
+
+                  } else {
+                    console.log(err);
+                  }
+                });
+              }
+            }
+            console.log("done with the list");
+          } else {
+            console.log(err);
+          }
+        })
+      }
+      else if(now.getHours() - 5 != 7 && now.getHours()-5 == 15) {
         console.log("Not 7AM or 3PM. Won't send an email.")
+        app.enable("mailCheckable");
       }
      }, 1000*60*60); // check once per hour*/
 
