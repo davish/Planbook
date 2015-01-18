@@ -49,7 +49,7 @@ function login(req, res) {
         break;
       case 404: // not found in Dalton
         // res.send(404, {'message': 'The username and password entered do not match.'});
-        res.redirect('/login?why=incorrect')
+        res.redirect('/login?why=incorrect');
         break;
     }
   }).on('error', function(e) {
