@@ -157,7 +157,7 @@ MongoClient.connect('mongodb://localhost/planner', function(err, dbase) {
           fs.readFileSync('/home/ubuntu/sslcert/intermediate.pem', 'utf8'),
           fs.readFileSync('/home/ubuntu/sslcert/root.pem', 'utf8')
         ]
-      }, app)
+      }, app);
       secure.listen(app.get('sslPort'), function() {
         console.info('HTTPS listening on port %d', app.get('sslPort'));
       });

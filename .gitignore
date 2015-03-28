@@ -8,3 +8,4 @@ donotpush.js
 node_modules/*
 !node_modules/whitelist.js
 .idea
+mailtest.js
