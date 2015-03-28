@@ -7,3 +7,4 @@ log.txt
 donotpush.js
 node_modules/*
 !node_modules/whitelist.js
+.idea

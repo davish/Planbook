@@ -1,4 +1,5 @@
 var http = require('http');
+var https = require('https');
 // validate user with req.body.username and req.body.password.
 module.exports = {
   get: function(req, res) { // render login page.
@@ -32,6 +33,7 @@ function login(req, res) {
         db.collection("users").find({'name': req.body.username}).toArray(function(err, docs) {
           if (!err) {
             if (docs[0]) {
+              // check if they have their schedule credentials in their account.
               // update the lastLogin field, which is used for analytics
               db.collection("users").findOneAndUpdate({'name': req.body.username}, {$set: {'lastLogin': new Date(), 'lastAccess': new Date()}}, 
                 function(err, result) {

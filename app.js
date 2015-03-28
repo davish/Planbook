@@ -19,7 +19,7 @@ app.configure("development", function() {
   app.use(express.logger({'format': 'dev'}));
   app.use(express.session({
     cookie: {maxAge: 7 * 24 * 60 * 60 * 1000},
-    secret: "keyboard cat",
+    secret: "keyboard cat"
   }));
 
   app.set('port', process.env.PORT || process.argv[2] || 5000);
