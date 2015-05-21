@@ -8,7 +8,7 @@ Planbook, Revision 4
 1. install [node.js](http://nodejs.org/).
 2. install [mongodb](http://www.mongodb.org/).
 1. `git clone` the repo into a directory.
-2. run `npm update` inside the directory, it will download all the dependencies (express, nano, and cookie).
+2. run `npm update` inside the directory, it will download all the dependencies (express, mongodb, etc.)
 5. start mongodb.
 6. run `node app.js [port]`.
 7. open your browser to `http://localhost:[port]`.
