@@ -10,6 +10,7 @@
     "mongodb": "2.x",
     "ejs": "*",
     "connect-redis": "*",
-    "nodemailer": "*"
+    "nodemailer": "*",
+    "xml2js": "~0.4.6"
   }
 }
