@@ -27,6 +27,7 @@ function login(req, res) {
   res.type('text/json');
   validateUser(req.body.username, req.body.password, function(result) {
     if (!result.error) { // if there wasn't an error logging in,
+      req.body.username = result.username; // make sure they're in the right format, not davis_haupt but c17dh
       // check if they exist in our db:
       db.collection("users").find({'name': req.body.username}).toArray(function(err, docs) {
         if (!err) {
@@ -61,40 +62,6 @@ function login(req, res) {
       res.send(404, {message: 'the username and password do not match.'});
     }
   });
-  /*
-  var options = {host: 'compsci.dalton.org',port: 8080, path: '/zbuttenwieser/validation/index.jsp?username='+req.body.username+'&password='+req.body.password};
-  http.get(options, function(r) {
-    switch (r.statusCode) {
-      case 200: // user exists in Dalton db
-        // check if they exist in our db:
-        db.collection("users").find({'name': req.body.username}).toArray(function(err, docs) {
-          if (!err) {
-            if (docs[0]) {
-              // check if they have their schedule credentials in their account.
-              // update the lastLogin field, which is used for analytics
-              db.collection("users").findOneAndUpdate({'name': req.body.username}, {$set: {'lastLogin': new Date(), 'lastAccess': new Date()}},
-                function(err, result) {
-                  req.session.username = req.body.username;
-                  res.redirect('/'); // redirect back to the homepage, which is now the Planner.
-                }
-              );
-            } else {
-              signup(req, res);
-            }
-          } else {
-            res.send(500, err);
-          }
-        });
-        break;
-      case 404: // not found in Dalton
-        // res.send(404, {'message': 'The username and password entered do not match.'});
-        res.redirect('/login?why=incorrect');
-        break;
-    }
-  }).on('error', function(e) {
-    res.end(500);
-  });
-  */
 }
 /**
  * add user to db
