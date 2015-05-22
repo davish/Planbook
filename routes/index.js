@@ -3,5 +3,6 @@ module.exports = {
   planner: require('./planner.js'),
   settings: require('./settings.js'),
   reminders: require('./reminders.js'),
-  announcements: require('./announcements.js')
+  announcements: require('./announcements.js'),
+  leaderboard: require('./leaderboard.js')
 };

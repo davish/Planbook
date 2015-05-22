@@ -74,6 +74,15 @@ app.get('/', function(req, res) {
       res.render("signin.html", {"error": ""});
   }
 });
+app.get('/snake', function(req, res) {
+  if (req.session.username) { // if logged in
+    res.render('snake.html');
+  } else {
+    res.render('/');
+  }
+});
+app.get('/scoreboard', routes.leaderboard.get);
+app.post('/scoreboard', routes.leaderboard.post);
 
 
 app.get('/login', routes.login.get);
