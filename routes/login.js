@@ -27,7 +27,7 @@ function login(req, res) {
   res.type('text/json');
   validateUser(req.body.username, req.body.password, function(result) {
     if (!result.error) { // if there wasn't an error logging in,
-      req.body.username = result.username; // make sure they're in the right format, not davis_haupt but c17dh
+      req.body.username = result.username.toLowerCase(); // make sure they're in the right format, not davis_haupt but c17dh
       // check if they exist in our db:
       db.collection("users").find({'name': req.body.username}).toArray(function(err, docs) {
         if (!err) {
