@@ -1,4 +1,5 @@
 function Snake(id, size, speed, callbacks) {
+  // callbacks are gameover and updateScore, both take ints of the current score and are pretty self-explanatory.
   this.callbacks = callbacks;
   this.SQUARE_SIZE = size;
   this.SPEED = speed; // milliseconds delay between steps 
@@ -78,10 +79,10 @@ Snake.prototype.reset = function() {
     snakeLength: 0,
     fruit: {},
     pressed: false
-  }
+  };
   console.log(this.vals);
 
-  document.getElementById("score").innerHTML = this.vals.snakeLength;
+  this.callbacks.updateScore(this.vals.snakeLength);
 
   this.clearField();
   this.makeFruit();
@@ -92,7 +93,7 @@ Snake.prototype.reset = function() {
   this.loop = setInterval(function() {
     l(t);
   }, this.SPEED);
-}
+};
 
 Snake.prototype.step = function(t) {
   // function called by setInterval() to move one step forward in game
@@ -104,7 +105,7 @@ Snake.prototype.step = function(t) {
   var forbidden = t.boundaries.concat(body);
 
   if (t.vals.fruit.x == t.vals.head.x && t.vals.fruit.y == t.vals.head.y) { // if you ate the fruit
-    document.getElementById("score").innerHTML = ++t.vals.snakeLength;
+    t.callbacks.updateScore(++t.vals.snakeLength);
     t.makeFruit(); // make a new one
   }
 
@@ -116,7 +117,7 @@ Snake.prototype.step = function(t) {
     }
   }
   t.updateSnake(body);
-}
+};
 
 Snake.prototype.makeFruit = function() {
   var rand_x = Math.floor(Math.random() * (this.grid_width - 3)+1); // 50-3=47; 0 to 47+1 is 1 to 48
@@ -131,13 +132,13 @@ Snake.prototype.makeFruit = function() {
 
   this.vals.fruit.x = rand_x;
   this.vals.fruit.y = rand_y;
-}
+};
 
 Snake.prototype.gameOver = function() {
   clearInterval(this.loop);
   this.callbacks.gameover(this.vals.snakeLength);
   this.makeBorder();
-}
+};
 
 Snake.prototype.onkeydown = function(t) {
   // clockwise starting from left arrow 37-40
