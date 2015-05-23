@@ -132,7 +132,7 @@
         $('#highscore').text(d.highscore.score);
         $('#tbl').html(""); // clear the table
         for (var i = 0; i < d.scores.length; i++) {
-          $('#tbl').append('<tr><td>'+ d.scores[i].fullname+'</td>' +
+          $('#tbl').append('<tr><td>'+ d.scores[i].fullname || d.scores[i].username+'</td>' +
           '<td>'+ d.scores[i].score+'</td>' +
           '<td>'+ new Date(d.scores[i].timestamp).toLocaleDateString()+'</td></tr>');
         }
