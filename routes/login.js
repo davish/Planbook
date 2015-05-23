@@ -45,10 +45,12 @@ function login(req, res) {
                 'groups': result.groups
               }}, function(e, r) {
                 req.session.username = req.body.username;
+                req.session.fullname = result.fullname;
                 res.redirect('/'); // redirect back to the homepage, which is now their Planner.
               });
             } else { // if we've already added the metadata, then just go ahead and log 'em in.
               req.session.username = req.body.username;
+              req.session.fullname = result.fullname;
               res.redirect('/'); // redirect back to the homepage, which is now their Planner.
             }
           } else { // if they don't exist in the DB, sign them up.
