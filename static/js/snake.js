@@ -17,7 +17,7 @@ function Snake(id, size, speed, callbacks) {
     this.reset();
   }
   canvas.tabIndex = 1000;
-  canvas.addEventListener("keydown", this.onkeydown(this));
+  window.addEventListener("keydown", this.onkeydown(this));
   canvas.style.outline = "none";
 }
 
@@ -70,7 +70,6 @@ Snake.prototype.clearField = function() {
 
 Snake.prototype.reset = function() {
   // reset the board and snake variables
-  console.log(this.vals);
   this.vals = {
     add_x: 0,
     add_y: 0,
@@ -80,7 +79,6 @@ Snake.prototype.reset = function() {
     fruit: {},
     pressed: false
   };
-  console.log(this.vals);
 
   this.callbacks.updateScore(this.vals.snakeLength);
 
@@ -111,7 +109,6 @@ Snake.prototype.step = function(t) {
 
   for (var i = 0; i < forbidden.length; i++) { // check the head position against the array of stuff you can't hit in to
     if (forbidden[i].x == t.vals.head.x && forbidden[i].y == t.vals.head.y) { // if you ran into a wall or yourself
-      console.log("dead");
       t.gameOver();
       return;
     }
