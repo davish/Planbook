@@ -40,8 +40,7 @@ app.configure("production", function() {
   app.use(requireHTTPS); 
 
 });
-
-app.configure(function() { 
+app.configure(function() {
   app.engine("html", require("ejs").renderFile);
   app.set('view engine', 'html');
   app.set('views', __dirname + '/views');
