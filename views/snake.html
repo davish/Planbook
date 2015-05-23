@@ -8,11 +8,10 @@
   <meta name="author" content="">
   <link rel="icon" type="image/png" href="/favicon.png">
 
-  <title>Settings</title>
+  <title>Snake!</title>
 
   <!-- Bootstrap core CSS -->
   <link href="css/bootstrap.css" rel="stylesheet" media="screen">
-  <link href="css/bootstrap-colorpicker.min.css" rel="stylesheet" media="screen">
 
   <style>
     body {
@@ -61,12 +60,30 @@
 
 <div class="container">
   <div class="row">
+    <div class="col-md-3"></div>
     <div class="col-md-3">
-      <div id="score"></div>
-      <button id="reset" class="btn btn-default">Reset</button>
+      <h3>Score: <span id="score"></span></h3>
+    </div>
+    <div class="col-md-3">
+      <h3> High Score: <span id="highscore"></span></h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1 col-md-offset-2">
+      <div class="col-md-6"><button id="reset" class="btn btn-lg btn-danger">Reset</button></div>
     </div>
     <div class="col-md-6">
       <canvas id="snakeBoard" width="500px" height="500px"></canvas>
+    </div>
+    <div class="col-md-3">
+      <table class="table">
+        <thead>
+        <tr><td>Name</td><td>Score</td><td>Date</td></tr>
+        </thead>
+        <tbody id="tbl">
+
+        </tbody>
+      </table>
     </div>
   </div>
 </div><!-- /.container -->
@@ -78,26 +95,27 @@
 <script src="/js/jquery.min.js"></script>
 <script src="/js/jquery.hotkeys.js"></script>
 <script src="/js/bootstrap.min.js"></script>
-<script src="/js/bootstrap-colorpicker.min.js"></script>
 <script src="/js/main.js"></script>
 <script src="/js/snake.js"></script>
 <script>
   $(document).ready(function() {
-
-    $.ajax({
-      type: 'GET',
-      url: '/scoreboard',
-      success: function(d) {
-        console.log(d);
-      }
-    });
-
+    refreshScoreboard();
     var callbacks = {
       gameover: function(score) {
+        $.ajax({
+          type: 'POST',
+          url: '/scoreboard',
+          data: {
+            score: score
+          },
+          success: function(d) {
+          }
+        });
+        refreshScoreboard();
         alert("Good Job! You ate " + score + " fruits.")
       },
       updateScore: function(score) {
-        $('div#score').text(score);
+        $('#score').text(score);
       }
     };
     var board = new Snake('snakeBoard', 10, 75, callbacks);
@@ -105,6 +123,22 @@
       board.reset();
     });
   });
+  function refreshScoreboard() {
+    $.ajax({
+      type: 'GET',
+      url: '/scoreboard?game=snake',
+      success: function(d) {
+        $('li#username').children('a').text(d.username);
+        $('#highscore').text(d.highscore.score);
+        $('#tbl').html(""); // clear the table
+        for (var i = 0; i < d.scores.length; i++) {
+          $('#tbl').append('<tr><td>'+ d.scores[i].fullname+'</td>' +
+          '<td>'+ d.scores[i].score+'</td>' +
+          '<td>'+ new Date(d.scores[i].timestamp).toLocaleDateString()+'</td></tr>');
+        }
+      }
+    });
+  }
 </script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
