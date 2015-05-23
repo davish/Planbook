@@ -77,7 +77,7 @@ app.get('/snake', function(req, res) {
   if (req.session.username) { // if logged in
     res.render('snake.html');
   } else {
-    res.render('/');
+    res.redirect('/');
   }
 });
 app.get('/scoreboard', routes.leaderboard.get);
