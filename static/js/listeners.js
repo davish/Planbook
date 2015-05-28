@@ -138,10 +138,14 @@ function taListen() {
   $("textarea").blur(function() {
     saveWeek(getAssignmentValues());
   });
-  $("textarea").keydown(function(e) {
+
+  $("textarea").keyup(function(e) {
     if ($(this).val().indexOf('snake') >= 0) {
       $('#snakebtn').show();
     }
+  });
+
+  $("textarea").keydown(function(e) {
     // If it's been more than 30 seconds since you've updated from this device
     var taID = this.id;
     if (new Date().getTime() - ref.lastUpdate.getTime() > 30000) {
