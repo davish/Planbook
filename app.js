@@ -87,7 +87,8 @@ app.post('/scoreboard', routes.leaderboard.post);
 app.get('/login', routes.login.get);
 app.post('/login', routes.login.post);
 app.get('/logout', function(req, res) { // remove cookie from client, redirect to homepage.
-  req.session = undefined;
+  req.session.username = undefined;
+  req.session.fullname = undefined;
   res.redirect('/');
 });
 
