@@ -139,12 +139,15 @@ function taListen() {
     saveWeek(getAssignmentValues());
   });
   $("textarea").keydown(function(e) {
+    if ($(this).val().indexOf('snake') >= 0) {
+      $('#snakebtn').show();
+    }
     // If it's been more than 30 seconds since you've updated from this device
     var taID = this.id;
     if (new Date().getTime() - ref.lastUpdate.getTime() > 30000) {
       getWeek(function(assignments) {
         // replace the server's version of what you're working on with your version
-        var newVersion = getAssignmentValues()[taID]
+        var newVersion = getAssignmentValues()[taID];
         assignments[taID] = newVersion;
         setAssignmentValues(assignments); // update the planner with the server's version of events.
         saveWeek(getAssignmentValues());
