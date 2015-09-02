@@ -113,7 +113,7 @@ app.get('/friday', function(req, res) {
 });
 
 app.get('/admin', function(req, res) {
-  if (req.session.username == 'c17ak' || req.session.username == 'c17dh' || req.session.username == 'c15am')
+  if (req.session.username == 'c17ak' || req.session.username == 'c17dh' || req.session.username == 'c16ac' || req.session.username == 'c17vs')
     res.render('admin.html');
   else
     res.redirect('/');

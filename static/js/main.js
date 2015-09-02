@@ -227,7 +227,8 @@ function renderRows(rows) {
       // set ID to rows[i][1] 
       row.append('<div class="subj col-sm-2" id="'+rows[i][1]+'">\
         <span class="subjectspan">'+rows[i][0]+'</span> <span class="subjbtns" style="display: none;">\
-        <button class="edit btn btn-default btn-xs"">\<span class="glyphicon glyphicon-edit"></span></button>\
+        <button class="edit btn btn-default btn-xs"">\
+        <span class="glyphicon glyphicon-edit"></span></button>\
         <button class="delete btn btn-xs btn-danger">-</button></span></div>');
       for (var j = 1; j <= 5; j++) {
         row.append('<div class="col-sm-2"><textarea class="ta" id="'+ String(rows[i][1]) + String(j)+'"></textarea>' + buttongroup + '</div>');
@@ -288,7 +289,7 @@ function drawDates() {
       else
         $(element).html('<span>' + $(element).children('span').html() + '</span> ' + (d.getMonth()+1) + '/' + d.getDate());
       if (isToday)
-        $(element).children('span').attr('id', 'today')
+        $(element).children('span').attr('id', 'today');
       else
         $(element).children('span').attr('id', ''); 
     });
