@@ -4,5 +4,6 @@ module.exports = {
   settings: require('./settings.js'),
   reminders: require('./reminders.js'),
   announcements: require('./announcements.js'),
-  leaderboard: require('./leaderboard.js')
+  leaderboard: require('./leaderboard.js'),
+  admins: require('./admins.js').admin
 };

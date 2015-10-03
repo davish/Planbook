@@ -1,0 +1,1 @@
+module.exports = {'admin': ['c17dh', 'c17ak', 'c17vs', 'c16ac']};
