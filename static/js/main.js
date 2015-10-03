@@ -42,6 +42,9 @@ function getWeek(c) {
         getReminders();
         c(genBlankAssignments());
       },
+      403: function() {
+        location.reload();
+      },
       500: function() {
         alert("There's been a server error. Contact NLTL for assistance.");
       }
