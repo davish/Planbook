@@ -25,45 +25,78 @@ module.exports = {
 
 function login(req, res) {
   res.type('text/json');
-  validateUser(req.body.username, req.body.password, function(result) {
-    if (!result.error) { // if there wasn't an error logging in,
-      req.body.username = result.username.toLowerCase(); // make sure they're in the right format, not davis_haupt but c17dh
-      // check if they exist in our db:
-      db.collection("users").find({'name': req.body.username}).toArray(function(err, docs) {
-        if (!err) {
-          if (docs[0]) { // if they exist,
-            // update analytics fields
-            // we don't really care if/when this finishes, so no callback.
-            db.collection("users").update({'_id': docs[0]._id}, {
-              $set: { 'lastLogin': new Date(), 'lastAccess': new Date() }
-            });
-            if (!docs[0].fullname) { // if we haven't had the chance to update with metadata
-              db.collection("users").update({'_id': docs[0]._id}, {$set: {
-                'ssid': result.ssid,
-                'fullname': result.fullname,
-                'email': result.email.toLowerCase(),
-                'groups': result.groups
-              }}, function(e, r) {
-                req.session.username = req.body.username;
-                req.session.fullname = result.fullname;
-                res.redirect('/'); // redirect back to the homepage, which is now their Planner.
-              });
-            } else { // if we've already added the metadata, then just go ahead and log 'em in.
-              req.session.username = req.body.username;
-              req.session.fullname = result.fullname;
-              res.redirect('/'); // redirect back to the homepage, which is now their Planner.
+  var options = {host: 'compsci.dalton.org',port: 8080, path: '/zbuttenwieser/validation/index.jsp?username='+req.body.username+'&password='+req.body.password};
+  http.get(options, function(r) {
+    switch (r.statusCode) {
+      case 200: // user exists in Dalton db
+        // check if they exist in our db:
+        db.collection("users").find({'name': req.body.username}).toArray(function(err, docs) {
+          if (!err) {
+            if (docs[0]) {
+              // check if they have their schedule credentials in their account.
+              // update the lastLogin field, which is used for analytics
+              db.collection("users").findOneAndUpdate({'name': req.body.username}, {$set: {'lastLogin': new Date(), 'lastAccess': new Date()}},
+                function(err, result) {
+                  req.session.username = req.body.username;
+                  res.redirect('/'); // redirect back to the homepage, which is now the Planner.
+                }
+              );
+            } else {
+              signup(req, res);
             }
-          } else { // if they don't exist in the DB, sign them up.
-            signup(req, res);
+          } else {
+            res.send(500, err);
           }
-        } else {
-          res.send(500, err);
-        }
-      });
-    } else {
-      res.send(404, {message: 'the username and password do not match.'});
+        });
+        break;
+      case 404: // not found in Dalton
+        // res.send(404, {'message': 'The username and password entered do not match.'});
+        res.redirect('/login?why=incorrect');
+        break;
     }
+  }).on('error', function(e) {
+    res.end(500);
   });
+
+  //validateUser(req.body.username, req.body.password, function(result) {
+  //  if (!result.error) { // if there wasn't an error logging in,
+  //    req.body.username = result.username.toLowerCase(); // make sure they're in the right format, not davis_haupt but c17dh
+  //    // check if they exist in our db:
+  //    db.collection("users").find({'name': req.body.username}).toArray(function(err, docs) {
+  //      if (!err) {
+  //        if (docs[0]) { // if they exist,
+  //          // update analytics fields
+  //          // we don't really care if/when this finishes, so no callback.
+  //          db.collection("users").update({'_id': docs[0]._id}, {
+  //            $set: { 'lastLogin': new Date(), 'lastAccess': new Date() }
+  //          });
+  //          if (!docs[0].fullname) { // if we haven't had the chance to update with metadata
+  //            db.collection("users").update({'_id': docs[0]._id}, {$set: {
+  //              'ssid': result.ssid,
+  //              'fullname': result.fullname,
+  //              'email': result.email.toLowerCase(),
+  //              'groups': result.groups
+  //            }}, function(e, r) {
+  //              req.session.username = req.body.username;
+  //              req.session.fullname = result.fullname;
+  //              res.redirect('/'); // redirect back to the homepage, which is now their Planner.
+  //            });
+  //          } else { // if we've already added the metadata, then just go ahead and log 'em in.
+  //            req.session.username = req.body.username;
+  //            req.session.fullname = result.fullname;
+  //            res.redirect('/'); // redirect back to the homepage, which is now their Planner.
+  //          }
+  //        } else { // if they don't exist in the DB, sign them up.
+  //          signup(req, res);
+  //        }
+  //      } else {
+  //        res.send(500, err);
+  //      }
+  //    });
+  //  } else {
+  //    res.send(404, {message: 'the username and password do not match.'});
+  //  }
+  //});
 }
 /**
  * add user to db
@@ -108,6 +141,7 @@ function validateUser(username, password, callback) {
     host: 'sandbox.dalton.org',
     path: '/webapps/auth/index.php/token',
     headers: {
+      'Host': 'sandbox.dalton.org',
       'Content-Type': 'application/x-www-form-urlencoded',
       'Content-Length': 'username=temp&password=temp'.length
     }
@@ -116,6 +150,7 @@ function validateUser(username, password, callback) {
   https.request(options, function(res) {
     res.on('data', function(t) {
       // get the token from the response object. if this doesn't work we're fucked so don't catch the parse error.
+      console.log(t.toString());
       var token = JSON.parse(t.toString()).token;
       var s = 'username='+username+'&password='+password+'&token='+token; // query string
       // keep the options object, cuz some parts are useful and no reason not to.
